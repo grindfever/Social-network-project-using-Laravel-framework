@@ -18,6 +18,7 @@ https://docs.google.com/spreadsheets/d/1FSuG007baL93l2qDRNLbfAkbHQu6oZZwY04kPu21
 * Afonso Dias, up202006721@up.pt
 * Diogo Leandro, up202005304@up.pt
 * Ricardo Vieira, up202005091@up.pt
+* Miguel Figueiredo, up201706105@up.pt
 
 ***
 GROUP23102, 21/09/2023
