@@ -1,3 +1,9 @@
+ /*
+
+  ---- CSS feito para a Thingy (website exemplo) ----------
+
+*/
+/**
 body {
     background-color: #ffffff;
     color: #9b4dca;
@@ -140,6 +146,7 @@ body {
    * Override milligram colors
    * Some styles might be missing
    **/
+  /* 
   button {
     background-color: #9b4dca;
     border-color: #9b4dca;
@@ -159,4 +166,30 @@ body {
   input[type=password]:focus {
     border-color: #9b4dca;
   }
-  
+  */
+   /*
+
+   ---- CSS feito para a dashboard da Rede Social ----------
+
+   */
+
+.new-post{
+  padding: 16px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.new-post header
+.posts header{
+  margin-bottom: 20px;
+}
+
+.posts .post {
+  padding-left: 10px;
+  border-left: 3px solid  #a21b24;
+  margin-bottom: 30px;
+}
+
+.posts .post .info {
+  color: #aaa;
+  font-style: italic;
+}

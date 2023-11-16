@@ -29,6 +29,8 @@ Route::controller(CardController::class)->group(function () {
 });
 
 
+
+
 // API
 Route::controller(CardController::class)->group(function () {
     Route::put('/api/cards', 'create');

@@ -56,4 +56,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Card::class);
     }
+
+    public  function posts(){
+        return $this->hasMany('App\Post');
+    }
 }
