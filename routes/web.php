@@ -62,7 +62,11 @@ Route::controller(RegisterController::class)->group(function () {
 
 Route::controller(DashBoardController::class)->group(function () {
     Route::get('/timeline','showDashBoard')->name('timeline');
-    Route::get('/post/{id}','showPost');
    
 });
 
+/*
+Route::controller(PosTController::class)->group(function () {
+    Route::get('/post/{id}','showPost')->name('post');
+});
+*/

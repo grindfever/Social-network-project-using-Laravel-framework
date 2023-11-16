@@ -12,14 +12,7 @@ use App\Models\Post;
 
 class DashBoardController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
+    
     /**
      * Create a new post
      */
@@ -40,36 +33,27 @@ class DashBoardController extends Controller
         return response()->json($post);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorePostRequest $request)
-    {
-        //
-    }
-
+ 
     /**
      * Show the post for a given id.
      */
 
-    public function showDashBoard(): View {
-        return view('pages.dashboard');
-    }
+    public function showPost(string $id): View {
+        
+        // Get the card.
+        $post = Card::findOrFail($id);
 
-    public function showPost(string $id): View
-    {
-        // Get the post.
-        $post = Post::findOrFail($id);
+        // Check if the current user can see (show) the card.
+        $this->authorize('show', $post);  
 
-        // Check if the current user can see (show) the post.
-        $this->authorize('show',$post);
-
-        // Use the pages.post template to display the post,
+        // Use the pages.dashboard template to display the card.
         return view('pages.dashboard', [
             'post' => $post
         ]);
+
     }
 
+    
     /**
      * Show the form for editing the specified resource.
      */

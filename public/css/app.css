@@ -3,7 +3,7 @@
   ---- CSS feito para a Thingy (website exemplo) ----------
 
 */
-/**
+
 body {
     background-color: #ffffff;
     color: #9b4dca;
@@ -146,7 +146,7 @@ body {
    * Override milligram colors
    * Some styles might be missing
    **/
-  /* 
+  
   button {
     background-color: #9b4dca;
     border-color: #9b4dca;
@@ -166,7 +166,7 @@ body {
   input[type=password]:focus {
     border-color: #9b4dca;
   }
-  */
+  
    /*
 
    ---- CSS feito para a dashboard da Rede Social ----------
