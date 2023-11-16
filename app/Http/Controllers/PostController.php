@@ -51,7 +51,12 @@ class PostController extends Controller
     /**
      * Show the post for a given id.
      */
-    public function show(string $id): View
+
+    public function showDashBoard(): View {
+        return view('pages.dashboard');
+    }
+
+    public function showPost(string $id): View
     {
         // Get the post.
         $post = Post::findOrFail($id);
