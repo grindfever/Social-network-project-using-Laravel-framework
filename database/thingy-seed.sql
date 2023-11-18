@@ -20,6 +20,10 @@ CREATE TABLE users (
   name VARCHAR NOT NULL,
   email VARCHAR UNIQUE NOT NULL,
   password VARCHAR NOT NULL,
+  bio character varying(256),
+  age INTEGER CONSTRAINT nn_users_age NOT NULL,
+  img character varying(256),
+  priv BOOLEAN DEFAULT TRUE,
   remember_token VARCHAR
 );
 
@@ -44,7 +48,10 @@ INSERT INTO users VALUES (
   DEFAULT,
   'John Doe',
   'admin@example.com',
-  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W'
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
+  'Hello!',
+  29,
+  DEFAULT
 ); -- Password is 1234. Generated using Hash::make('1234')
 
 INSERT INTO cards VALUES (DEFAULT, 'Things to do', 1);

@@ -60,6 +60,13 @@ Route::controller(RegisterController::class)->group(function () {
 
 //Profile
 Route::controller(ProfileController::class)->group(function () {
-    Route::get('/profile', 'showProfilePage')->name('profile');
+    Route::get('/profile', function(){return redirect('/');});
+    Route::get('/profile/{id}', 'show');
 });
 
+// API
+/*
+Route::controller(ProfileController::class)->group(function () {
+    Route::post('/api/profile/{id}', );
+});
+*/
