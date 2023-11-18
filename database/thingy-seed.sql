@@ -51,6 +51,7 @@ INSERT INTO users VALUES (
   '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
   'Hello!',
   29,
+  'admin.jpg',
   DEFAULT
 ); -- Password is 1234. Generated using Hash::make('1234')
 
@@ -61,3 +62,4 @@ INSERT INTO items VALUES (DEFAULT, 1, 'Walk the dog', true);
 INSERT INTO cards VALUES (DEFAULT, 'Things not to do', 1);
 INSERT INTO items VALUES (DEFAULT, 2, 'Break a leg');
 INSERT INTO items VALUES (DEFAULT, 2, 'Crash the car');
+
