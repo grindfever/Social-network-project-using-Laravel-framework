@@ -56,4 +56,23 @@ class User extends Authenticatable
     {
         return $this->hasMany(Card::class);
     }
+
+    public function messages()
+    {
+        $sentMessages = $this->sentMessages();
+        $receivedMessages = $this->receivedMessages();
+        $messages = collect($sentMessages)->merge($receivedMessages);
+        
+        return $messages;
+    } 
+    public function sentMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'sender');  
+    }
+
+    public function receivedMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'receiver');  
+    }
+    
 }

@@ -36,6 +36,22 @@ CREATE TABLE items (
   done BOOLEAN NOT NULL DEFAULT FALSE
 );
 
+DROP TABLE IF EXISTS messages CASCADE;
+CREATE TABLE messages
+(
+    id SERIAL PRIMARY KEY,
+    sender INTEGER CONSTRAINT fk_message_sender REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+				 CONSTRAINT nn_message_sender NOT NULL,
+    receiver INTEGER CONSTRAINT fk_message_receiver REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+				   CONSTRAINT nn_message_receiver NOT NULL,
+    content character varying(128),
+    date timestamp(0) without time zone CONSTRAINT nn_message_date NOT NULL DEFAULT now(),
+    viewed boolean DEFAULT FALSE,
+    img character varying(256) ,
+    CHECK (content IS NOT NULL OR img IS NOT NULL)
+);
+
+
 --
 -- Insert value.
 --
@@ -46,6 +62,46 @@ INSERT INTO users VALUES (
   'admin@example.com',
   '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W'
 ); -- Password is 1234. Generated using Hash::make('1234')
+
+INSERT INTO users VALUES (
+  DEFAULT,
+  'Diogo',
+  'diogo@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W'
+); -- Password is 1234. Generated using Hash::make('1234')
+
+INSERT INTO users VALUES (
+  DEFAULT,
+  'a',
+  'a@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W'
+); -- Password is 1234. Generated using Hash::make('1234')
+
+
+
+INSERT INTO messages VALUES (
+  DEFAULT, 1, 2, 'Blah1', DEFAULT, DEFAULT
+);
+
+INSERT INTO messages VALUES (
+  DEFAULT, 1, 3, 'Blah2', DEFAULT, DEFAULT
+);
+
+INSERT INTO messages VALUES (
+  DEFAULT, 2, 1, 'Blah3', DEFAULT, DEFAULT
+);
+
+INSERT INTO messages VALUES (
+  DEFAULT, 2, 3, 'Blah4', DEFAULT, DEFAULT
+);
+
+INSERT INTO messages VALUES (
+  DEFAULT, 3, 1, 'Blah5', DEFAULT, DEFAULT
+);
+
+INSERT INTO messages VALUES (
+  DEFAULT, 3, 2, 'Blah6', DEFAULT, DEFAULT
+);
 
 INSERT INTO cards VALUES (DEFAULT, 'Things to do', 1);
 INSERT INTO items VALUES (DEFAULT, 1, 'Buy milk');
