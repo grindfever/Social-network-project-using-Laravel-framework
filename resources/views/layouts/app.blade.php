@@ -23,7 +23,8 @@
     <body>
 
     <main>
-        <header>
+        <header1>
+
             <div class="logo">
                 <a href="{{ url('/cards') }}">Thingy!</a>
             </div>
@@ -33,20 +34,24 @@
             <div class="messages">
                 <a href="{{ url('/messages') }}">Messages</a>
             </div>
+            
             @if (Auth::check())
-                <div class="user-info">
-                    <a class="button" href="{{ url('/logout') }}">Logout</a>
-                    <span><a href="{{ url('/profile') }}" >{{ Auth::user()->name }}</a></span>
-                </div>
+            <div class="user-info">
+             <span><a href="{{ url('/profile') }}" >{{ Auth::user()->name }}</a></span>
+            </div>
             @endif
-        </header>
+            <div class="logout">
+            <a class="button" href="{{ url('/logout') }}">Logout</a>
+            </div>    
+           
+        </header1>
         <header2>
         <div class="Search">
            <p>add search bar here</p>
         </div>
         <div class="Profile">
                 <a href="{{ url('/profile') }}">MyProfile</a>
-                <img src="{{ public_path('lbaw23102/images/' . $user->img) }}" alt="Profile Picture">
+                
             </div>  
         </header2>    
         <section id="content">
