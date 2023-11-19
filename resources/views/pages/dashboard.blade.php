@@ -5,7 +5,7 @@
 @section('content')
 
     <section id="post">
-        @each('partials.post', $posts, 'post')
+        @each('partials.post', $post, 'post')
         <article class="post">
             <form class="new_post" method="POST" action="/dashboard">
                 @csrf

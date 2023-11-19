@@ -43,7 +43,7 @@ class DashBoardController extends Controller
             // The user is logged in.
 
             // Get posts for user ordered by id.
-            $posts = Auth::user()->posts()->orderBy('id')->get();
+            $post = Auth::user()->posts()->orderBy('id')->get();
 
             // Check if the current user can list the cards.
             $this->authorize('list', Post::class);
@@ -52,7 +52,7 @@ class DashBoardController extends Controller
 
             // Use the pages.dashboard template to display all posts.
             return view('pages.dashboard', [
-                'posts' => $posts
+                'post' => $post
             ]);
         }
     }
