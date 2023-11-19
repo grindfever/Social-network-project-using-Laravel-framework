@@ -22,6 +22,14 @@ function addEventListeners() {
     let cardCreator = document.querySelector('article.card form.new_card');
     if (cardCreator != null)
       cardCreator.addEventListener('submit', sendCreateCardRequest);
+
+    let postDeleters = document.querySelectorAll('article.post header a.delete');
+    if (postDeleters != null)
+      postCreator.addEventListener('click', sendDeletePostRequest);
+
+    let postCreator = document.querySelector('article.post form.new_post');
+    if (postCreator != null)
+      cardCreator.addEventListener('submit', sendCreatePostRequest);
   }
   
   function encodeForAjax(data) {
@@ -70,6 +78,12 @@ function addEventListeners() {
   
     sendAjaxRequest('delete', '/api/cards/' + id, null, cardDeletedHandler);
   }
+
+  function sendDeletePostRequest(event) {
+    let id = this.closest('article').getAttribute('data-id');
+    
+    sendAjaxRequest('delete', '/api/post/' + id, null, postDeletedHandler);
+  }
   
   function sendCreateCardRequest(event) {
     let name = this.querySelector('input[name=name]').value;
@@ -77,6 +91,15 @@ function addEventListeners() {
     if (name != '')
       sendAjaxRequest('put', '/api/cards/', {name: name}, cardAddedHandler);
   
+    event.preventDefault();
+  }
+
+  function sendCreatePostRequest(event) {
+    let name = this.querySelector('input[name=content]').value;
+
+    if (name != '')
+      sendAjaxRequest('post', '/dashboard', {content: content}, postAddedHandler);
+
     event.preventDefault();
   }
   
@@ -117,6 +140,13 @@ function addEventListeners() {
     article.remove();
   }
   
+  function postDeletedHandler() {
+    if (this.status != 200) window.location = '/';
+    let post = JSON.parse(this.responseText);
+    let article = document.querySelector('article.post[data-id="'+ post.id + '"]');
+    article.remove();
+  }
+
   function cardAddedHandler() {
     if (this.status != 200) window.location = '/';
     let card = JSON.parse(this.responseText);
@@ -135,6 +165,22 @@ function addEventListeners() {
   
     // Focus on adding an item to the new card
     new_card.querySelector('[type=text]').focus();
+  }
+
+  function postAddedHandler() {
+    if (this.status != 200) window.location = '/';
+    let post = JSON.parse(this.responseText);
+
+    let new_post = createPost(post);
+
+    let form = document.querySelector('article.post form.new_post');
+    form.querySelector('[type=text]').value="";
+
+    let article = form.parentElement;
+    let section = article.parentElement;
+    section.insertBefore(new_post, article);
+
+    new_post.querySelector('[type=text]').focus();
   }
   
   function createCard(card) {
@@ -160,6 +206,22 @@ function addEventListeners() {
   
     return new_card;
   }
+
+  function createPost(post) {
+      let new_post = document.createElement('article');
+      new_post.classList.add('post');
+      new_post.setAttribute('data-id', post.id);
+      new_post.innerHTML = `
+      <header>
+        <h2><a href="post/${post.id}"></a></h2>
+        {{ $post->content }}
+        <a href="#" class="delete">&#10761;</a>
+      </header>`;
+
+      let deleter = new_post.querySelector('header a.delete');
+
+      return new_post;
+  } 
   
   function createItem(item) {
     let new_item = document.createElement('li');

@@ -25,27 +25,20 @@ use App\Http\Controllers\DashBoardController;
 // Home
 Route::redirect('/', '/login');
 
-// Cards
-Route::controller(CardController::class)->group(function () {
-    Route::get('/cards', 'list')->name('cards');
-    Route::get('/cards/{id}', 'show');
+// Dashboard
+Route::controller(DashBoardController::class)->group(function () {
+    Route::get('/dashboard','list')->name('DashBoard');
+    Route::get('/post/{id}','show');
 });
 
 
+/*
+ *    API
+ */ 
 
-
-// API
-Route::controller(CardController::class)->group(function () {
-    Route::put('/api/cards', 'create');
-    Route::delete('/api/cards/{card_id}', 'delete');
-});
-
-Route::controller(ItemController::class)->group(function () {
-    Route::put('/api/cards/{card_id}', 'create');
-    Route::post('/api/item/{id}', 'update');
-    Route::delete('/api/item/{id}', 'delete');
-});
-
+ Route::post('/dashboard', [DashBoardController::class, 'create']);
+ Route::delete('/post/{post_id}', [DashBoardController::class, 'delete']);
+ 
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {
@@ -60,13 +53,3 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 
-Route::controller(DashBoardController::class)->group(function () {
-    Route::get('/timeline','showDashBoard')->name('timeline');
-   
-});
-
-/*
-Route::controller(PosTController::class)->group(function () {
-    Route::get('/post/{id}','showPost')->name('post');
-});
-*/

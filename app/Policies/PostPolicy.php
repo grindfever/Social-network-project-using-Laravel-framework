@@ -4,63 +4,51 @@ namespace App\Policies;
 
 use App\Models\Post;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
+
+use Illuminate\Support\Facades\Auth;
 
 class PostPolicy
 {
-    /**
-     * Determine whether the user can view any models.
+  /**
+     * Create a new policy instance.
      */
-    public function viewAny(User $user): bool
+    public function __construct()
     {
         //
     }
 
     /**
-     * Determine whether the user can view the model.
+     * Determine if a given post can be shown to a user.
      */
-    public function view(User $user, Post $post): bool
+    public function show(User $user, Post $post): bool
     {
-        //
+        // Only a post owner can see a post.
+        return $user->id === $post->user_id;
+    }
+    /**
+     * Determine if all posts can be listed by a user.
+     */
+    public function list(User $user): bool
+    {
+        // Any (authenticated) user can list its own cards.
+        return Auth::check();
     }
 
     /**
-     * Determine whether the user can create models.
+     * Determine if a post can be created by a user.
      */
     public function create(User $user): bool
     {
-        //
+        // Any user can create a new post.
+        return Auth::check();
     }
 
     /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, Post $post): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can delete the model.
+     * Determine if a post can be deleted by a user.
      */
     public function delete(User $user, Post $post): bool
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Post $post): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Post $post): bool
-    {
-        //
+      // Only a post owner can delete it.
+      return $user->id === $post->user_id;
     }
 }

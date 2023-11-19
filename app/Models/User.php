@@ -56,8 +56,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Card::class);
     }
-
-    public  function posts(){
-        return $this->hasMany('App\Post');
+    /**
+     * Get the posts for a user
+     */
+    public  function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
     }
 }

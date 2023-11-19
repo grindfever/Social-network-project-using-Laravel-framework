@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', $post->name)
+@section('title', 'Random')
 
 @section('content')
-    <section id="posts">
+    <section id="post">
         @include('partials.post', ['post' => $post])
     </section>
 @endsection
