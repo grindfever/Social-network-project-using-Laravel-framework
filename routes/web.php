@@ -8,6 +8,9 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
+
+use App\Http\Controllers\DashBoardController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,25 +25,21 @@ use App\Http\Controllers\Auth\RegisterController;
 // Home
 Route::redirect('/', '/login');
 
-// Cards
-Route::controller(CardController::class)->group(function () {
-    Route::get('/cards', 'list')->name('cards');
-    Route::get('/cards/{id}', 'show');
+// Dashboard
+Route::controller(DashBoardController::class)->group(function () {
+    Route::get('/dashboard','list')->name('DashBoard');
+    Route::get('/post/{id}','show');
 });
 
 
-// API
-Route::controller(CardController::class)->group(function () {
-    Route::put('/api/cards', 'create');
-    Route::delete('/api/cards/{card_id}', 'delete');
-});
+/*
+ *    API
+ */ 
 
-Route::controller(ItemController::class)->group(function () {
-    Route::put('/api/cards/{card_id}', 'create');
-    Route::post('/api/item/{id}', 'update');
-    Route::delete('/api/item/{id}', 'delete');
-});
-
+ Route::post('/dashboard', [DashBoardController::class, 'create']);
+ Route::delete('api/post/{post_id}', [DashBoardController::class, 'delete']);
+ Route::put('api/post/{post_id}', [DashBoardController::class, 'update']);
+ 
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {
@@ -53,3 +52,5 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
+
+
