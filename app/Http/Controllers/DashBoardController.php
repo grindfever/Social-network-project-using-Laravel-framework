@@ -54,6 +54,7 @@ class DashBoardController extends Controller
             return view('pages.dashboard', [
                 'post' => $post
             ]);
+
         }
     }
 
@@ -69,10 +70,32 @@ class DashBoardController extends Controller
         $this->authorize('create', $post);
 
         // Set post details
-        $post->content = $request->input('content');
+        $post->content = $request->input('content'); 
         $post->user_id = Auth::user()->id;
 
         // Save the card and return it as JSON.
+        $post->save();
+
+        $post->load('user:id,name');
+
+        return response()->json($post);
+    }
+
+    /**
+     * Updates the state of an individual post.
+     */
+    public function update(Request $request, $id)
+    {
+        // Find the item.
+        $post = Post::find($id);
+
+        // Check if the current user is authorized to update this item.
+       // $this->authorize('update', $post);
+
+        // Update the done property of the item.
+        $post->content = $request->input('content');
+
+        // Save the post and return it as JSON.
         $post->save();
         return response()->json($post);
     }
