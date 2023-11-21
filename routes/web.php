@@ -58,4 +58,11 @@ Route::controller(RegisterController::class)->group(function () {
 // Messages
 Route::controller(MessageController::class)->group(function () {
     Route::get('/messages', 'list_chats');
+    Route::get('/messages/{mesage_id}','chat');
+});
+
+
+//
+Route::controller(MessageController::class)->group(function () {
+    Route::post('/api/messages/{id}', 'create');
 });

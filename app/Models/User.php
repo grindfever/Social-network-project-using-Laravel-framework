@@ -61,8 +61,13 @@ class User extends Authenticatable
     {
         $sentMessages = $this->sentMessages();
         $receivedMessages = $this->receivedMessages();
-        $messages = collect($sentMessages)->merge($receivedMessages);
-        
+        $messages = array();
+        foreach ($sentMessages as $message) {   
+            $messages[] = $message;
+        }
+        foreach ($receivedMessages as $message) {   
+            $messages[] = $message;
+        }
         return $messages;
     } 
     public function sentMessages(): HasMany
@@ -73,6 +78,10 @@ class User extends Authenticatable
     public function receivedMessages(): HasMany
     {
         return $this->hasMany(Message::class, 'receiver');  
+    }
+
+    public function chats(){
+        return $this->hasMany(Message::class,'sender', 'receiver');
     }
     
 }
