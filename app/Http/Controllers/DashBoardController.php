@@ -37,25 +37,24 @@ class DashBoardController extends Controller
         // Check if the user is logged in.
         if (!Auth::check()) {
             // Not logged in, redirect to login.
-            return redirect('/login');
+         $guest = 1;
 
         } else {
             // The user is logged in.
-
-            // Get posts for user ordered by id.
-            $post = Auth::user()->posts()->orderBy('id')->get();
-
-            // Check if the current user can list the cards.
-            $this->authorize('list', Post::class);
-
-            // The current user is authorized to list cards.
-
-            // Use the pages.dashboard template to display all posts.
-            return view('pages.dashboard', [
-                'post' => $post
-            ]);
-
+            $guest = 0;
         }
+        // Get posts for user ordered by id.
+        $post = Post::all();
+
+        // Check if the current user can list the cards.
+        //$this->authorize('list', Post::class);
+
+        // The current user is authorized to list cards.
+
+        // Use the pages.dashboard template to display all posts.
+        return view('pages.dashboard', [
+            'post' => $post, 'guest' => $guest
+        ]);
     }
 
     /**
