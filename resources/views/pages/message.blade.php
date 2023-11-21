@@ -18,4 +18,12 @@
             @endforeach
         </ul>
     </div>
+    <div>
+        <article class="post">
+            <form class="new_message" method="POST" action="/messages/{{$id}}"></form>
+                <input type="text" name="content" placeholder="new message">
+                <button type="submit">Send</button>
+            </form>
+        </article>
+    </div>
 @endsection

@@ -35,7 +35,8 @@ class MessageController extends Controller
             // Use the pages.cards template to display all cards.
             return view('pages.message', [
                 'sentMessages' => $sentMessages,
-                'receivedMessages' => $receivedMessages
+                'receivedMessages' => $receivedMessages,
+                'id' => $chatter
             ]);
         }
     }
