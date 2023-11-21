@@ -1,28 +1,33 @@
 function addEventListeners() {
-    let itemCheckers = document.querySelectorAll('article.card li.item input[type=checkbox]');
-    [].forEach.call(itemCheckers, function(checker) {
-      checker.addEventListener('change', sendItemUpdateRequest);
-    });
   
-    let itemCreators = document.querySelectorAll('article.card form.new_item');
-    [].forEach.call(itemCreators, function(creator) {
-      creator.addEventListener('submit', sendCreateItemRequest);
-    });
-  
-    let itemDeleters = document.querySelectorAll('article.card li a.delete');
-    [].forEach.call(itemDeleters, function(deleter) {
-      deleter.addEventListener('click', sendDeleteItemRequest);
-    });
-  
-    let cardDeleters = document.querySelectorAll('article.card header a.delete');
-    [].forEach.call(cardDeleters, function(deleter) {
-      deleter.addEventListener('click', sendDeleteCardRequest);
-    });
-  
-    let cardCreator = document.querySelector('article.card form.new_card');
-    if (cardCreator != null)
-      cardCreator.addEventListener('submit', sendCreateCardRequest);
-  }
+  let messageCreator = document.querySelector('article.message form.new_message');
+  if (messageCreator != null){
+    messageCreator.addEventListener('submit', sendCreateMessageRequest);
+  }  
+  let itemCheckers = document.querySelectorAll('article.card li.item input[type=checkbox]');
+  [].forEach.call(itemCheckers, function(checker) {
+    checker.addEventListener('change', sendItemUpdateRequest);
+  });
+
+  let itemCreators = document.querySelectorAll('article.card form.new_item');
+  [].forEach.call(itemCreators, function(creator) {
+    creator.addEventListener('submit', sendCreateItemRequest);
+  });
+
+  let itemDeleters = document.querySelectorAll('article.card li a.delete');
+  [].forEach.call(itemDeleters, function(deleter) {
+    deleter.addEventListener('click', sendDeleteItemRequest);
+  });
+
+  let cardDeleters = document.querySelectorAll('article.card header a.delete');
+  [].forEach.call(cardDeleters, function(deleter) {
+    deleter.addEventListener('click', sendDeleteCardRequest);
+  });
+
+  let cardCreator = document.querySelector('article.card form.new_card');
+  if (cardCreator != null)
+    cardCreator.addEventListener('submit', sendCreateCardRequest);
+}
   
   function encodeForAjax(data) {
     if (data == null) return null;
@@ -176,6 +181,50 @@ function addEventListeners() {
   
     return new_item;
   }
+
+
+  function sendCreateMessageRequest(event){
+    let name = this.querySelector('input[name=content]').value;
+
+    if (name != '')
+      sendAjaxRequest('post', '/messages', {content: name}, messageAddedHandler);
+
+    event.preventDefault();
+  }
   
+  function messageAddedHandler(){
+    if (this.status != 200) window.location = '/';
+    let message = JSON.parse(this.responseText);
+    let new_message = createMessage(message);
+
+    let form = document.querySelector('article message form.new_message');
+    form.querySelector('[type=text]').value="";
+
+    let article = form.parentElement;
+    let section= article.parentElement;
+    section.insertBefore(new_message, article);
+
+    new_message.querySelector('[type=text]').focus();
+  }
+
+
+  function createMessage(message) {
+    let new_message = document.createElement('article');
+    new_message.classList.add('message');
+    new_message.setAttribute('data_id', post.id);
+    new_post.innerHTML = ` 
+    <div>
+      <h2>Sent Messages</h2>
+      <ul>
+        @foreach($sentMessages as $sentMessage)
+            <li>{{ $sentMessage->content }}</li>
+        @endforeach
+      </ul>
+    </div>
+    `;
+
+    return new_message;
+}
+
   addEventListeners();
   

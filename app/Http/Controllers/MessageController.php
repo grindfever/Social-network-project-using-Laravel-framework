@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
+
+
+use App\Models\Message;
 
 
 class MessageController extends Controller
@@ -73,4 +77,26 @@ class MessageController extends Controller
             ]);
         }
     }
+
+
+    /**
+     * Creates a new card.
+     */
+    public function create(Request $request, string $id)   
+    {
+        // Create a blank new Card.
+        $message = new Message();
+
+        // Check if the current user is authorized to create this card.
+        //$this->authorize('create', $card);
+
+        // Set card details.
+        $message->content = $request->input('content');
+        $message->sender = Auth::user()->id;
+        $message->receiver = $id;  
+        // Save the card and return it as JSON.
+        $message->save();
+        return response()->json($message);
+    }
+
 }
