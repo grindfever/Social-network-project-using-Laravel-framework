@@ -188,7 +188,7 @@ function addEventListeners() {
     let name = this.querySelector('input[name=content]').value;
 
     if (name != '')
-      sendAjaxRequest('post', '/messages/'+id, {content: name}, messageAddedHandler);
+      sendAjaxRequest('post', '/api/messages/'+id, {content: name}, messageAddedHandler);
 
     event.preventDefault();
   }

@@ -39,6 +39,9 @@ Route::controller(RegisterController::class)->group(function () {
 Route::controller(MessageController::class)->group(function () {
     Route::get('/messages', 'list_chats');
     Route::get('/messages/{id}','chat');
-    Route::post('/messages/{id}', 'create');
 });
 
+//API
+Route::controller(MessageController::class)->group(function () {
+    Route::post('/api/messages/{id}', 'create');
+});
