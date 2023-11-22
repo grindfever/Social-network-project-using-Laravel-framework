@@ -3,7 +3,7 @@
 @section('content')
     <div>
         <h2>Sent Messages</h2>
-        <ul>
+        <ul class="messages">
             @foreach($sentMessages as $sentMessage)
                 <li>{{ $sentMessage->content }}</li>
             @endforeach

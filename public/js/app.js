@@ -11,9 +11,12 @@ function addEventListeners() {
 
   let postEditor = document.querySelector('button.edit-post');
   if (postEditor != null){
-    //postEditor.addEventListener('click', sendEditPostRequest);
     postEditor.addEventListener('click', editablePost);
   }
+
+  let messageCreator = document.querySelector('article.message form.new_message');
+  if (messageCreator != null)
+    messageCreator.addEventListener('submit', sendCreateMessageRequest);
 }
   
 function editablePost(event) {
@@ -145,28 +148,29 @@ function sendUpdatePostRequest(updatedContent, content) {
   function sendCreateMessageRequest(event){
     let id = this.closest('article').getAttribute('data-id');
     let name = this.querySelector('input[name=content]').value;
-
     if (name != '')
       sendAjaxRequest('post', '/messages/'+id, {content: name}, messageAddedHandler);
 
     event.preventDefault();
   }
 
-
-  function messageAddedHandler(){
+  function messageAddedHandler() {
     if (this.status != 200) window.location = '/';
     let message = JSON.parse(this.responseText);
     let new_message = createMessage(message);
 
+    let messagesList = document.querySelector('ul.messages');
+    let li = document.createElement('li');
+    li.textContent = message.content;
+
+    // Insert the new message after the last <li> element in the messages list
+    messagesList.appendChild(li);
+
     let form = document.querySelector('article.message form.new_message');
-    form.querySelector('[type=text]').value="";
+    form.querySelector('[type=text]').value = "";
 
-    let article = form.parentElement;
-    let section= article.parentElement;
-    section.insertBefore(new_message, article);
-
-    new_message.querySelector('[type=text]').focus();
   }
+
 
 
   function createMessage(message) {
@@ -176,7 +180,6 @@ function sendUpdatePostRequest(updatedContent, content) {
     new_message.innerHTML = `
       <li>${message.content}</li>
     `;
-
     return new_message;
 }
 
