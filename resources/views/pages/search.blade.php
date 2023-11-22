@@ -10,12 +10,13 @@
     </div>
     @if(isset($results))
         <h2>Search Results</h2>
+        
         <ul>
             @if ($empty)
-                @foreach($results as $result)
-                    <li>{{ $result->title }}</li>
-                @endforeach    
-        
+            @foreach($results as $result)
+                <li><a href="/profile/{{$result->id}}"> {{$result->name}}</a></li>
+            @endforeach    
+                
             @else
                 <p>No results found.</p>            
             @endif

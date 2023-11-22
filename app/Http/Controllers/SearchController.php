@@ -13,7 +13,7 @@ class SearchController extends Controller {
     
     
     public function search(Request $request) {    
-        $results = User::where('users.name', 'like', '%' . $request . '%')->get();
+        $results = User::where('name', 'like', '%' . $request->input('query') . '%')->get();
 
         return view('pages.search', ['results'=> $results, 'empty' => $results->empty()]);
     }
