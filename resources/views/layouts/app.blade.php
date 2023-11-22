@@ -21,16 +21,44 @@
         </script>
     </head>
     <body>
-        <main>
-            <header>
-                <h1><a href="{{ url('/dashboard') }}">Y</a></h1>
-                @if (Auth::check())
-                    <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
-                @endif
-            </header>
-            <section id="content">
-                @yield('content')
-            </section>
-        </main>
+
+    <main>
+        <header1>
+
+            <div class="logo">
+                <a href="{{ url('/cards') }}">Thingy!</a>
+            </div>
+            <div class="timeline">
+                <a href="{{ url('/timeline') }}">Timeline</a>
+            </div>
+            <div class="messages">
+                <a href="{{ url('/messages') }}">Messages</a>
+            </div>
+            
+            @if (Auth::check())
+            <div class="user-info">
+             <span><a href="{{ url('/profile') }}" >{{ Auth::user()->name }}</a></span>
+            </div>
+            @endif
+            <div class="logout">
+            <a class="button" href="{{ url('/logout') }}">Logout</a>
+            </div>    
+           
+        </header1>
+        <header2>
+        <div class="Search">
+           <p>add search bar here</p>
+        </div>
+        <div class="Profile">
+                <a href="{{ url('/profile') }}">MyProfile</a>
+                
+            </div>  
+        </header2>    
+        <section id="content">
+            @yield('content')
+        </section>
+    </main>
+
     </body>
 </html>
+
