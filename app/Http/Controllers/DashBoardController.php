@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\Post;
 
+
 class DashBoardController extends Controller
 {
     
@@ -19,9 +20,6 @@ class DashBoardController extends Controller
      {   
         // Get the post.
         $post = Post::findOrFail($id);
-
-        // Check if the current user can see (show) the post.
-        //$this->authorize('show', $post);  
 
         // Use the pages.post template to display the post.
         return view('pages.post', [
@@ -36,11 +34,6 @@ class DashBoardController extends Controller
     {
         
         $post = Post::all();
-
-        // Check if the current user can list the cards.
-        //$this->authorize('list', Post::class);
-
-        // The current user is authorized to list cards.
 
         // Use the pages.dashboard template to display all posts.
         return view('pages.dashboard', [
@@ -80,7 +73,7 @@ class DashBoardController extends Controller
         $post = Post::find($id);
 
         // Check if the current user is authorized to update this item.
-       // $this->authorize('update', $post);
+        $this->authorize('update', $post);
 
         // Update the done property of the item.
         $post->content = $request->input('content');
