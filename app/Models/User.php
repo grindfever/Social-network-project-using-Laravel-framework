@@ -80,4 +80,9 @@ class User extends Authenticatable
         return $this->hasMany(Message::class,'sender', 'receiver');
     }
     
+
+    public  function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
 }

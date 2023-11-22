@@ -6,6 +6,10 @@ use App\Http\Controllers\MessageController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+
+
+use App\Http\Controllers\DashBoardController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,7 +22,23 @@ use App\Http\Controllers\Auth\RegisterController;
 */
 
 // Home
-Route::redirect('/', '/messages');
+Route::redirect('/', '/login');
+
+// Dashboard
+Route::controller(DashBoardController::class)->group(function () {
+    Route::get('/dashboard','list')->name('DashBoard');
+    Route::get('/post/{id}','show');
+});
+
+
+/*
+ *    API
+ */ 
+
+ Route::post('/dashboard', [DashBoardController::class, 'create']);
+ Route::delete('api/post/{post_id}', [DashBoardController::class, 'delete']);
+ Route::put('api/post/{post_id}', [DashBoardController::class, 'update']);
+ 
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {
@@ -37,9 +57,6 @@ Route::controller(RegisterController::class)->group(function () {
 Route::controller(MessageController::class)->group(function () {
     Route::get('/messages', 'list_chats');
     Route::get('/messages/{id}','chat');
+    Route::post('/messages/{id}', 'create');
 });
 
-//API
-Route::controller(MessageController::class)->group(function () {
-    Route::post('/api/messages/{id}', 'create');
-});
