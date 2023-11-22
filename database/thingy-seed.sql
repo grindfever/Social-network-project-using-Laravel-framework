@@ -24,8 +24,6 @@ DROP TABLE if exists memberships CASCADE;
 
 
 
-
-
 CREATE TYPE notification_type_enum AS ENUM ('liked_comment', 
                                        'reply_comment',
                                        'comment_post',
@@ -45,18 +43,22 @@ CREATE TYPE notification_type_enum AS ENUM ('liked_comment',
 
 --USERS
 
-
-CREATE TABLE users
-(
-    id SERIAL PRIMARY KEY,
-    username character varying(256),
-    password character varying(256) CONSTRAINT nn_users_password  NOT NULL,
-    email character varying(256) CONSTRAINT uk_users_email UNIQUE
-				CONSTRAINT nn_users_email NOT NULL,
-    name character varying(256)  CONSTRAINT nn_users_name NOT NULL,
-    bio character varying(256),
-    remember_token VARCHAR
+--
+-- Create tables.
+--
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR NOT NULL,
+  name VARCHAR NOT NULL,
+  email VARCHAR UNIQUE NOT NULL,
+  password VARCHAR NOT NULL,
+  bio character varying(256),
+  age INTEGER CONSTRAINT nn_users_age NOT NULL,
+  img character varying(256),
+  priv BOOLEAN DEFAULT TRUE,
+  remember_token VARCHAR
 );
+
 
 --MODERATOR
 
@@ -226,28 +228,34 @@ CREATE TABLE memberships
 INSERT INTO users VALUES (
   DEFAULT,
   'John Doe',
-  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
-  'admin@example.com',
   'John',
-  'Funny person'
+  'admin@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
+  'Funny person',
+  29,
+  DEFAULT
 ); -- Password is 1234. Generated using Hash::make('1234')
 
 INSERT INTO users VALUES (
   DEFAULT,
   'Diogo',
-  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
-  'diogo@example.com',
   'Diogo',
-  'Yo'
+  'diogo@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
+  'Yo',
+  21,
+  DEFAULT
 ); -- Password is 1234. Generated using Hash::make('1234')
 
 INSERT INTO users VALUES (
   DEFAULT,
   'a',
-  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W'
-  'a@example.com',
   'A',
-  'a'
+  'a@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
+  'a',
+  18,
+  DEFAULT
 ); -- Password is 1234. Generated using Hash::make('1234')
 
 

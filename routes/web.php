@@ -7,6 +7,8 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
+use App\Http\Controllers\ProfileController;
+
 
 use App\Http\Controllers\DashBoardController;
 
@@ -51,6 +53,14 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
+
+
+//Profile
+Route::controller(ProfileController::class)->group(function () {
+    Route::get('/profile', 'myProfile');
+    Route::get('/profile/{id}', 'show');
+});
+
 
 
 // Messages
