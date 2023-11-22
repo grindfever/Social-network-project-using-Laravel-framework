@@ -19,8 +19,8 @@
         </ul>
     </div>
     <div>
-        <article class="message">
-            <form class="new_message" method="POST"></form>
+        <article class="message" data-id="{{$id}}">
+            <form class="new_message" method="POST" action="/messages/{{$id}}">
                 @csrf
                 <input type="text" name="content" placeholder="new message">
                 <button type="submit">Send</button>

@@ -184,10 +184,11 @@ function addEventListeners() {
 
 
   function sendCreateMessageRequest(event){
+    let id = this.closest('article').getAttribute('data-id');
     let name = this.querySelector('input[name=content]').value;
 
     if (name != '')
-      sendAjaxRequest('post', '/messages', {content: name}, messageAddedHandler);
+      sendAjaxRequest('post', '/messages/'+id, {content: name}, messageAddedHandler);
 
     event.preventDefault();
   }
@@ -197,7 +198,7 @@ function addEventListeners() {
     let message = JSON.parse(this.responseText);
     let new_message = createMessage(message);
 
-    let form = document.querySelector('article message form.new_message');
+    let form = document.querySelector('article.message form.new_message');
     form.querySelector('[type=text]').value="";
 
     let article = form.parentElement;
@@ -211,17 +212,6 @@ function addEventListeners() {
   function createMessage(message) {
     let new_message = document.createElement('article');
     new_message.classList.add('message');
-    new_message.setAttribute('data_id', post.id);
-    new_post.innerHTML = ` 
-    <div>
-      <h2>Sent Messages</h2>
-      <ul>
-        @foreach($sentMessages as $sentMessage)
-            <li>{{ $sentMessage->content }}</li>
-        @endforeach
-      </ul>
-    </div>
-    `;
 
     return new_message;
 }

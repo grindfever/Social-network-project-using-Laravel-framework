@@ -17,7 +17,7 @@ class MessageController extends Controller
     /**
      * Shows all cards.
      */
-    public function chat(string $chatter)
+    public function chat(string $id)
     {
         // Check if the user is logged in.
         if (!Auth::check()) {
@@ -28,9 +28,9 @@ class MessageController extends Controller
             // The user is logged in.
 
             // Get sent messages for user ordered by id.
-            $sentMessages = Auth::user()->sentMessages()->where('messages.receiver','=', $chatter)->get();
+            $sentMessages = Auth::user()->sentMessages()->where('messages.receiver','=', $id)->get();
             // Get sent messages for user ordered by id.
-            $receivedMessages = Auth::user()->receivedMessages()->where('messages.sender','=', $chatter)->get();
+            $receivedMessages = Auth::user()->receivedMessages()->where('messages.sender','=', $id)->get();
             // Check if the current user can list the cards.
             //$this->authorize('list', Card::class);
 
@@ -40,13 +40,13 @@ class MessageController extends Controller
             return view('pages.message', [
                 'sentMessages' => $sentMessages,
                 'receivedMessages' => $receivedMessages,
-                'id' => $chatter
+                'id' => $id
             ]);
         }
     }
 
     /**
-     * Shows all cards.
+     * Shows all chats.
      */
     public function list_chats()
     {
@@ -80,21 +80,18 @@ class MessageController extends Controller
 
 
     /**
-     * Creates a new card.
+     * Creates a new message.
      */
     public function create(Request $request, string $id)   
     {
-        // Create a blank new Card.
         $message = new Message();
 
-        // Check if the current user is authorized to create this card.
         //$this->authorize('create', $card);
 
-        // Set card details.
         $message->content = $request->input('content');
         $message->sender = Auth::user()->id;
         $message->receiver = $id;  
-        // Save the card and return it as JSON.
+
         $message->save();
         return response()->json($message);
     }
