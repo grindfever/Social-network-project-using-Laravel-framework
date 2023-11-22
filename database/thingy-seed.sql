@@ -1,61 +1,3 @@
-/*
---
--- Use a specific schema and set it as default - thingy.
---
-DROP SCHEMA IF EXISTS thingy CASCADE;
-CREATE SCHEMA IF NOT EXISTS thingy;
-SET search_path TO thingy;
-
---
--- Drop any existing tables.
---
-DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS cards CASCADE;
-DROP TABLE IF EXISTS items CASCADE;
-
---
--- Create tables.
---
-CREATE TABLE users (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR NOT NULL,
-  email VARCHAR UNIQUE NOT NULL,
-  password VARCHAR NOT NULL,
-  remember_token VARCHAR
-);
-
-CREATE TABLE cards (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR NOT NULL,
-  user_id INTEGER REFERENCES users NOT NULL
-);
-
-CREATE TABLE items (
-  id SERIAL PRIMARY KEY,
-  card_id INTEGER NOT NULL REFERENCES cards ON DELETE CASCADE,
-  description VARCHAR NOT NULL,
-  done BOOLEAN NOT NULL DEFAULT FALSE
-);
-
---
--- Insert value.
---
-
-INSERT INTO users VALUES (
-  DEFAULT,
-  'John Doe',
-  'admin@example.com',
-  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W'
-); -- Password is 1234. Generated using Hash::make('1234')
-
-INSERT INTO cards VALUES (DEFAULT, 'Things to do', 1);
-INSERT INTO items VALUES (DEFAULT, 1, 'Buy milk');
-INSERT INTO items VALUES (DEFAULT, 1, 'Walk the dog', true);
-
-INSERT INTO cards VALUES (DEFAULT, 'Things not to do', 1);
-INSERT INTO items VALUES (DEFAULT, 2, 'Break a leg');
-INSERT INTO items VALUES (DEFAULT, 2, 'Crash the car');
-*/
 
 --- Y Database ---
 
@@ -68,7 +10,7 @@ DROP TABLE if exists users CASCADE;
 DROP TABLE if exists moderators CASCADE;
 DROP TABLE if exists admins CASCADE;
 DROP TABLE if exists posts CASCADE;
-DROP TABLE if exists messages CASCADE;
+DROP TABLE IF EXISTS messages CASCADE;
 DROP TABLE if exists comments CASCADE;
 DROP TABLE if exists friend_requests CASCADE;
 DROP TABLE if exists groups CASCADE;
@@ -79,8 +21,6 @@ DROP TABLE if exists user_likes_posts CASCADE;
 DROP TABLE if exists user_likes_comments CASCADE;
 DROP TABLE if exists post_removals CASCADE;
 DROP TABLE if exists memberships CASCADE; 
-
-
 
 
 
@@ -103,17 +43,22 @@ CREATE TYPE notification_type_enum AS ENUM ('liked_comment',
 
 --USERS
 
-CREATE TABLE users
-(
-    id SERIAL PRIMARY KEY,
-    username character varying(256),
-    password character varying(256) CONSTRAINT nn_users_password  NOT NULL,
-    email character varying(256) CONSTRAINT uk_users_email UNIQUE
-				CONSTRAINT nn_users_email NOT NULL,
-    name character varying(256)  CONSTRAINT nn_users_name NOT NULL,
-    bio character varying(256),
-    remember_token VARCHAR
+--
+-- Create tables.
+--
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR NOT NULL,
+  name VARCHAR NOT NULL,
+  email VARCHAR UNIQUE NOT NULL,
+  password VARCHAR NOT NULL,
+  bio character varying(256),
+  age INTEGER CONSTRAINT nn_users_age NOT NULL,
+  img character varying(256),
+  priv BOOLEAN DEFAULT TRUE,
+  remember_token VARCHAR
 );
+
 
 --MODERATOR
 
@@ -157,6 +102,7 @@ CREATE TABLE messages
     img character varying(256) ,
     CHECK (content IS NOT NULL OR img IS NOT NULL)
 );
+
 
 --COMMENT
 
@@ -282,11 +228,36 @@ CREATE TABLE memberships
 INSERT INTO users VALUES (
   DEFAULT,
   'John Doe',
-  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
-  'admin@example.com',
   'John',
-  'Funny person'
+  'admin@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
+  'Funny person',
+  29,
+  DEFAULT
 ); -- Password is 1234. Generated using Hash::make('1234')
+
+INSERT INTO users VALUES (
+  DEFAULT,
+  'Diogo',
+  'Diogo',
+  'diogo@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
+  'Yo',
+  21,
+  DEFAULT
+); -- Password is 1234. Generated using Hash::make('1234')
+
+INSERT INTO users VALUES (
+  DEFAULT,
+  'a',
+  'A',
+  'a@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
+  'a',
+  18,
+  DEFAULT
+); -- Password is 1234. Generated using Hash::make('1234')
+
 
 INSERT INTO posts VALUES (
     DEFAULT,
@@ -295,9 +266,29 @@ INSERT INTO posts VALUES (
     '2023-08-08'
 );
 
-INSERT INTO posts VALUES (
-    DEFAULT,
-    2, 
-    'My second post,is a very large text completo de varios coisas e poucas coisas', 
-    '2023-02-02'
+
+
+
+INSERT INTO messages VALUES (
+  DEFAULT, 1, 2, 'Blah1', DEFAULT, DEFAULT
+);
+
+INSERT INTO messages VALUES (
+  DEFAULT, 1, 3, 'Blah2', DEFAULT, DEFAULT
+);
+
+INSERT INTO messages VALUES (
+  DEFAULT, 2, 1, 'Blah3', DEFAULT, DEFAULT
+);
+
+INSERT INTO messages VALUES (
+  DEFAULT, 2, 3, 'Blah4', DEFAULT, DEFAULT
+);
+
+INSERT INTO messages VALUES (
+  DEFAULT, 3, 1, 'Blah5', DEFAULT, DEFAULT
+);
+
+INSERT INTO messages VALUES (
+  DEFAULT, 3, 2, 'Blah6', DEFAULT, DEFAULT
 );
