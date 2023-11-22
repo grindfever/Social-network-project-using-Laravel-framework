@@ -12,6 +12,8 @@ use App\Http\Controllers\ProfileController;
 
 use App\Http\Controllers\DashBoardController;
 
+use App\Http\Controllers\SearchController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -70,3 +72,8 @@ Route::controller(MessageController::class)->group(function () {
     Route::post('/messages/{id}', 'create');
 });
 
+
+//Search
+Route::controller(SearchController::class)->group(function () {
+    Route::get('/search','search');
+});
