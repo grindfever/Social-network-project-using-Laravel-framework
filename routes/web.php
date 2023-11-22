@@ -24,7 +24,7 @@ use App\Http\Controllers\DashBoardController;
 */
 
 // Home
-Route::redirect('/', '/login');
+Route::redirect('/', '/dashboard');
 
 // Dashboard
 Route::controller(DashBoardController::class)->group(function () {

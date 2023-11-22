@@ -21,7 +21,7 @@ class DashBoardController extends Controller
         $post = Post::findOrFail($id);
 
         // Check if the current user can see (show) the post.
-        $this->authorize('show', $post);  
+        //$this->authorize('show', $post);  
 
         // Use the pages.post template to display the post.
         return view('pages.post', [
@@ -34,28 +34,18 @@ class DashBoardController extends Controller
      */
     public function list()
     {
-        // Check if the user is logged in.
-        if (!Auth::check()) {
-            // Not logged in, redirect to login.
-            return redirect('/login');
+        
+        $post = Post::all();
 
-        } else {
-            // The user is logged in.
+        // Check if the current user can list the cards.
+        //$this->authorize('list', Post::class);
 
-            // Get posts for user ordered by id.
-            $post = Auth::user()->posts()->orderBy('id')->get();
+        // The current user is authorized to list cards.
 
-            // Check if the current user can list the cards.
-            $this->authorize('list', Post::class);
-
-            // The current user is authorized to list cards.
-
-            // Use the pages.dashboard template to display all posts.
-            return view('pages.dashboard', [
-                'post' => $post
-            ]);
-
-        }
+        // Use the pages.dashboard template to display all posts.
+        return view('pages.dashboard', [
+            'post' => $post,
+        ]);
     }
 
     /**
