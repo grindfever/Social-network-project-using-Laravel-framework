@@ -48,17 +48,16 @@ CREATE TYPE notification_type_enum AS ENUM ('liked_comment',
 --
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
-  username VARCHAR NOT NULL,
+  username VARCHAR,
   name VARCHAR NOT NULL,
   email VARCHAR UNIQUE NOT NULL,
   password VARCHAR NOT NULL,
   bio character varying(256),
-  age INTEGER CONSTRAINT nn_users_age NOT NULL,
+  age INTEGER, --CONSTRAINT nn_users_age NOT NULL,
   img character varying(256),
   priv BOOLEAN DEFAULT TRUE,
   remember_token VARCHAR
 );
-
 
 --MODERATOR
 
@@ -257,6 +256,7 @@ INSERT INTO users VALUES (
   18,
   DEFAULT
 ); -- Password is 1234. Generated using Hash::make('1234')
+
 
 
 INSERT INTO posts VALUES (
