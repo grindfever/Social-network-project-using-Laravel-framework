@@ -2,8 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\CardController;
-use App\Http\Controllers\ItemController;
+use App\Http\Controllers\MessageController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -53,4 +52,11 @@ Route::controller(RegisterController::class)->group(function () {
     Route::post('/register', 'register');
 });
 
+
+// Messages
+Route::controller(MessageController::class)->group(function () {
+    Route::get('/messages', 'list_chats');
+    Route::get('/messages/{id}','chat');
+    Route::post('/messages/{id}', 'create');
+});
 

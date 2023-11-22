@@ -138,10 +138,47 @@ function sendUpdatePostRequest(updatedContent, content) {
       let deleter = new_post.querySelector('button.delete-post');
       deleter.addEventListener('click', sendDeletePostRequest);
 
-  
 
       return new_post;
   } 
   
+  function sendCreateMessageRequest(event){
+    let id = this.closest('article').getAttribute('data-id');
+    let name = this.querySelector('input[name=content]').value;
+
+    if (name != '')
+      sendAjaxRequest('post', '/messages/'+id, {content: name}, messageAddedHandler);
+
+    event.preventDefault();
+  }
+
+
+  function messageAddedHandler(){
+    if (this.status != 200) window.location = '/';
+    let message = JSON.parse(this.responseText);
+    let new_message = createMessage(message);
+
+    let form = document.querySelector('article.message form.new_message');
+    form.querySelector('[type=text]').value="";
+
+    let article = form.parentElement;
+    let section= article.parentElement;
+    section.insertBefore(new_message, article);
+
+    new_message.querySelector('[type=text]').focus();
+  }
+
+
+  function createMessage(message) {
+    let new_message = document.createElement('article');
+    new_message.classList.add('message');
+
+    new_message.innerHTML = `
+      <li>${message.content}</li>
+    `;
+
+    return new_message;
+}
+
   addEventListeners();
   
