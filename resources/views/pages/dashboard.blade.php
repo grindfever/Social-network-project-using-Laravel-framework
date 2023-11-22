@@ -6,14 +6,19 @@
 
     <section id="post">
         @each('partials.post', $post, 'post')
-        @if ( $guest == 0)
-        {<article class="post">
+        @guest
+        <article class="post">
+            <p> Please <a href="{{ url('/login') }}">login</a> to create a post </p>
+        @endguest
+        @auth
+        <article class="post">
             <form class="new_post" method="POST" action="/dashboard">
                 @csrf
                 <input type="text" name="content" placeholder="new post">
                 <button type="submit">Create Post</button>
             </form>
-        </article>} @endif
+        </article>
+        @endauth
     </section>
     
 @endsection

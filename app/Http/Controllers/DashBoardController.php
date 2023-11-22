@@ -21,7 +21,7 @@ class DashBoardController extends Controller
         $post = Post::findOrFail($id);
 
         // Check if the current user can see (show) the post.
-        $this->authorize('show', $post);  
+        //$this->authorize('show', $post);  
 
         // Use the pages.post template to display the post.
         return view('pages.post', [
@@ -34,16 +34,7 @@ class DashBoardController extends Controller
      */
     public function list()
     {
-        // Check if the user is logged in.
-        if (!Auth::check()) {
-            // Not logged in, redirect to login.
-         $guest = 1;
-
-        } else {
-            // The user is logged in.
-            $guest = 0;
-        }
-        // Get posts for user ordered by id.
+        
         $post = Post::all();
 
         // Check if the current user can list the cards.
@@ -53,7 +44,7 @@ class DashBoardController extends Controller
 
         // Use the pages.dashboard template to display all posts.
         return view('pages.dashboard', [
-            'post' => $post, 'guest' => $guest
+            'post' => $post,
         ]);
     }
 
