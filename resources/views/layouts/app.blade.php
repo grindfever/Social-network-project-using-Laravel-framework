@@ -25,7 +25,7 @@
             <header>
                 <h1><a href="{{ url('/dashboard') }}">Y</a></h1>
                 @if (Auth::check())
-                    <a class="button" href="{{ url('/logout') }}"> Logout </a> <a class="button" href="{{ url('/profile') }}">{{ Auth::user()->name }}</a> <a class="button" href="{{ url('/messages') }}"> Messages </a>
+                    <a class="button" href="{{ url('/logout') }}"> Logout </a> <a class="button" href="{{ url('/profile') }}">{{ Auth::user()->name }}</a> <a class="button" href="{{ url('/messages') }}"> Messages </a> <a class="button" href="{{ url('/search') }}"> Search </a>
                 @endif
             </header>
             <section id="content">
