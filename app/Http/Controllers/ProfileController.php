@@ -12,6 +12,11 @@ use App\Models\User;
 
 class ProfileController extends Controller {
     //Display Profile page
+
+    public function myProfile(){
+        $user = Auth::user();
+        return redirect('/profile/'.$user->id);
+    }
     public function show(string $id)
     {
         $user = User::findOrFail($id);

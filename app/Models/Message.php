@@ -7,9 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Card extends Model
+class Message extends Model
 {
     use HasFactory;
 
@@ -17,18 +16,15 @@ class Card extends Model
     public $timestamps  = false;
 
     /**
-     * Get the user that owns the card.
+     * Get the card where the item is included.
      */
-    public function user(): BelongsTo
+    public function sender(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'sender', 'id');
     }
 
-    /**
-     * Get the items for the card.
-     */
-    public function items(): HasMany
+    public function receiver(): BelongsTo
     {
-        return $this->hasMany(Item::class);
+        return $this->belongsTo(User::class, 'receiver', 'id');
     }
 }
