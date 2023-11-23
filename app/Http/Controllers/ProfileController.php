@@ -16,6 +16,9 @@ class ProfileController extends Controller {
     //Display Profile page
 
     public function myProfile(){
+        if(Auth::guest()){
+            return redirect('/login');
+        }
         $user = Auth::user();
         return redirect('/profile/'.$user->id);
     }
