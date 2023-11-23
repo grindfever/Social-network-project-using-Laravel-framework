@@ -4,6 +4,14 @@ info:
   title: 'Y API'
   description: 'Web Resources Specification (A7) for Y'
 
+servers:
+- url: https://lbaw23102.lbaw.fe.up.pt
+  description: Production server
+
+externalDocs:
+ description: Find more info here.
+ url: https://git.fe.up.pt/lbaw/lbaw2324/lbaw23102/-/wikis/eap
+
 tags:
   - name: 'M01: Authentication'
   - name: 'M02: Users'
