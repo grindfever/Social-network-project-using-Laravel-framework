@@ -1,9 +1,9 @@
 
 --- Y Database ---
 
-DROP SCHEMA IF EXISTS thingy CASCADE;
-CREATE SCHEMA IF NOT EXISTS thingy;
-SET search_path TO thingy;
+DROP SCHEMA IF EXISTS lbaw23102 CASCADE;
+CREATE SCHEMA IF NOT EXISTS lbaw23102;
+SET search_path TO lbaw23102;
 
 --- DROP TABLE STATEMENTS ---
 DROP TABLE if exists users CASCADE;
