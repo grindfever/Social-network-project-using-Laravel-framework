@@ -254,7 +254,7 @@ INSERT INTO users VALUES (
   '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
   'a',
   18,
-  DEFAULT
+  FALSE
 ); -- Password is 1234. Generated using Hash::make('1234')
 
 

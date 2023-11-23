@@ -22,12 +22,12 @@ class ProfileController extends Controller {
     public function show(string $id)
     {
         $user = User::findOrFail($id);
-       // Get posts for user ordered by id.
-       $post = Auth::user()->posts()->orderBy('id')->get();
+        // Get posts for user ordered by id.
+        $post = Post::where('user_id','=',$id)->orderBy('id')->get();
 
         
         if(Auth::guest()){
-            if($user->priv == TRUE) return redirect('/cards');
+            if($user->priv == TRUE) return redirect('/dashboard');
             else return view('pages.profile', ['user'=> $user]);
         }
         
