@@ -39,11 +39,10 @@
             <div class="user-info">
              <span><a href="{{ url('/profile') }}" >{{ Auth::user()->name }}</a></span>
             </div>
-            @endif
             <div class="logout">
             <a class="button" href="{{ url('/logout') }}">Logout</a>
             </div>    
-           
+            @endif
         </header1>
         <header2>
             <a class="button" href="{{ url('/search') }}"> Search </a>
