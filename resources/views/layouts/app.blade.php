@@ -26,10 +26,10 @@
         <header1>
 
             <div class="logo">
-                <a href="{{ url('/cards') }}">Thingy!</a>
+                <a href="{{ url('/dashboard') }}">Thingy!</a>
             </div>
             <div class="timeline">
-                <a href="{{ url('/timeline') }}">Timeline</a>
+                <a href="{{ url('/dashboard') }}">Timeline</a>
             </div>
             <div class="messages">
                 <a href="{{ url('/messages') }}">Messages</a>
