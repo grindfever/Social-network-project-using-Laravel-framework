@@ -2,14 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\CardController;
-use App\Http\Controllers\ItemController;
+use App\Http\Controllers\MessageController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
+use App\Http\Controllers\ProfileController;
+
 
 use App\Http\Controllers\DashBoardController;
+
+use App\Http\Controllers\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +26,7 @@ use App\Http\Controllers\DashBoardController;
 */
 
 // Home
-Route::redirect('/', '/login');
+Route::redirect('/', '/dashboard');
 
 // Dashboard
 Route::controller(DashBoardController::class)->group(function () {
@@ -54,3 +57,23 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 
+//Profile
+Route::controller(ProfileController::class)->group(function () {
+    Route::get('/profile', 'myProfile');
+    Route::get('/profile/{id}', 'show');
+});
+
+
+
+// Messages
+Route::controller(MessageController::class)->group(function () {
+    Route::get('/messages', 'list_chats');
+    Route::get('/messages/{id}','chat');
+    Route::post('/messages/{id}', 'create');
+});
+
+
+//Search
+Route::controller(SearchController::class)->group(function () {
+    Route::get('/search','search');
+});

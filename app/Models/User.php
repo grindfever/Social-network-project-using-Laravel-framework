@@ -52,13 +52,35 @@ class User extends Authenticatable
     /**
      * Get the cards for a user.
      */
-    public function cards(): HasMany
+
+    public function messages()
     {
-        return $this->hasMany(Card::class);
+        $sentMessages = $this->sentMessages();
+        $receivedMessages = $this->receivedMessages();
+        $messages = array();
+        foreach ($sentMessages as $message) {   
+            $messages[] = $message;
+        }
+        foreach ($receivedMessages as $message) {   
+            $messages[] = $message;
+        }
+        return $messages;
+    } 
+    public function sentMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'sender');  
     }
-    /**
-     * Get the posts for a user
-     */
+
+    public function receivedMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'receiver');  
+    }
+
+    public function chats(){
+        return $this->hasMany(Message::class,'sender', 'receiver');
+    }
+    
+
     public  function posts(): HasMany
     {
         return $this->hasMany(Post::class);

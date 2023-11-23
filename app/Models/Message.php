@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Item extends Model
+class Message extends Model
 {
     use HasFactory;
 
@@ -18,8 +18,13 @@ class Item extends Model
     /**
      * Get the card where the item is included.
      */
-    public function card(): BelongsTo
+    public function sender(): BelongsTo
     {
-        return $this->belongsTo(Card::class);
+        return $this->belongsTo(User::class, 'sender', 'id');
+    }
+
+    public function receiver(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'receiver', 'id');
     }
 }

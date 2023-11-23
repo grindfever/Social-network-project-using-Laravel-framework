@@ -46,9 +46,7 @@
            
         </header1>
         <header2>
-        <div class="Search">
-           <p>add search bar here</p>
-        </div>
+            <a class="button" href="{{ url('/search') }}"> Search </a>
         <div class="Profile">
                 <a href="{{ url('/profile') }}">MyProfile</a>
                 
