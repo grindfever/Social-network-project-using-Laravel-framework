@@ -21,8 +21,10 @@ tags:
   - name: 'M05: Administration'
 
 paths:
+
   /login:
     get:
+      operationId: R101
       summary: 'R101: Login Form'
       description: 'Provide login form. Access: GST'
       tags:
@@ -31,10 +33,12 @@ paths:
         '200':
           description: 'Ok. Show Log-in UI'
     post:
+      operationId: R102
       summary: 'R102: Login Action'
       description: 'Processes the login form submission. Access: GST'
       tags:
         - 'M01: Authentication'
+
       requestBody:
         required: true
         content:
@@ -42,12 +46,12 @@ paths:
             schema:
               type: object
               properties:
-                username:
+                email:
                   type: string
                 password:
                   type: string
               required:
-                - username
+                - email
                 - password
       responses:
         '302':
@@ -64,7 +68,9 @@ paths:
                   description: 'Failed authentication. Redirect to login form.'
                   value: '/login'
   /logout:
+
     post:
+      operationId: R103
       summary: 'R103: Logout Action'
       description: 'Logout the current authenticated user. Access: USR, ADM'
       tags:
@@ -80,8 +86,10 @@ paths:
                 302Success:
                   description: 'Successful logout. Redirect to login form.'
                   value: '/login'
+
   /register:
     get:
+      operationId: R104
       summary: 'R104: Register Form'
       description: 'Provide new user registration form. Access: GST'
       tags:
@@ -89,11 +97,14 @@ paths:
       responses:
         '200':
           description: 'Ok. Show Sign-Up UI'
+    
     post:
+      operationId: R105
       summary: 'R105: Register Action'
       description: 'Processes the new user registration form submission. Access: GST'
       tags:
         - 'M01: Authentication'
+
       requestBody:
         required: true
         content:
@@ -129,6 +140,7 @@ paths:
                   value: '/register'
   /dashboard:
     get:
+      operationId: R106
       summary: 'R106: View user dashboard'
       description: 'Show the user dashboard. Access: USR'
       tags:
@@ -137,6 +149,7 @@ paths:
         '200':
           description: 'Ok. Show User Dashboard UI'
     post:
+      operationId: R107
       summary: 'R107: Create Post'
       description: 'Create a new post. Access: USR'
       tags:
@@ -166,6 +179,7 @@ paths:
 
   /post/{post_id}:
     get:
+      operationId: R108
       summary: 'R108: View Post'
       description: 'View a specific post. Access: USR'
       tags:
@@ -180,6 +194,7 @@ paths:
         '200':
           description: 'Ok. Show Post UI'
     post:
+      operationId: R109      
       summary: 'R109: Update Post'
       description: 'Update an existing post. Access: OWN'
       tags:
@@ -213,6 +228,7 @@ paths:
                   description: 'Post updated successfully. Redirect to post.'
                   value: '/post/{post_id}'
     delete:
+      operationId: R110
       summary: 'R110: Delete Post'
       description: 'Delete an existing post. Access: OWN'
       tags:
@@ -234,8 +250,9 @@ paths:
                 302Success:
                   description: 'Post deleted successfully. Redirect to user dashboard.'
                   value: '/dashboard'
-/profile:
+  /profile:
     get:
+      operationId: R701
       summary: 'R701: View My Profile'
       description: 'View the profile of the authenticated user. Access: USR'
       tags:
@@ -246,6 +263,7 @@ paths:
 
   /profile/{user_id}:
     get:
+      operationId: R702
       summary: 'R702: View User Profile'
       description: 'View the profile of another user. Access: USR'
       tags:
@@ -262,6 +280,7 @@ paths:
 
   /messages:
     get:
+      operationId: R801
       summary: 'R801: List Chats'
       description: 'List the chats of the authenticated user. Access: USR'
       tags:
@@ -290,10 +309,11 @@ paths:
                       last_message: 'Hello, how are you?'
                     - user_id: 102
                       username: 'jane_doe'
-                      last_message: 'I'm doing well, thanks!'
-
+                      last_message: 'I am doing well, thanks!'
+ 
   /messages/{user_id}:
     get:
+      operationId: R802
       summary: 'R802: View Chat'
       description: 'View the chat with another user. Access: USR'
       tags:
@@ -342,4 +362,3 @@ paths:
                   description: 'Message sent successfully. Redirect to chat.'
                   value: '/messages/{user_id}'
 
-```
