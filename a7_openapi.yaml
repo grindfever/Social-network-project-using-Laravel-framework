@@ -1,8 +1,17 @@
 openapi: 3.0.0
+
 info:
   version: '1.0'
   title: 'Y API'
   description: 'Web Resources Specification (A7) for Y'
+
+servers:
+- url: http://lbaw23102.fe.up.pt
+  description: Production server
+
+externalDocs:
+  description: Find more info here.
+  url: https://web.fe.up.pt/~ssn/wiki/teach/lbaw/medialib/a07
 
 tags:
   - name: 'M01: Authentication'
