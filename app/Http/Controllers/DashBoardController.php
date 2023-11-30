@@ -8,6 +8,7 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Post;
+use App\Models\PostLike;
 
 
 class DashBoardController extends Controller
@@ -20,10 +21,11 @@ class DashBoardController extends Controller
      {   
         // Get the post.
         $post = Post::findOrFail($id);
-
+        $count_likes = PostLike::where('post_id', '=', $id)->get()->count();
+        
         // Use the pages.post template to display the post.
         return view('pages.post', [
-            'post' => $post
+            'post' => $post, 'count_likes' => $count_likes
         ]);
     }
 
@@ -33,10 +35,10 @@ class DashBoardController extends Controller
     public function list()
     {
         $post = Post::all();
-
+        
         // Use the pages.dashboard template to display all posts.
         return view('pages.dashboard', [
-            'post' => $post,
+            'post' => $post
         ]);
     }
 
@@ -102,16 +104,11 @@ class DashBoardController extends Controller
      *   Like a post.
      */
     public function like(Request $request, $id){
-        // Find the post.
-        $like = PostLike::find($id);
-        $post = Post::find($id);
-        $user = Auth::user();
-
-
         
-
-        $post->save();
-        return response()->json($post);
+        $like = PostLike::withCount()->where('post_id','=',$id)->get();
+        
+        $like->save();
+        return response()->json($like);
     }
 
 }

@@ -4,7 +4,7 @@
 
 @section('content')
     <section id="post">
-        @include('partials.post', ['post' => $post])
+        @include('partials.post', ['post' => $post, 'count_likes' => $count_likes])
     </section>
     @auth
     <button class="edit-post" data-post-id="{{ $post->id }}" type="submit">Edit</button>

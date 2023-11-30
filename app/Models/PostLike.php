@@ -15,7 +15,6 @@ class PostLike extends Model
     use HasFactory;
 
     public $timestamps  = false;
-
     /**
      * Get the post.
      */

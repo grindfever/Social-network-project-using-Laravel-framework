@@ -10,6 +10,7 @@ DROP TABLE if exists users CASCADE;
 DROP TABLE if exists moderators CASCADE;
 DROP TABLE if exists admins CASCADE;
 DROP TABLE if exists posts CASCADE;
+DROP TABLE if exists post_likes CASCADE;
 DROP TABLE IF EXISTS messages CASCADE;
 DROP TABLE if exists comments CASCADE;
 DROP TABLE if exists friend_requests CASCADE;
@@ -236,39 +237,11 @@ CREATE TABLE memberships
     PRIMARY KEY (possible_member, group_id)
 );
 
+--- INDEXES ---
+
 --- TRIGGERS ---
 
---TRIGGER TO UPDATE POSTS LIKES
-
--- TRIGGER01
--- A user can only like a post once, or like posts from groups to which they belong or like comment in posts from public users or users they follow (business rule BR07)
-
-CREATE FUNCTION verify_post_likes() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-   IF EXISTS (SELECT * FROM post_likes WHERE NEW.user_id = user_id AND NEW.post_id = post_id) THEN
-      RAISE EXCEPTION 'A user can only like a post once';
-   END IF;
-   IF EXISTS (SELECT * FROM post WHERE NEW.post_id = post.id AND post.group_id IS NOT NULL)
-      AND NOT EXISTS (SELECT * FROM post,member WHERE NEW.post_id = post.id AND post.group_id = member.group_id
-                  AND NEW.user_id = member.user_id) THEN
-      RAISE EXCEPTION 'A user can only like posts from groups to which they belong';
-   END IF;
-   IF EXISTS (SELECT * FROM users,post WHERE NEW.post_id = post.id AND post.owner_id = users.id AND NOT users.is_public AND post.group_id IS NULL AND NEW.user_id <> post.owner_id)
-      AND NOT EXISTS (SELECT * FROM post,follows WHERE NEW.post_id = post.id AND NEW.user_id = follows.follower_id AND follows.followed_id = post.owner_id) THEN
-      RAISE EXCEPTION 'A user can only like posts from public users or users they follow';
-   END IF;
-   RETURN NEW;
-END
-$BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER verify_post_likes
-   BEFORE INSERT OR UPDATE ON post_likes
-   FOR EACH ROW
-   EXECUTE PROCEDURE verify_post_likes();
-
-
+--- TRANSACTIONS ---
 INSERT INTO users VALUES (
   DEFAULT,
   'John Doe',
@@ -310,6 +283,13 @@ INSERT INTO posts VALUES (
     '2023-08-08'
 );
 
+INSERT INTO posts VALUES (
+    DEFAULT,
+    1, 
+    'My second post', 
+    '2023-08-08'
+);
+
 INSERT INTO messages VALUES (
   DEFAULT, 1, 2, 'Blah1', DEFAULT, DEFAULT
 );
@@ -332,4 +312,16 @@ INSERT INTO messages VALUES (
 
 INSERT INTO messages VALUES (
   DEFAULT, 3, 2, 'Blah6', DEFAULT, DEFAULT
+);
+
+INSERT INTO post_likes VALUES (
+  1,1
+);
+
+INSERT INTO post_likes VALUES (
+  1,2
+);
+
+INSERT INTO post_likes VALUES (
+  2,1
 );
