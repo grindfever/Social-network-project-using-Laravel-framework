@@ -39,9 +39,11 @@ Route::controller(DashBoardController::class)->group(function () {
  *    API
  */ 
 
+ // Posts
  Route::post('/dashboard', [DashBoardController::class, 'create']);
  Route::delete('api/post/{post_id}', [DashBoardController::class, 'delete']);
  Route::put('api/post/{post_id}', [DashBoardController::class, 'update']);
+ Route::post('api/post/{post_id}', [DashBoardController::class, 'like']);
  
 
 // Authentication

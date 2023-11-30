@@ -9,23 +9,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Post extends Model
+class PostLike extends Model
 {
+
     use HasFactory;
 
     public $timestamps  = false;
 
-     /**
-     * Get the user that owns the post.
+    /**
+     * Get the post.
      */
+    public  function post(): BelongsTo 
+    {
+        return $this->belongsTo(Post::class);
+    }
+
     public  function user(): BelongsTo 
     {
         return $this->belongsTo(User::class);
     }
-
-    public function likes(): HasMany
-    {
-        return $this->hasMany(PostLike::class);
-    }
-    
 }

@@ -32,7 +32,6 @@ class DashBoardController extends Controller
      */
     public function list()
     {
-        
         $post = Post::all();
 
         // Use the pages.dashboard template to display all posts.
@@ -69,13 +68,13 @@ class DashBoardController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Find the item.
+        // Find the post.
         $post = Post::find($id);
 
-        // Check if the current user is authorized to update this item.
+        // Check if the current user is authorized to update this post.
         $this->authorize('update', $post);
 
-        // Update the done property of the item.
+        // Update the content property of the post.
         $post->content = $request->input('content');
 
         // Save the post and return it as JSON.
@@ -98,4 +97,21 @@ class DashBoardController extends Controller
         $post->delete();
         return response()->json($post);
     }
+
+    /**
+     *   Like a post.
+     */
+    public function like(Request $request, $id){
+        // Find the post.
+        $like = PostLike::find($id);
+        $post = Post::find($id);
+        $user = Auth::user();
+
+
+        
+
+        $post->save();
+        return response()->json($post);
+    }
+
 }

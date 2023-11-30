@@ -14,60 +14,15 @@ function addEventListeners() {
     postEditor.addEventListener('click', editablePost);
   }
 
+  let postLiker = document.querySelector('button.like-post');
+  if (postLiker != null){
+    postLiker.addEventListener('click', sendLikePostRequest);
+  }
+
   let messageCreator = document.querySelector('article.message form.new_message');
   if (messageCreator != null)
     messageCreator.addEventListener('submit', sendCreateMessageRequest);
-}
-  
-function editablePost(event) {
-  let content = document.querySelector('div.content');
 
-  if (!content.isContentEditable) {
-    content.setAttribute('contenteditable', 'true');
-    content.focus();
-    content.style.borderColor = 'red';
-    // Create a new button element
-    let saveButton = document.createElement('button');
-    // Set button properties (e.g., text content, attributes, event listeners)
-    saveButton.textContent = 'Save'; // Set button text
-    saveButton.setAttribute('class', 'save-button'); // Set button class
-    saveButton.addEventListener('click', function () {
-      // Add functionality for when the button is clicked
-      console.log('post saved');
-      let updatedContent = content.textContent.trim();
-
-      // Send AJAX request to update post
-      sendUpdatePostRequest(updatedContent, content);
-    });
-    // Find the reference button (the button above which you want to insert the new button)
-    let referenceButton = document.querySelector('.edit-post'); // Replace '.reference-button' with your reference button selector
-
-    // Insert the new button below the reference button using insertAdjacentElement
-    referenceButton.insertAdjacentElement('afterend', saveButton);
-  }
-  event.preventDefault();
-}
-
-function sendUpdatePostRequest(updatedContent, content) {
-  let id = content.closest('article.post').getAttribute('data-id');
-  let data = { content: updatedContent };
-
-  sendAjaxRequest('put', '/api/post/' + id, data, function() {
-      // Handler for the response after the content is updated
-      if (this.status === 200) {
-          // Content successfully updated, update the UI
-          content.contentEditable = false; // Set content back to non-editable
-
-          // Remove the 'Save' button
-          let saveButton = content.nextElementSibling;
-          if (saveButton && saveButton.classList.contains('save-button')) {
-              saveButton.remove();
-          }
-      } else {
-          // Handle error, for example:
-          console.error('Failed to update content.');
-      }
-  });
 }
 
   function encodeForAjax(data) {
@@ -87,6 +42,62 @@ function sendUpdatePostRequest(updatedContent, content) {
     request.send(encodeForAjax(data));
   }
   
+  function editablePost(event) {
+    let content = document.querySelector('div.content');
+
+    if (!content.isContentEditable) {
+      content.setAttribute('contenteditable', 'true');
+      content.focus();
+      content.style.borderColor = 'red';
+      // Create a new button element
+      let saveButton = document.createElement('button');
+      // Set button properties (e.g., text content, attributes, event listeners)
+      saveButton.textContent = 'Save'; // Set button text
+      saveButton.setAttribute('class', 'save-button'); // Set button class
+      saveButton.addEventListener('click', function () {
+        // Add functionality for when the button is clicked
+        console.log('post saved');
+        let updatedContent = content.textContent.trim();
+
+        // Send AJAX request to update post
+        sendUpdatePostRequest(updatedContent, content);
+      });
+      // Find the reference button (the button above which you want to insert the new button)
+      let referenceButton = document.querySelector('.edit-post'); // Replace '.reference-button' with your reference button selector
+
+      // Insert the new button below the reference button using insertAdjacentElement
+      referenceButton.insertAdjacentElement('afterend', saveButton);
+    }
+    event.preventDefault();
+  }
+
+  function sendUpdatePostRequest(updatedContent, content) {
+    let id = content.closest('article.post').getAttribute('data-id');
+    let data = { content: updatedContent };
+
+    sendAjaxRequest('put', '/api/post/' + id, data, function() {
+        // Handler for the response after the content is updated
+        if (this.status === 200) {
+            // Content successfully updated, update the UI
+            content.contentEditable = false; // Set content back to non-editable
+
+            // Remove the 'Save' button
+            let saveButton = content.nextElementSibling;
+            if (saveButton && saveButton.classList.contains('save-button')) {
+                saveButton.remove();
+            }
+        } else {
+            // Handle error, for example:
+            console.error('Failed to update content.');
+        }
+    });
+  }
+
+  function sendLikePostRequest(event) {
+    let id = this.closest('article').getAttribute('data-id');
+    sendAjaxRequest('post', '/api/post/' + id, null, postLikedHandler);
+  }
+
   function sendDeletePostRequest(event) {
     let id = this.closest('article').getAttribute('data-id');
     
@@ -102,6 +113,15 @@ function sendUpdatePostRequest(updatedContent, content) {
     event.preventDefault();
   }
   
+  function postLikedHandler() {
+    if (this.status != 200) window.location = '/';
+    let post = JSON.parse(this.responseText);
+    console.log(post);
+    let likeButton = document.querySelector('button.like-post');
+    likeButton.textContent = post.likes++;
+    console.log(likeButton.textContent);
+  }
+
   function postDeletedHandler() {
     if (this.status != 200) window.location = '/';
     let post = JSON.parse(this.responseText);
@@ -170,8 +190,6 @@ function sendUpdatePostRequest(updatedContent, content) {
 
   }
 
-
-
   function createMessage(message) {
     let new_message = document.createElement('article');
     new_message.classList.add('message');
@@ -180,7 +198,7 @@ function sendUpdatePostRequest(updatedContent, content) {
       <li>${message.content}</li>
     `;
     return new_message;
-}
+  }
 
   addEventListeners();
   

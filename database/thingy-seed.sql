@@ -82,8 +82,21 @@ CREATE TABLE posts
 				   CONSTRAINT nn_posts_userid NOT NULL,
     content character varying(512) ,
     date timestamp(0) without time zone CONSTRAINT nn_posts_date NOT NULL DEFAULT now(),
+    public boolean NOT NULL DEFAULT TRUE,
+    likes integer DEFAULT 0,
     img character varying(256),
     CHECK (content IS NOT NULL OR img IS NOT NULL)
+);
+
+--Post likes
+
+CREATE TABLE post_likes
+(
+    post_id INTEGER CONSTRAINT fk_post_likes_post_id REFERENCES posts(id) ON DELETE CASCADE ON UPDATE CASCADE
+            CONSTRAINT nn_post_likes_post_id NOT NULL,
+    user_id INTEGER CONSTRAINT fk_post_likes_user_id REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+            CONSTRAINT nn_post_likes_user_id NOT NULL,
+    PRIMARY KEY (post_id, user_id)
 );
 
 --MESSAGE
@@ -206,7 +219,6 @@ CREATE TABLE post_removals
 				    CONSTRAINT nn_post_removal_moderator NOT NULL,
     reason character varying(128) CONSTRAINT nn_post_removal_reason NOT NULL,
     date timestamp(0) without time zone CONSTRAINT nn_post_removal_date NOT NULL
-
 );
 
 --MEMBERSHIP
@@ -223,6 +235,39 @@ CREATE TABLE memberships
 				 CONSTRAINT nn_membership_member NOT NULL,
     PRIMARY KEY (possible_member, group_id)
 );
+
+--- TRIGGERS ---
+
+--TRIGGER TO UPDATE POSTS LIKES
+
+-- TRIGGER01
+-- A user can only like a post once, or like posts from groups to which they belong or like comment in posts from public users or users they follow (business rule BR07)
+
+CREATE FUNCTION verify_post_likes() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+   IF EXISTS (SELECT * FROM post_likes WHERE NEW.user_id = user_id AND NEW.post_id = post_id) THEN
+      RAISE EXCEPTION 'A user can only like a post once';
+   END IF;
+   IF EXISTS (SELECT * FROM post WHERE NEW.post_id = post.id AND post.group_id IS NOT NULL)
+      AND NOT EXISTS (SELECT * FROM post,member WHERE NEW.post_id = post.id AND post.group_id = member.group_id
+                  AND NEW.user_id = member.user_id) THEN
+      RAISE EXCEPTION 'A user can only like posts from groups to which they belong';
+   END IF;
+   IF EXISTS (SELECT * FROM users,post WHERE NEW.post_id = post.id AND post.owner_id = users.id AND NOT users.is_public AND post.group_id IS NULL AND NEW.user_id <> post.owner_id)
+      AND NOT EXISTS (SELECT * FROM post,follows WHERE NEW.post_id = post.id AND NEW.user_id = follows.follower_id AND follows.followed_id = post.owner_id) THEN
+      RAISE EXCEPTION 'A user can only like posts from public users or users they follow';
+   END IF;
+   RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER verify_post_likes
+   BEFORE INSERT OR UPDATE ON post_likes
+   FOR EACH ROW
+   EXECUTE PROCEDURE verify_post_likes();
+
 
 INSERT INTO users VALUES (
   DEFAULT,
@@ -258,16 +303,12 @@ INSERT INTO users VALUES (
 ); -- Password is 1234. Generated using Hash::make('1234')
 
 
-
 INSERT INTO posts VALUES (
     DEFAULT,
     1, 
     'My first post', 
     '2023-08-08'
 );
-
-
-
 
 INSERT INTO messages VALUES (
   DEFAULT, 1, 2, 'Blah1', DEFAULT, DEFAULT
