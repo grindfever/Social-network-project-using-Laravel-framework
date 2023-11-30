@@ -70,7 +70,10 @@ CREATE TABLE moderators
 
 CREATE TABLE admins
 (
-    id INTEGER PRIMARY KEY CONSTRAINT fk_admin_username REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+  id SERIAL,
+  email VARCHAR UNIQUE NOT NULL,
+  password VARCHAR NOT NULL,
+  remember_token VARCHAR
 );
 
 --POST
@@ -291,4 +294,11 @@ INSERT INTO messages VALUES (
 
 INSERT INTO messages VALUES (
   DEFAULT, 3, 2, 'Blah6', DEFAULT, DEFAULT
+);
+
+
+INSERT INTO admins VALUES (
+  DEFAULT,
+  'm@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W'
 );

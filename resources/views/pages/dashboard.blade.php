@@ -6,11 +6,11 @@
 
     <section id="post">
         @each('partials.post', $post, 'post')
-        @guest
+        @guest('admin')
         <article class="post">
             <p> Please <a href="{{ url('/login') }}">login</a> to create a post </p>
         @endguest
-        @auth
+        @auth ('web')
         <article class="post">
             <form class="new_post" method="POST" action="/dashboard">
                 @csrf

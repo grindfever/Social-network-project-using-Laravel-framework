@@ -35,14 +35,19 @@
                 <a href="{{ url('/messages') }}">Messages</a>
             </div>
             
-            @if (Auth::check())
+            @auth('web')
             <div class="user-info">
              <span><a href="{{ url('/profile') }}" >{{ Auth::user()->name }}</a></span>
             </div>
             <div class="logout">
             <a class="button" href="{{ url('/logout') }}">Logout</a>
             </div>    
-            @endif
+            @endauth
+            @auth('admin')
+            <div class="logout">
+            <a class="button" href="{{ url('/logout') }}">Logout</a>
+            </div>    
+            @endauth
         </header1>
         <header2>
             <a class="button" href="{{ url('/search') }}"> Search </a>

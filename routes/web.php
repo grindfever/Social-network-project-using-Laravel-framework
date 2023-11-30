@@ -14,6 +14,8 @@ use App\Http\Controllers\DashBoardController;
 
 use App\Http\Controllers\SearchController;
 
+use App\Http\Controllers\AdminController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -77,3 +79,13 @@ Route::controller(MessageController::class)->group(function () {
 Route::controller(SearchController::class)->group(function () {
     Route::get('/search','search');
 });
+
+
+//Admin
+Route::controller(AdminController::class)->group(function () {
+    Route::get('/admin','showDashboard');    
+    Route::get('/admin/dashboard', 'showDashboard');
+});
+
+
+Route::get('/teste', function(){return view('pages.teste');});

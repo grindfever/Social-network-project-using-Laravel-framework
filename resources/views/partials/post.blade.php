@@ -3,7 +3,7 @@
         <h2><a href="/post/{{ $post->id }}">{{ $post->user->name }}</a></h2>
     </header>
     <div class="content">{{$post->content}}</div>
-    @auth
+    @auth('admin')
     <button class="delete-post" data-post-id="{{ $post->id }}" type="submit">Delete</button>
     @endauth
 </article>
