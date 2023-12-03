@@ -43,8 +43,8 @@ Route::controller(DashBoardController::class)->group(function () {
  Route::post('/dashboard', [DashBoardController::class, 'create']);
  Route::delete('api/post/{post_id}', [DashBoardController::class, 'delete']);
  Route::put('api/post/{post_id}', [DashBoardController::class, 'update']);
- Route::post('api/post/{post_id}', [DashBoardController::class, 'like']);
- 
+ Route::post('api/post/{post_id}/like', [DashBoardController::class, 'like'])->middleware('auth')->name('post.like');
+ Route::post('api/post/{post_id}/unlike', [DashBoardController::class, 'unlike'])->middleware('auth')->name('post.unlike');
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {

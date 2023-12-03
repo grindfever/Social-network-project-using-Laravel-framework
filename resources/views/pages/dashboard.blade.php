@@ -3,23 +3,25 @@
 @section('title', 'DashBoard')
 
 @section('content')
-
     <section id="post">
-        @each('partials.post', $post, 'post')
+        @foreach($posts as $post)
+            @include('partials.post', ['post' => $post, 'post_likes' => $post->likes_count])
+        @endforeach
+        
         @guest
-        <article class="post">
-            <p> Please <a href="{{ url('/login') }}">login</a> to create a post </p>
+            <article class="post">
+                <p> Please <a href="{{ url('/login') }}">login</a> to create a post </p>
+            </article>
         @endguest
+        
         @auth
-        <article class="post">
-            <form class="new_post" method="POST" action="/dashboard">
-                @csrf
-                <input type="text" name="content" placeholder="new post">
-                <button type="submit">Create Post</button>
-            </form>
-        </article>
+            <article class="post">
+                <form class="new_post" method="POST" action="/dashboard">
+                    @csrf
+                    <input type="text" name="content" placeholder="new post">
+                    <button type="submit" class="btn btn-dark">Create Post</button>
+                </form>
+            </article>
         @endauth
     </section>
-    
 @endsection
-   

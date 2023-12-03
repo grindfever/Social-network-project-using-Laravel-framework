@@ -126,3 +126,26 @@ form {
     margin-left: 10px; /* Adjust as needed for spacing */
 }
 
+fw-light.nav-link.fs-6 {
+  background-color: transparent;
+  border: none;
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.fw-light.nav-link.fs-6:hover {
+  color: #ff0000;
+}
+
+.fas.fa-heart {
+  color: #ff0000;
+}
+
+.far.fa-heart {
+  color: #000;
+}
+.far.fa-heart:hover, .fas.fa-heart:hover {
+  color: #ff0000;
+}

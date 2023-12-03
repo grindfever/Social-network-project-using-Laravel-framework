@@ -14,10 +14,6 @@ function addEventListeners() {
     postEditor.addEventListener('click', editablePost);
   }
 
-  let postLiker = document.querySelector('button.like-post');
-  if (postLiker != null){
-    postLiker.addEventListener('click', sendLikePostRequest);
-  }
 
   let messageCreator = document.querySelector('article.message form.new_message');
   if (messageCreator != null)
@@ -93,14 +89,9 @@ function addEventListeners() {
     });
   }
 
-  function sendLikePostRequest(event) {
+  function sendDeletePostRequest() {
     let id = this.closest('article').getAttribute('data-id');
-    sendAjaxRequest('post', '/api/post/' + id, null, postLikedHandler);
-  }
 
-  function sendDeletePostRequest(event) {
-    let id = this.closest('article').getAttribute('data-id');
-    
     sendAjaxRequest('delete', '/api/post/' + id, null, postDeletedHandler);
   }
 
@@ -113,17 +104,9 @@ function addEventListeners() {
     event.preventDefault();
   }
   
-  function postLikedHandler() {
-    if (this.status != 200) window.location = '/';
-    let post = JSON.parse(this.responseText);
-    console.log(post);
-    let likeButton = document.querySelector('button.like-post');
-    likeButton.textContent = post.likes++;
-    console.log(likeButton.textContent);
-  }
-
   function postDeletedHandler() {
     if (this.status != 200) window.location = '/';
+    console.log(this.responseText);
     let post = JSON.parse(this.responseText);
     let article = document.querySelector('article.post[data-id="'+ post.id + '"]');
     article.remove();
@@ -199,6 +182,13 @@ function addEventListeners() {
     `;
     return new_message;
   }
+
+  // ########## LIKE BUTTON ##############
+
+ 
+  
+  
+
 
   addEventListeners();
   

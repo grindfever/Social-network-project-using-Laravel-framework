@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Post;
 use App\Models\PostLike;
@@ -21,11 +22,10 @@ class DashBoardController extends Controller
      {   
         // Get the post.
         $post = Post::findOrFail($id);
-        $count_likes = PostLike::where('post_id', '=', $id)->get()->count();
         
         // Use the pages.post template to display the post.
         return view('pages.post', [
-            'post' => $post, 'count_likes' => $count_likes
+            'post' => $post, 
         ]);
     }
 
@@ -34,13 +34,14 @@ class DashBoardController extends Controller
      */
     public function list()
     {
-        $post = Post::all();
+        $posts = Post::orderBy('id')->get();
         
         // Use the pages.dashboard template to display all posts.
         return view('pages.dashboard', [
-            'post' => $post
+            'posts' => $posts,
         ]);
     }
+    
 
     /**
      * Create a new post
@@ -99,16 +100,33 @@ class DashBoardController extends Controller
         $post->delete();
         return response()->json($post);
     }
-
-    /**
-     *   Like a post.
-     */
-    public function like(Request $request, $id){
-        
-        $like = PostLike::withCount()->where('post_id','=',$id)->get();
-        
-        $like->save();
-        return response()->json($like);
+    
+    public function like($id){
+        $liker = auth()->user();
+        $post = Post::find($id);
+    
+        if (!$liker->likes()->where('post_id', $post->id)->exists()) {
+            $liker->likes()->attach($post);
+        }
+    
+        $likesCount = $post->likes()->count(); // Calculate likes count if needed
+        return redirect()->route('DashBoard')->with('success', 'Post liked');
+       // return response()->json(['message' => 'Post liked', 'likesCount' => $likesCount], 200);
     }
-
+    
+    
+    public function unlike($id){
+        $liker = auth()->user();
+        $post = Post::find($id);
+    
+        if ($liker->likes()->where('post_id', $post->id)->exists()) {
+            $liker->likes()->detach($post);
+        }
+    
+        $likesCount = $post->likes()->count(); // Calculate likes count if needed
+        return redirect()->route('DashBoard')->with('success', 'Post unliked');
+        //return response()->json(['message' => 'Post unliked', 'likesCount' => $likesCount], 200);
+    }
+    
+    
 }

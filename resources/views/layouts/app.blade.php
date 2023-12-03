@@ -44,13 +44,15 @@
             </div>    
             @endif
         </header1>
-        <header2>
+   
+        <header2> 
             <a class="button" href="{{ url('/search') }}"> Search </a>
         <div class="Profile">
                 <a href="{{ url('/profile') }}">MyProfile</a>
                 
             </div>  
-        </header2>    
+        </header2>   
+ 
         <section id="content">
             @yield('content')
         </section>

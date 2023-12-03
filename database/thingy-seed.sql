@@ -84,7 +84,6 @@ CREATE TABLE posts
     content character varying(512) ,
     date timestamp(0) without time zone CONSTRAINT nn_posts_date NOT NULL DEFAULT now(),
     public boolean NOT NULL DEFAULT TRUE,
-    likes integer DEFAULT 0,
     img character varying(256),
     CHECK (content IS NOT NULL OR img IS NOT NULL)
 );
@@ -241,7 +240,11 @@ CREATE TABLE memberships
 
 --- TRIGGERS ---
 
+
+
 --- TRANSACTIONS ---
+
+--- DATA ---
 INSERT INTO users VALUES (
   DEFAULT,
   'John Doe',
@@ -275,20 +278,68 @@ INSERT INTO users VALUES (
   FALSE
 ); -- Password is 1234. Generated using Hash::make('1234')
 
+-- Populating users table
+INSERT INTO users VALUES (
+  DEFAULT,
+  'Emily',
+  'Emily Smith',
+  'emily@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', -- Password is 1234
+  'Coder and designer',
+  25,
+  DEFAULT
+);
+
+INSERT INTO users VALUES (
+  DEFAULT,
+  'Mark',
+  'Mark Johnson',
+  'mark@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', -- Password is 1234
+  'Travel enthusiast',
+  30,
+  DEFAULT
+);
+
+-- Add more users as needed
+
+
 
 INSERT INTO posts VALUES (
     DEFAULT,
     1, 
     'My first post', 
-    '2023-08-08'
+    '2023-08-08',
+    DEFAULT
 );
 
 INSERT INTO posts VALUES (
     DEFAULT,
     1, 
     'My second post', 
-    '2023-08-08'
+    '2023-08-08',
+    DEFAULT
 );
+
+-- Populating posts table
+INSERT INTO posts VALUES (
+    DEFAULT,
+    2, 
+    'Exploring the world', 
+    '2023-09-15',
+    DEFAULT
+);
+
+INSERT INTO posts VALUES (
+    DEFAULT,
+    3, 
+    'New coding project!', 
+    '2023-09-20',
+    DEFAULT
+);
+
+-- Add more posts as needed
+
 
 INSERT INTO messages VALUES (
   DEFAULT, 1, 2, 'Blah1', DEFAULT, DEFAULT
@@ -314,14 +365,3 @@ INSERT INTO messages VALUES (
   DEFAULT, 3, 2, 'Blah6', DEFAULT, DEFAULT
 );
 
-INSERT INTO post_likes VALUES (
-  1,1
-);
-
-INSERT INTO post_likes VALUES (
-  1,2
-);
-
-INSERT INTO post_likes VALUES (
-  2,1
-);

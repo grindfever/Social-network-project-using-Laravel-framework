@@ -52,9 +52,6 @@ class PostPolicy
       return $user->id === $post->user_id;
     }
 
-    /**
-     * Determine if a post can be updated by a user.
-     */
     public function update(User $user, Post $post): bool
     {
       // Only a post owner can update it.
