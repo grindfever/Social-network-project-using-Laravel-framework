@@ -1,79 +1,85 @@
 body, html {
   height: 100%;
   margin: 0;
-  overflow: auto;
+  padding-top:50px;/*padding igual ao tamanho do header1*/
 }
 
 main {
   display: flex;
-  height: 100px;
+  
+}
+*, *::before, *::after {
+  box-sizing: border-box; 
 }
 /*Header and components*/
 header1 {
-  background-color: #333; 
+  background-color: #000; 
   color: #fff; 
   padding: 30px;
+  padding-top:20px;
   text-align: center;
   display: flex;
   flex-direction: column;
   position: fixed;
   height:100%;
+  top:0;
+
   
 }
-
 .logo a {
   font-size: 3em;
   color: #fff;
   text-decoration: none;
   margin-bottom: 1px;
-}
 
+}
 .timeline{
   margin-top: auto;
   margin-bottom:15px;
 }
 .messages,
 .user-info{ 
-  margin: 15px 0 ; /* Adjust the margin as needed */
+  margin: 20px 0 ;
 }
+
+
 
 .button {
-
   color: #fff;
   text-decoration: none;
-  padding: 0px 10px;
+  padding: 0px 15px;
+  font-size:0.8em;
 }
-
 .button:hover {
   /* Add hover styles */
   background-color: #555;
 }
 
-/*Header2 and components*/
-header2 {
-  background-color: #333;
+
+header2{
+  background-color: #000;
   color: #fff;
-  padding-top: 40px;
-  padding-bottom: 10px;
+  position: fixed;
   text-align: center;
   display: flex;
-  position: fixed;
+  padding-top: 40px;
+  padding-bottom: 15px;
   top: 0;
-  left: 210px; /* Center horizontally */
-  width: 100vw;
-
+  right: 0;
+  left: 210px;
+  z-index: 1030;
 }
 
-
-.Search{
-  margin-left:10%;
+header2 .button {
+  margin-left: 100px; /* Adjust the value as needed */
 }
 .Profile{
+  font-size:1.5em;
   margin-left:5%;
+  padding-left: 30px;
 }
 .Profile a {
   color: #fff;
-
 }
 
 
@@ -83,7 +89,7 @@ header2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-grow: 1; /* Allow the form container to grow to fill the available space */
+
 }
 
 form {
@@ -101,9 +107,13 @@ form {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh; 
   padding-left: 50%; 
-
+  padding-top:40px;
+  height: 100%; 
+  overflow-y: auto;
+}
+#content > * {
+  margin-bottom: 10px; /* Add a bottom margin to separate elements */
 }
 #content form {
   width: 1400px;
@@ -115,14 +125,14 @@ form {
 .timeline a,
 .messages a,
 .user-info a {
-    font-size: 1.5em; /* Adjust the font size as needed */
+    font-size: 1.6em; /* Adjust the font size as needed */
     color: #fff;
     text-decoration: none;
     margin-bottom: 20px; /* Adjust as needed */
 }
 
 .user-info span {
-    font-size: 1em; /* Adjust the font size as needed */
+    font-size: 1.5em; /* Adjust the font size as needed */
     margin-left: 10px; /* Adjust as needed for spacing */
 }
 

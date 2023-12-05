@@ -5,7 +5,7 @@
 @section('content')
 
     <section id="post">
-        @each('partials.post', $post, 'post')
+        
         @guest
         <article class="post">
             <p> Please <a href="{{ url('/login') }}">login</a> to create a post </p>
@@ -19,6 +19,7 @@
             </form>
         </article>
         @endauth
+        @each('partials.post', $post, 'post')
     </section>
     
 @endsection

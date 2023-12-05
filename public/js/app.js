@@ -123,6 +123,9 @@ function sendUpdatePostRequest(updatedContent, content) {
     section.insertBefore(new_post, article);
 
     new_post.querySelector('[type=text]').focus();
+
+    let content = document.getElementById('content');
+    content.scrollTop = content.scrollHeight;
   }
   
   function createPost(post) {

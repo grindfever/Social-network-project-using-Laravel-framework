@@ -46,7 +46,7 @@
         </header1>
         <header2>
             <a class="button" href="{{ url('/search') }}"> Search </a>
-        <div class="Profile">
+            <div class="Profile">
                 <a href="{{ url('/profile') }}">MyProfile</a>
                 
             </div>  
