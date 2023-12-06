@@ -26,13 +26,16 @@
         <header1>
 
             <div class="logo">
-                <a href="{{ url('/dashboard') }}">Thingy!</a>
+                <a href="{{ url('/dashboard') }}">Y</a>
             </div>
             <div class="timeline">
                 <a href="{{ url('/dashboard') }}">Timeline</a>
             </div>
             <div class="messages">
                 <a href="{{ url('/messages') }}">Messages</a>
+            </div>
+            <div class="messages">
+                <a href="{{ url('/groups') }}">Groups</a>
             </div>
             
             @if (Auth::check())

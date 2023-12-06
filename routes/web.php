@@ -13,6 +13,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashBoardController;
 
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\GroupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +71,14 @@ Route::controller(MessageController::class)->group(function () {
     Route::get('/messages', 'list_chats');
     Route::get('/messages/{id}','chat');
     Route::post('/messages/{id}', 'create');
+});
+
+// Groups
+Route::controller(GroupController::class)->group(function (){
+    Route::get('/groups', 'showGroups');
+    Route::get('/groups/{id}', 'showGroup');
+    Route::get('/create-group', 'showGroupCreationForm');
+    Route::post('/create-group', 'createGroup');
 });
 
 
