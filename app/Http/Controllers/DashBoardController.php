@@ -38,7 +38,7 @@ class DashBoardController extends Controller
         
         // Use the pages.dashboard template to display all posts.
         return view('pages.dashboard', [
-            'posts' => $posts,
+            'posts' => $posts
         ]);
     }
     

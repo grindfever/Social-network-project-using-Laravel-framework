@@ -5,7 +5,7 @@
 @section('content')
     <section id="post">
         @foreach($posts as $post)
-            @include('partials.post', ['post' => $post, 'post_likes' => $post->likes_count])
+            @include('partials.post', ['post' => $post])
         @endforeach
         
         @guest
@@ -23,6 +23,5 @@
                 </form>
             </article>
         @endauth
-        @each('partials.post', $post, 'post')
     </section>
 @endsection
