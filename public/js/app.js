@@ -143,6 +143,7 @@ function addEventListeners() {
 
       let deleter = new_post.querySelector('button.delete-post');
       deleter.addEventListener('click', sendDeletePostRequest);
+      
 
       return new_post;
   } 

@@ -126,26 +126,35 @@ form {
     margin-left: 10px; /* Adjust as needed for spacing */
 }
 
-fw-light.nav-link.fs-6 {
-  background-color: transparent;
-  border: none;
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-  padding: 0;
+
+
+.article.post {
+  /* Add your styling here */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.fw-light.nav-link.fs-6:hover {
-  color: #ff0000;
+.article.post h2 {
+  /* Styles for post title */
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
 }
 
-.fas.fa-heart {
-  color: #ff0000;
+.article.post p {
+  /* Styles for post content */
+  font-size: 16px;
+  line-height: 1.5;
+  color: #555;
 }
 
-.far.fa-heart {
-  color: #000;
-}
-.far.fa-heart:hover, .fas.fa-heart:hover {
-  color: #ff0000;
+.article.post .post-footer {
+  /* Styles for post footer, e.g., like, comment, share buttons */
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
 }
