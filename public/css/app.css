@@ -82,34 +82,15 @@ header2 .button {
   color: #fff;
 }
 
-
-
-
-.form-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-}
-
-form {
-  text-align: center;
-  max-width: 400px; /* Adjust as needed */
-  width: 100%;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
 /* Add your existing form styles here... */
 
 #content {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-left: 50%; 
+  padding-left:230px;
   padding-top:40px;
-  height: 100%; 
+  height: 100%;
   overflow-y: auto;
 }
 #content > * {
@@ -120,7 +101,7 @@ form {
   font-size: 2em;
 }
 #content label{
-  font-size:23px;
+  font-size:16px;
 }
 .timeline a,
 .messages a,
@@ -134,5 +115,153 @@ form {
 .user-info span {
     font-size: 1.5em; /* Adjust the font size as needed */
     margin-left: 10px; /* Adjust as needed for spacing */
+}
+
+
+.form-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+form {
+  text-align: start;
+  max-width: 600px; /* Adjust as needed */
+  width: 100%;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+/*profile*/
+#profile{
+  width:100%;
+  padding-left: 100px;
+  padding-top:40px;
+}
+.profiletimeline{
+  padding-left: 100px;
+}
+#profile h3{
+  padding-right: 500px;
+  text-decoration: underline;
+}
+#profile .content{
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+#profile .user{
+  font-size: 20px;
+}
+/*dashboard*/
+.post{
+  width:100%;
+  padding-left: 230px; 
+  padding-top:40px;
+}
+.post form{
+  width:100%;
+}
+.post .content {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+/*Chatmenu*/
+#chatmenu{
+  padding-top:40px;
+  padding-left:100px;
+}
+#chatmenu ul{
+padding-top:10px;
+}
+#chatmenu li{
+  font-size: 22px;
+  padding-top:10px;
+}
+/*chat*/
+
+
+#chat {
+  padding-top: 40px;
+  margin-left: 100px;
+  display: flex;
+  flex-direction: column-reverse; /* Display messages in reverse order (new at the bottom) */
+  height: 900px;
+  width: 1000px; /* Set a fixed height for the chat container */
+  overflow-y: auto; /* Add a vertical scrollbar when content overflows */
+  border-radius: 8px;
+  border: 2px solid #ddd; /* Add a border to the chat container */
+ /* Add border radius for rounded corners */
+}
+
+.message-container {
+ width: 50%;
+  
+
+   /* Set the width for both sent and received message containers */
+}
+.message-container ul {
+  list-style-type: none; /* Remove the bullet points from the ul */
+}
+
+.message-container ul li {
+  text-decoration: none;
+}
+.message-container li {
+  font-size:20px;
+  border-radius: 8px; /* Set the width for both sent and received message containers */
+  border: 1px solid #ccc; /* Add a border to the message containers */
+  padding: 10px; /* Add padding for better spacing */
+  margin: 5px; /* Add margin for better spacing between message containers */
+  text-decoration: none;
+}
+
+.sent-messages {
+  align-self: flex-end; /* Align sent messages to the right */
+  text-align: end;
+}
+.sent-messages li{
+  background-color: #1f9bcf;
+  color:#fff;
+  
+}
+.received-messages {
+  align-self: flex-start; /* Align received messages to the left */
+}
+.received-messages li {
+  background-color: #888;
+  color:#fff; /* Align received messages to the left */
+}
+.message {
+  margin-top: 10px; /* Add some spacing between messages */
+  
+}
+
+.new_message {
+  margin-left: 100px;
+  max-width: 1000px;
+  display: flex;
+  justify-content: space-between; /* Create space between the input and the button */
+  align-items: center;
+}
+
+.new_message input {
+  flex-grow: 1; /* Allow the input to grow to fill the available space */
+  margin-right: 10px; /* Add spacing between input and button */
+  border: 1px solid #ccc; /* Add a border to the input */
+  padding: 8px; /* Add padding for better appearance */
+}
+
+#chat-page {
+  flex-direction: column; /* Change to column layout for this page */
+}
+ article button{
+  font-size:18px;
 }
 

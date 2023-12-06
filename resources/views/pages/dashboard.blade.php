@@ -14,7 +14,7 @@
         <article class="post">
             <form class="new_post" method="POST" action="/dashboard">
                 @csrf
-                <input type="text" name="content" placeholder="new post">
+                <input type="text" name="content" placeholder="What's on your mind">
                 <button type="submit">Create Post</button>
             </form>
         </article>
