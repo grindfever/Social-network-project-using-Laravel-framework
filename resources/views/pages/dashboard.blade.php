@@ -23,5 +23,6 @@
                 </form>
             </article>
         @endauth
+        @each('partials.post', $post, 'post')
     </section>
 @endsection
