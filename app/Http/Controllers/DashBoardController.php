@@ -22,7 +22,7 @@ class DashBoardController extends Controller
      {   
         // Get the post.
         $post = Post::findOrFail($id);
-        
+        //$post->comments = $post->comments()->orderBy('date', 'desc')->get();
         // Use the pages.post template to display the post.
         return view('pages.post', [
             'post' => $post, 

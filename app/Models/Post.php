@@ -30,4 +30,8 @@ class Post extends Model
         return $this->belongsToMany(User::class, 'post_likes');
     }
   
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

@@ -3,16 +3,12 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\MessageController;
-
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-
 use App\Http\Controllers\ProfileController;
-
-
 use App\Http\Controllers\DashBoardController;
-
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +22,7 @@ use App\Http\Controllers\SearchController;
 */
 
 // Home
-Route::redirect('/', '/dashboard');
+Route::redirect('/', '/dashboard')->name('home');
 
 // Dashboard
 Route::controller(DashBoardController::class)->group(function () {
@@ -45,6 +41,10 @@ Route::controller(DashBoardController::class)->group(function () {
  Route::put('api/post/{post_id}', [DashBoardController::class, 'update']);
  Route::post('api/post/{post_id}/like', [DashBoardController::class, 'like'])->middleware('auth')->name('post.like');
  Route::post('api/post/{post_id}/unlike', [DashBoardController::class, 'unlike'])->middleware('auth')->name('post.unlike');
+
+ // Comments
+
+ Route::post('api/post/{post_id}/comment', [CommentController::class, 'store'])->middleware('auth')->name('post.comment.store');
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {
