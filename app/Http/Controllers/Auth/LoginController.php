@@ -43,7 +43,7 @@ class LoginController extends Controller
         if ($exist) {
             if (Auth::guard('admin')->attempt($credentials, $request->filled('remember'))) {            
                 $request->session()->regenerate();
-                return redirect()->intended('/admin/dashboard')->with('success','Logged in.');
+                return redirect()->intended('/admin')->with('success','Logged in.');
             }
             else return back()->withErrors([
                 'email' => 'The provided credentials do not match our records of admins.',

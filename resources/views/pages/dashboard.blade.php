@@ -7,8 +7,10 @@
     <section id="post">
         @each('partials.post', $post, 'post')
         @guest('admin')
+        @guest('web')
         <article class="post">
             <p> Please <a href="{{ url('/login') }}">login</a> to create a post </p>
+        @endguest
         @endguest
         @auth ('web')
         <article class="post">

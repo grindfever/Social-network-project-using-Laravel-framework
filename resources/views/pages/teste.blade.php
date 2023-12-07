@@ -1,3 +1,7 @@
+
+
+
+
 @extends('layouts.app')
 
 @section('content')
@@ -10,10 +14,10 @@
 <h2> User </h2>
 @endauth
 
-@guest ('admin')
-<h2> guest </h2>
+@guest('admin')
+@guest('web')
+<h2> Guest </h2>
 @endguest
-
-
+@endguest
 
 @endsection

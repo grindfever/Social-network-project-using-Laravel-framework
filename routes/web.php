@@ -84,8 +84,7 @@ Route::controller(SearchController::class)->group(function () {
 //Admin
 Route::controller(AdminController::class)->group(function () {
     Route::get('/admin','showDashboard');    
-    Route::get('/admin/dashboard', 'showDashboard');
 });
 
-
+//Remover
 Route::get('/teste', function(){return view('pages.teste');});
