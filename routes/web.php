@@ -9,7 +9,7 @@ use App\Http\Controllers\Auth\RegisterController;
 
 use App\Http\Controllers\ProfileController;
 
-
+use App\Http\Controllers\GroupMessageController;
 use App\Http\Controllers\DashBoardController;
 
 use App\Http\Controllers\SearchController;
@@ -79,6 +79,12 @@ Route::controller(GroupController::class)->group(function (){
     Route::get('/groups/{group}', 'showGroup');
     Route::get('/create-group', 'showGroupCreationForm');
     Route::post('/create-group', 'createGroup');
+});
+
+// GroupChat
+Route::controller(GroupMessageController::class)->group(function (){
+    Route::get('/groups/{groupId}/chat', 'showChat');
+    Route::post('/groups/{groupId}/chat', 'sendMessage');
 });
 
 

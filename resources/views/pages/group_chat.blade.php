@@ -1,20 +1,17 @@
 @extends('layouts.app')
-<!-- Display form for creating a group -->
-<form method="post" action="{{ route('create.group') }}">
-    @csrf
-    <label for="name">Group Name:</label>
-    <input type="text" name="name" required><br>
 
-    <label for="description">Group Description:</label>
-    <textarea name="description"></textarea><br>
+@section('content')
+    <h1>Group Chat</h1>
 
-    <label for="members">Select Group Members (at least three):</label>
-    <select name="members[]" multiple required>
-        @foreach ($users as $user)
-            <option value="{{ $user->id }}">{{ $user->name }}</option>
+    <div id="chat">
+        @foreach ($group_messages as $message)
+            <p><strong>{{ $message->sender }}:</strong> {{ $message->content }}</p>
         @endforeach
-    </select><br>
+    </div>
 
-    <button type="submit">Create Group</button>
-</form>
-*/
+    <form method="post" action="/groups/{{$group->id}}/chat">
+        @csrf
+        <input type="text" name="message" placeholder="Type your message">
+        <button type="submit">Send</button>
+    </form>
+@endsection

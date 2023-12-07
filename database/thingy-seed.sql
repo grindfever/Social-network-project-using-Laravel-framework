@@ -20,7 +20,8 @@ DROP TABLE if exists user_tagged_posts CASCADE;
 DROP TABLE if exists user_likes_posts CASCADE;
 DROP TABLE if exists user_likes_comments CASCADE;
 DROP TABLE if exists post_removals CASCADE;
-DROP TABLE if exists memberships CASCADE; 
+DROP TABLE if exists memberships CASCADE;
+DROP TABLE if exists group_messages CASCADE;  
 
 
 
@@ -224,6 +225,21 @@ CREATE TABLE memberships
     PRIMARY KEY (possible_member, group_id)
 );
 
+--GROUP MESSAGES
+CREATE TABLE group_messages
+(
+    id SERIAL PRIMARY KEY,
+    group_id INTEGER CONSTRAINT fk_group_message_group_id REFERENCES groups(id) ON DELETE CASCADE ON UPDATE CASCADE
+                 CONSTRAINT nn_group_message_group_id NOT NULL,
+    sender INTEGER CONSTRAINT fk_group_message_sender REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+                 CONSTRAINT nn_group_message_sender NOT NULL,
+    content character varying(128),
+    date timestamp(0) without time zone CONSTRAINT nn_group_message_date NOT NULL DEFAULT now(),
+    viewed boolean DEFAULT FALSE,
+    img character varying(256) ,
+    CHECK (content IS NOT NULL OR img IS NOT NULL)
+);
+
 INSERT INTO users VALUES (
   DEFAULT,
   'John Doe',
@@ -291,4 +307,53 @@ INSERT INTO messages VALUES (
 
 INSERT INTO messages VALUES (
   DEFAULT, 3, 2, 'Blah6', DEFAULT, DEFAULT
+);
+
+INSERT INTO groups VALUES (
+    DEFAULT,
+    1, 
+    'Loucos', 
+    'os mais loucos do leic'
+);
+
+INSERT INTO memberships VALUES (
+    1,
+    1,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    1
+);
+
+INSERT INTO memberships VALUES (
+    2,
+    1,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    1
+);
+
+INSERT INTO memberships VALUES (
+    3,
+    1,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    1
+);
+
+INSERT INTO group_messages VALUES (
+  DEFAULT, 1, 1, 'primeira', DEFAULT, DEFAULT
+);
+
+INSERT INTO group_messages VALUES (
+  DEFAULT, 1, 2, 'segunda', DEFAULT, DEFAULT
+);
+
+INSERT INTO group_messages VALUES (
+  DEFAULT, 1, 3, 'terceira', DEFAULT, DEFAULT
 );
