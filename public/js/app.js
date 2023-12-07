@@ -188,7 +188,7 @@ function addEventListeners() {
   }
 
   // ########## LIKE BUTTON ##############
-  /*
+  
   document.addEventListener('DOMContentLoaded', function() {
     var likeButton = document.querySelector('.like-post');
     console.log(1);
@@ -199,6 +199,23 @@ function addEventListeners() {
         });
     }
   });
+
+  document.querySelectorAll('.like-count').forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        //event.preventDefault();
+        this.classList.toggle('liked');
+        var icon = this.querySelector('span'); // Select the span element
+        if (this.classList.contains('liked')) {
+            // Perform like action
+            icon.classList.remove('far');
+            icon.classList.add('fas', 'fa-heart');
+        } else {
+            // Perform unlike action
+            icon.classList.remove('fas', 'fa-heart');
+            icon.classList.add('far', 'fa-heart');
+        }
+    });
+  });
  
   function likePost(postId) {
     console.log(2);
@@ -207,10 +224,10 @@ function addEventListeners() {
   }
 
   function handleLikeResponse() {
-    console.log(3);
+    
     if (this.status >= 200 && this.status < 400) {
       let data = JSON.parse(this.responseText);
-      // Update the like count on the page
+    
       var likeCountElement = document.querySelector('.like-count[data-post-id="' + data.id + '"]');
       if (likeCountElement) {
         likeCountElement.textContent = data.likeCount;
@@ -220,7 +237,5 @@ function addEventListeners() {
       console.error('Error:', this.status, this.statusText);
     }
   }
-
-  */
   addEventListeners();
   
