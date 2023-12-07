@@ -135,6 +135,7 @@ fw-light.nav-link.fs-6 {
   padding: 0;
 }
 
+
 .fw-light.nav-link.fs-6:hover {
   color: #ff0000;
 }
@@ -147,5 +148,22 @@ fw-light.nav-link.fs-6 {
   color: #000;
 }
 .far.fa-heart:hover, .fas.fa-heart:hover {
+  color: #ff0000;
+}
+
+.like-count {
+  background-color:transparent;
+  border: none;
+  color:black;
+  font-size: 24px;
+}
+
+
+
+.like-count:focus {
+  outline: none;
+}
+
+.like-count:hover .fas.fa-heart, .like-count:hover .far.fa-heart {
   color: #ff0000;
 }

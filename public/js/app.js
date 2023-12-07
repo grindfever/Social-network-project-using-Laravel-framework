@@ -184,11 +184,39 @@ function addEventListeners() {
   }
 
   // ########## LIKE BUTTON ##############
-
+  /*
+  document.addEventListener('DOMContentLoaded', function() {
+    var likeButton = document.querySelector('.like-post');
+    console.log(1);
+    if (likeButton) {
+        likeButton.addEventListener('click', function(event) {
+            var postId = event.target.getAttribute('data-post-id');
+            likePost(postId);
+        });
+    }
+  });
  
-  
-  
+  function likePost(postId) {
+    console.log(2);
+    let data = { id: postId };
+    sendAjaxRequest('post', '/post/like/' + postId, data, handleLikeResponse);
+  }
 
+  function handleLikeResponse() {
+    console.log(3);
+    if (this.status >= 200 && this.status < 400) {
+      let data = JSON.parse(this.responseText);
+      // Update the like count on the page
+      var likeCountElement = document.querySelector('.like-count[data-post-id="' + data.id + '"]');
+      if (likeCountElement) {
+        likeCountElement.textContent = data.likeCount;
+      }
+      console.log(data.message);
+    } else {
+      console.error('Error:', this.status, this.statusText);
+    }
+  }
 
+  */
   addEventListeners();
   

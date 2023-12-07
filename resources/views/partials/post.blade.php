@@ -6,19 +6,19 @@
    
     @auth
         <button class="delete-post" data-post-id="{{ $post->id }}" type="submit">Delete</button>
-        <div class ="like-post">
+        <div class="like-post">
             @if (Auth::user()->likesPost($post))
-            <form action="{{ route('post.unlike', $post->id)}}" method="POST">
+            {{--<form action="{{ route('post.unlike', $post->id)}}" method="POST">--}}
                 @csrf
-                <button type="submit" class="like-count"> <span class="fas fa-heart me-1">
+                <button type="submit" class="like-count liked"> <span class="fas fa-heart me-1">
                     </span> {{ $post->likes()->count() }} </button>
-            </form>
+            {{--</form>--}}
             @else
-            <form action="{{ route('post.like', $post->id)}}" method="POST">
+            {{--<form action="{{ route('post.like', $post->id)}}" method="POST">--}}
                 @csrf
                 <button type="submit" class="like-count"> <span class="far fa-heart me-1">
                     </span> {{ $post->likes()->count() }} </button>
-            </form>
+            {{--</form>--}}
             @endif
         </div>
     @endauth
@@ -27,3 +27,23 @@
     </span> {{ $post->likes()->count() }} </a>
     @endguest
 </article>
+
+<script>
+    document.querySelectorAll('.like-count').forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            event.stopPropagation(); // Stop the event from bubbling up to the form
+            this.classList.toggle('liked');
+            var icon = this.querySelector('span'); // Select the span element
+            if (this.classList.contains('liked')) {
+                // Perform like action
+                icon.classList.remove('far');
+                icon.classList.add('fas', 'fa-heart');
+            } else {
+                // Perform unlike action
+                icon.classList.remove('fas', 'fa-heart');
+                icon.classList.add('far', 'fa-heart');
+            }
+        });
+    });
+</script>
