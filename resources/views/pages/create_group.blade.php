@@ -13,7 +13,7 @@
     <label for="description">Group Description:</label>
     <textarea name="description"></textarea><br>
 
-    <label for="members">Select Group Members (at least three):</label><br>
+    <label for="members">Select Group Members (at least two):</label><br>
     @foreach ($users as $user)
         <label>
             <input type="checkbox" name="members[]" value="{{ $user->id }}">

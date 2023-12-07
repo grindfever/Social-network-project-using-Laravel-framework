@@ -31,18 +31,28 @@ class GroupController extends Controller
         $group->description = $request->input('description');
         $group->save();
 
-        // Create memberships for each selected member
-        $members = $request->input('members');
-        foreach ($members as $memberId) {
-        // Create a membership record
-            DB::table('memberships')->insert([
+        DB::table('memberships')->insert([
                 'possible_member' => auth()->user()->id,
                 'group_id' => $group->id,
                 'accepted' => true, // Assuming memberships are accepted by default
                 'requested' => false,
                 'accept_date' => now(),
                 'req_or_inv_date' => now(),
-                'member' => $memberId,
+                'member' => auth()->user()->id,
+            ]);
+
+        // Create memberships for each selected member
+        $members = $request->input('members');
+        foreach ($members as $memberId) {
+        // Create a membership record
+            DB::table('memberships')->insert([
+                'possible_member' => $memberId,
+                'group_id' => $group->id,
+                'accepted' => true, // Assuming memberships are accepted by default
+                'requested' => false,
+                'accept_date' => now(),
+                'req_or_inv_date' => now(),
+                'member' => auth()->user()->id,
             ]);
         }
 
@@ -52,10 +62,12 @@ class GroupController extends Controller
 
  
     public function showGroupCreationForm()
-    {
-    $users = User::all(); 
+{
+    // Get all users except the authenticated user
+    $users = User::where('id', '!=', auth()->user()->id)->get();
+
     return view('pages.create_group', compact('users'));
-    }
+}
 
     
     public function showGroups()
@@ -65,11 +77,11 @@ class GroupController extends Controller
             return redirect('/login');
 
         } else {
-    $user = auth()->user();
-    $groups = $user->groups; 
+            $user = auth()->user();
+            $groups = $user->groups; 
 
-    return view('pages.groups', ['groups' => $groups]);
-    }
+            return view('pages.groups', ['groups' => $groups]);
+        }
     }
 
     public function showGroup(Group $group)
