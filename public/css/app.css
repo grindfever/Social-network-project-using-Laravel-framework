@@ -158,6 +158,9 @@ form {
   font-size: 24px;
   margin-bottom: 10px;
   color: #333;
+
+.fw-light.nav-link.fs-6:hover {
+  color: #ff0000;
 }
 
 .article.post p {
@@ -172,4 +175,24 @@ form {
   margin-top: 15px;
   padding-top: 10px;
   border-top: 1px solid #ddd;
+}
+.far.fa-heart:hover, .fas.fa-heart:hover {
+  color: #ff0000;
+}
+
+.like-count {
+  background-color:transparent;
+  border: none;
+  color:black;
+  font-size: 24px;
+}
+
+
+
+.like-count:focus {
+  outline: none;
+}
+
+.like-count:hover .fas.fa-heart, .like-count:hover .far.fa-heart {
+  color: #ff0000;
 }
