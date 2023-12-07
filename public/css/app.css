@@ -55,6 +55,11 @@ header1 {
   background-color: #555;
 }
 
+button.like-count{
+  background-color: green !important;
+  color: black !important;
+}
+
 
 header2{
   background-color: #000;

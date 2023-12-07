@@ -10,14 +10,12 @@
             @if (Auth::user()->likesPost($post))
             <form action="{{ route('post.unlike', $post->id)}}" method="POST">
                 @csrf
-                <button type="submit" class="like-count"> <span class="fas fa-heart me-1">
-                    </span> {{ $post->likes()->count() }} </button>
+                <button type="submit" class="like-count">  {{ $post->likes()->count() }} </button>
             </form>
             @else
             <form action="{{ route('post.like', $post->id)}}" method="POST">
                 @csrf
-                <button type="submit" class="like-count"> <span class="far fa-heart me-1">
-                    </span> {{ $post->likes()->count() }} </button>
+                <button type="submit" class="like-count"> {{ $post->likes()->count() }} </button>
             </form>
             @endif
         </div>

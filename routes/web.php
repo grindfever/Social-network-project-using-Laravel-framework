@@ -43,7 +43,6 @@ Route::controller(DashBoardController::class)->group(function () {
  Route::post('api/post/{post_id}/unlike', [DashBoardController::class, 'unlike'])->middleware('auth')->name('post.unlike');
 
  // Comments
-
  Route::post('api/post/{post_id}/comment', [CommentController::class, 'store'])->middleware('auth')->name('post.comment.store');
 
 // Authentication
