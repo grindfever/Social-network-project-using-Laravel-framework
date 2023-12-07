@@ -33,14 +33,21 @@ class ProfileController extends Controller {
             if($user->priv == TRUE) return redirect('/dashboard');
             else return view('pages.profile', ['user'=> $user]);
         }
-        
-        else return view('pages.profile', ['user'=> $user,'post'=>$post]);
+      
+        else {
+            $me = Auth::user()->id == $id;
+            return view('pages.profile', ['user'=> $user,'post'=>$post,'me'=>$me]);}
         //policy ainda n funciona
         /* 
         if ($this->authorize('show', $user)) return view('pages.profile', ['user'=> $user]);
         else return redirect('/cards');
         */
         //usar policy 
+    }
+    public function showfriendrequest(){
+        if (Auth::guest()){ return redirect("/dashboard") ; }
+        $user = Auth::user();
+        return view('pages.friendrequest');
     }
 }
 

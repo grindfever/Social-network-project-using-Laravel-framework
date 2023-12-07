@@ -61,6 +61,9 @@ Route::controller(RegisterController::class)->group(function () {
 Route::controller(ProfileController::class)->group(function () {
     Route::get('/profile', 'myProfile');
     Route::get('/profile/{id}', 'show');
+    Route::get('/friendrequest','showfriendrequest');
+    
+
 });
 
 
