@@ -16,7 +16,7 @@
             @endphp
 
             @if ($possibleMember)
-                <li>{{ $possibleMember->name }}</li>
+                <li><a href="/profile/{{$possibleMember->id}}">{{ $possibleMember->name }}</a></li>
             @endif
         @empty
             <li>No members in this group.</li>
