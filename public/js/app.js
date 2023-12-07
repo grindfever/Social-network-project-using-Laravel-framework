@@ -15,8 +15,20 @@ function addEventListeners() {
   }
 
   let messageCreator = document.querySelector('article.message form.new_message');
-  if (messageCreator != null)
+  if (messageCreator != null){  
     messageCreator.addEventListener('submit', sendCreateMessageRequest);
+  }
+
+  let searchForm = document.querySelector('article.search-article form.search-form');
+  if (searchForm !== null){  
+    searchForm.addEventListener('submit', sendSearchRequest);
+    /*let searchInput = searchResult.querySelector('input[type="text"]');
+    
+    if (searchInput != null) {
+        searchInput.addEventListener('input', sendSearchRequest);
+    }
+    */
+  }
 }
   
 function editablePost(event) {
@@ -181,6 +193,38 @@ function sendUpdatePostRequest(updatedContent, content) {
     `;
     return new_message;
 }
+
+
+  function sendSearchRequest(event){
+    let name = event.target.querySelector('input[name="query"]').value.trim();
+    if (name != '')
+      sendAjaxRequest('post', '/search', {query: name}, searchHandler);
+
+    event.preventDefault();
+  }
+
+  function searchHandler(){
+    if (this.status != 200) window.location = '/';
+    let searchResults = JSON.parse(this.responseText);
+
+    let searchResultList = document.querySelector('ul.results');
+
+    searchResultList.innerHTML = '';
+
+    searchResults.forEach(result => {
+        let li = document.createElement('li');
+        li.textContent = result.name;
+
+        let link = document.createElement('a');
+
+        link.href = '/profile/' + result.id;
+        link.textContent = result.content;
+
+        li.appendChild(link);
+
+        searchResultList.appendChild(li);
+    });
+  }
 
   addEventListeners();
   

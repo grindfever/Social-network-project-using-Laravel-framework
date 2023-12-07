@@ -75,5 +75,6 @@ Route::controller(MessageController::class)->group(function () {
 
 //Search
 Route::controller(SearchController::class)->group(function () {
-    Route::get('/search','search');
+    Route::get('/search','show');
+    Route::post('/search','search');
 });

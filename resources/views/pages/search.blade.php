@@ -2,25 +2,17 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="search-class">
-        <form action="/search" method="GET">
-            <input type="text" name="query" placeholder="Search">
+    <article class="search-article">
+        <form class="search-form" action="/search" method="POST">
+            @csrf
+            <input type="text" name="query" placeholder="search">
             <button type="submit">Search</button>
         </form>
-    </div>
-    @if(isset($results))
-        <h2>Search Results</h2>
-        
-        <ul>
-            @if ($empty)
-            @foreach($results as $result)
-                <li><a href="/profile/{{$result->id}}"> {{$result->name}}</a></li>
-            @endforeach    
-                
-            @else
-                <p>No results found.</p>            
-            @endif
-            
-        </ul>
-    @endif
+
+        <ul class="results"></ul>
+    </article>
+    
+
 @endsection
+
+
