@@ -76,7 +76,7 @@ Route::controller(MessageController::class)->group(function () {
 // Groups
 Route::controller(GroupController::class)->group(function (){
     Route::get('/groups', 'showGroups');
-    Route::get('/groups/{id}', 'showGroup');
+    Route::get('/groups/{group}', 'showGroup');
     Route::get('/create-group', 'showGroupCreationForm');
     Route::post('/create-group', 'createGroup');
 });

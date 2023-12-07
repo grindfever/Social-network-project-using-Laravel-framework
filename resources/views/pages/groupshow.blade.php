@@ -12,10 +12,12 @@
 
         @forelse ($memberships as $membership)
             @php
-                $member = DB::table('users')->where('id', $membership->member)->first();
+                $possibleMember = DB::table('users')->where('id', $membership->possible_member)->first();
             @endphp
 
-            <li>{{ $member->name }}</li>
+            @if ($possibleMember)
+                <li>{{ $possibleMember->name }}</li>
+            @endif
         @empty
             <li>No members in this group.</li>
         @endforelse
@@ -23,3 +25,4 @@
 
     <a href="/groups/{{ $group->id }}/chat" class="button">Enter Group Chat</a>
 @endsection
+

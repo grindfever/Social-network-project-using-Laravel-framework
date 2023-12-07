@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Group extends Model
 {
     public $timestamps = false;
@@ -15,13 +15,12 @@ class Group extends Model
 
     protected $fillable = ['owner', 'name', 'description', 'members'];
 
-    // Define relationships
-    public function memberships()
+   
+    public function members()
     {
-    return $this->hasMany(Membership::class, 'group_id');
+    return $this->belongsToMany(User::class, 'memberships', 'group_id', 'member');
     }
 
-    // Define casts for array columns
     protected $casts = [
         'members' => 'json',
     ];
