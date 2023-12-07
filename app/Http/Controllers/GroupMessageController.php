@@ -31,6 +31,6 @@ class GroupMessageController extends Controller
         $group_message->group_id = $groupId;  
 
         $group_message->save();
-        return redirect("/groups/{$groupId}/chat");
+        return response()->json($group_message);
     }
 }

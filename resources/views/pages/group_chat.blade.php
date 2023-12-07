@@ -5,7 +5,11 @@
 
     <div id="chat">
         @foreach ($group_messages as $message)
-            <p><strong>{{ $message->sender }}:</strong> {{ $message->content }}</p>
+            @php
+                // Fetch the sender's name from the users table using the sender ID
+                $sender = \App\Models\User::find($message->sender);
+            @endphp
+            <p><strong>{{ $sender->name }}:</strong> {{ $message->content }}</p>
         @endforeach
     </div>
 

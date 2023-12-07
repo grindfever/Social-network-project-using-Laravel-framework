@@ -17,6 +17,10 @@ function addEventListeners() {
   let messageCreator = document.querySelector('article.message form.new_message');
   if (messageCreator != null)
     messageCreator.addEventListener('submit', sendCreateMessageRequest);
+
+  let groupMessageCreator = document.querySelector('article.group-message form.new-group-message');
+  if (groupMessageCreator != null)
+    groupMessageCreator.addEventListener('submit', sendCreateGroupMessageRequest);
 }
   
 function editablePost(event) {
@@ -184,6 +188,45 @@ function sendUpdatePostRequest(updatedContent, content) {
     `;
     return new_message;
 }
+
+function sendCreateGroupMessageRequest(event) {
+  let groupId = this.closest('article').getAttribute('data-id');
+  let content = this.querySelector('input[name=content]').value;
+
+  if (content !== '') {
+      // Send an AJAX request to create a new group message
+      sendAjaxRequest('post', '/groups/' + groupId + '/chat', { content: content }, groupMessageAddedHandler);
+  }
+
+  event.preventDefault();
+}
+
+function groupMessageAddedHandler() {
+  if (this.status !== 200) {
+      console.error('Failed to send group message.');
+      return;
+  }
+
+  // The response is a JSON string, so parse it
+  let groupMessage = JSON.parse(this.responseText);
+
+  // Append the new message to the chat container
+  let chatContainer = document.getElementById('chat');
+  let newMessage = document.createElement('p');
+  newMessage.innerHTML = `<strong>${groupMessage.sender}:</strong> ${groupMessage.content}`;
+  chatContainer.appendChild(newMessage);
+
+  // Clear the message input field
+  let form = document.querySelector('form.new_group_message');
+  form.querySelector('[type=text]').value = '';
+}
+// Function to create a new group message element
+function createGroupMessage(groupMessage) {
+  let newGroupMessage = document.createElement('p');
+  newGroupMessage.innerHTML = `<strong>${groupMessage.sender}:</strong> ${groupMessage.content}`;
+  return newGroupMessage;
+}
+
 
   addEventListeners();
   
