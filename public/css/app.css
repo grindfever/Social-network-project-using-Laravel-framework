@@ -158,12 +158,12 @@ form {
 }
 /*dashboard*/
 .post{
-  width:100%;
+  width:80%;
   padding-left: 230px; 
   padding-top:40px;
 }
 .post form{
-  width:100%;
+  width:80%;
 }
 .post .content {
   background-color: #fff;
@@ -188,16 +188,14 @@ padding-top:10px;
 
 
 #chat {
-  padding-top: 40px;
   margin-left: 100px;
   display: flex;
-  flex-direction: column-reverse; /* Display messages in reverse order (new at the bottom) */
-  height: 1000px;
-  width: 1000px; /* Set a fixed height for the chat container */
-  overflow-y: auto; /* Add a vertical scrollbar when content overflows */
+  flex-direction: column-reverse;
+  max-height: 60vh; /* 80% of the viewport height */
+  width: 60vw; /* 60% of the viewport width */
+  overflow-y: auto;
   border-radius: 8px;
-  border: 2px solid #ddd; /* Add a border to the chat container */
- /* Add border radius for rounded corners */
+  border: 2px solid #ddd;
 }
 
 .message-container {
@@ -220,6 +218,7 @@ padding-top:10px;
   padding: 10px; /* Add padding for better spacing */
   margin: 5px; /* Add margin for better spacing between message containers */
   text-decoration: none;
+  word-wrap: break-word;
 }
 
 .sent-messages {
@@ -245,7 +244,7 @@ padding-top:10px;
 
 .new_message {
   margin-left: 100px;
-  max-width: 1000px;
+  max-width: 60vw;
   display: flex;
   justify-content: space-between; /* Create space between the input and the button */
   align-items: center;
@@ -259,9 +258,17 @@ padding-top:10px;
 }
 
 #chat-page {
-  flex-direction: column; /* Change to column layout for this page */
+  flex-direction: column;
 }
  article button{
-  font-size:18px;
+  font-size:16x;
 }
 
+/*postpage*/
+
+.postpage #post{
+  width:60vw;
+}
+.postpage .edit-post{
+  margin-left:230px;
+}
