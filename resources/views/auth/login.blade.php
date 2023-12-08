@@ -29,7 +29,7 @@
     </label>
 
     <button class="btn btn-primary"type="submit">Login</button>
-    Dont have an account? 7
+    Dont have an account?
     <a class="btn btn-primary" data-bs-toggle="offcanvas" class="button button-outline" href="{{ route('register') }}">Register</a>
     @if (session('success'))
         <p class="success">

@@ -37,6 +37,6 @@
       <label for="password-confirm">Confirm password</label>
     </div>
     <button class="btn btn-primary" type="submit">Register</button>
-    <a class="button button-outline" href="{{ route('login') }}">Login</a>
+    <a class="btn btn-primary" href="{{ route('login') }}">Login</a>
 </form>
 @endsection
