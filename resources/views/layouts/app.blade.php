@@ -31,7 +31,7 @@
               <div class="collapse navbar-collapse" id="navbarColor02">
                 <ul class="navbar-nav me-auto">
                   <li class="nav-item">
-                    <a class="nav-link active" href="href="{{ url('/dashboard') }}"">Home
+                    <a class="nav-link active" href="{{ url('/dashboard') }}">Home
                       <span class="visually-hidden">(current)</span>
                     </a>
                   </li>
@@ -56,6 +56,7 @@
         <main>
           <section id="content">
             @yield('content')
+            <button id="scrollToTopButton" onclick="scrollToTop()">Scroll to top</button>
           </section>
         </main>
     </body>

@@ -105,16 +105,17 @@ function addEventListeners() {
   
   function postDeletedHandler() {
     if (this.status != 200) window.location = '/';
-    console.log(this.responseText);
     let post = JSON.parse(this.responseText);
-    let article = document.querySelector('article.post[data-id="'+ post.id + '"]');
-    article.remove();
+    console.log(post.id);
+    
+    let div = document.getElementById(post.id);
+    div.remove();
   }
   
   function postAddedHandler() {
     if (this.status != 200) window.location = '/';
     let post = JSON.parse(this.responseText);
-    console.log(post);
+   
     let new_post = createPost(post);
 
     let form = document.querySelector('article.post form.new_post');
@@ -124,7 +125,6 @@ function addEventListeners() {
     let section = article.parentElement;
     section.insertBefore(new_post, article);
 
-    new_post.querySelector('[type=text]').focus();
 
     let content = document.getElementById('content');
     content.scrollTop = content.scrollHeight;
@@ -132,23 +132,47 @@ function addEventListeners() {
   
   function createPost(post) {
       let new_post = document.createElement('article');
+      console.log(post);
       new_post.classList.add('post');
       new_post.setAttribute('data-id', post.id);
       new_post.innerHTML = `
-      <header>
-        <h2><a href="post/${post.id}">  ${post.user.name} </a></h2>
-      </header>
-      <div class="content">${post.content}</div>
-      <button class="delete-post" data-post-id="${post.id}" 
-      type="submit">Delete</button>
+      <div class="card-header"><a href="post/${post.id}">  ${post.user.name} </a></div>
+      <div class="card-body">
+        <p class="card-text">
+          <div class="content">${post.content}</div>
+        </p>
+      </div>
+      <div class="like-post">
+      <button type="submit" class="like-count">
+        <span class="far fa-heart"></span> 0
+      </button>
+      <button class="delete-post" data-post-id="${post.id}" type="submit">Delete</button>
+
+  
+      <form action="api/post/${post.id}/comment" method="POST">
+        <div class="mb-3">
+          <textarea class="fs-6 form-control" name="content" rows="1" placeholder="Whats on your mind?"></textarea>
+        </div>
+      <button type="submit" class="btn btn-primary btn-sm"> Post Comment </button>
+      </form>
       `;
 
       let deleter = new_post.querySelector('button.delete-post');
       deleter.addEventListener('click', sendDeletePostRequest);
       
+      // Create a div element, add a class to it, and append new_post to it
+      let wrapper = document.createElement('div');
+      wrapper.classList.add('card', 'border-dark', 'mb-3');
+      wrapper.id = post.id;
+      wrapper.style.maxWidth = '20rem'; // Replace 'your-class-name' with the actual class name
+      wrapper.appendChild(new_post);
 
-      return new_post;
-  } 
+      return wrapper;
+
+  }
+  
+
+  
   
   function sendCreateMessageRequest(event){
     let id = this.closest('article').getAttribute('data-id');
@@ -190,7 +214,7 @@ function addEventListeners() {
   
   document.addEventListener('DOMContentLoaded', function() {
     var likeButton = document.querySelector('.like-post');
-    console.log(1);
+
     if (likeButton) {
         likeButton.addEventListener('click', function(event) {
             var postId = event.target.getAttribute('data-post-id');
@@ -236,5 +260,23 @@ function addEventListeners() {
       console.error('Error:', this.status, this.statusText);
     }
   }
+
+  function scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }
+
+  window.addEventListener('scroll', function() {
+    var button = document.getElementById('scrollToTopButton');
+    if (window.scrollY > 100) { // Show the button after 100px of scrolling
+      button.style.display = "block";
+    } else {
+      button.style.display = "none";
+    }
+  });
+
+
   addEventListeners();
   
