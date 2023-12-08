@@ -79,6 +79,10 @@ Route::controller(GroupController::class)->group(function (){
     Route::get('/groups/{group}', 'showGroup');
     Route::get('/create-group', 'showGroupCreationForm');
     Route::post('/create-group', 'createGroup');
+    Route::get('/groups/{group}/edit', 'edit');
+    Route::patch('/groups/{group}', 'update');
+    Route::post('/groups/{group}/add-members', 'addMembers');
+    Route::delete('/groups/{group}', 'destroy');
 });
 
 // GroupChat

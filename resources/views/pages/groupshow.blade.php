@@ -16,7 +16,7 @@
             @endphp
 
             @if ($possibleMember)
-                <li><a href="/profile/{{$possibleMember->id}}">{{ $possibleMember->name }}</a></li>
+                <li><a href="/profile/{{ $possibleMember->id }}">{{ $possibleMember->name }}</a></li>
             @endif
         @empty
             <li>No members in this group.</li>
@@ -24,5 +24,8 @@
     </ul>
 
     <a href="/groups/{{ $group->id }}/chat" class="button">Enter Group Chat</a>
-@endsection
 
+    @if (Auth::id() == $group->owner)
+        <a href="/groups/{{ $group->id }}/edit" class="button">Edit Group</a>
+    @endif
+@endsection
