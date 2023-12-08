@@ -170,4 +170,45 @@ class GroupController extends Controller
     return redirect("/groups")->with('success', 'Group deleted successfully.');
     }
 
+    public function kickMember(Request $request, Group $group)
+    {
+    // Check if the user is the owner of the group
+    //$this->authorize('update', $group);
+
+    // Validate the request
+    $request->validate([
+        'member_id' => 'required|exists:users,id',
+    ]);
+
+    // Delete the membership record
+    DB::table('memberships')
+        ->where('group_id', $group->id)
+        ->where('possible_member', $request->input('member_id'))
+        ->delete();
+
+    return redirect("/groups/{$group->id}")->with('success', 'Member kicked successfully.');
+    }
+
+    public function leaveGroup(Group $group)
+    {
+    // Check if the user is a member of the group
+    $membership = DB::table('memberships')
+        ->where('group_id', $group->id)
+        ->where('possible_member', auth()->user()->id)
+        ->first();
+
+    if ($membership) {
+        // Remove the user from the group
+        DB::table('memberships')
+            ->where('group_id', $group->id)
+            ->where('possible_member', auth()->user()->id)
+            ->delete();
+
+        return redirect("/groups")->with('success', 'Left the group successfully.');
+    }
+
+    return redirect("/groups")->with('error', 'You are not a member of this group.');
+    }   
+
+
 }

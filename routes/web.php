@@ -83,6 +83,9 @@ Route::controller(GroupController::class)->group(function (){
     Route::patch('/groups/{group}', 'update');
     Route::post('/groups/{group}/add-members', 'addMembers');
     Route::delete('/groups/{group}', 'destroy');
+    Route::post('/groups/{group}/kick-member', 'kickMember');
+    Route::post('/groups/{group}/leave', 'leaveGroup');
+
 });
 
 // GroupChat

@@ -4,6 +4,10 @@
     <h1>{{ $group->name }}</h1>
     <p>Description: {{ $group->description }}</p>
 
+    @if (auth()->user()->id === $group->owner)
+        <p><a href="/groups/{{ $group->id }}/edit" class=button>Edit Group</a></p>
+    @endif
+
     <h2>Members:</h2>
     <ul>
         @php
@@ -16,7 +20,20 @@
             @endphp
 
             @if ($possibleMember)
-                <li><a href="/profile/{{ $possibleMember->id }}">{{ $possibleMember->name }}</a></li>
+                <li>
+                    @if ($membership->possible_member === $group->owner)
+                        <a href="/profile/{{$possibleMember->id}}">{{ $possibleMember->name }} (Owner)</a>
+                    @else
+                        <a href="/profile/{{$possibleMember->id}}">{{ $possibleMember->name }}</a>
+                        @if (auth()->user()->id === $group->owner)
+                            <form method="post" action="/groups/{{$group->id}}/kick-member">
+                                @csrf
+                                <input type="hidden" name="member_id" value="{{ $possibleMember->id }}">
+                                <button type="submit">Kick</button>
+                            </form>
+                        @endif
+                    @endif
+                </li>
             @endif
         @empty
             <li>No members in this group.</li>
@@ -24,8 +41,4 @@
     </ul>
 
     <a href="/groups/{{ $group->id }}/chat" class="button">Enter Group Chat</a>
-
-    @if (Auth::id() == $group->owner)
-        <a href="/groups/{{ $group->id }}/edit" class="button">Edit Group</a>
-    @endif
 @endsection
