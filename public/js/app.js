@@ -1,6 +1,6 @@
 function addEventListeners() {
     
-  let postDeleters = document.querySelectorAll('article.post button.delete-post');
+  let postDeleters = document.querySelectorAll('article.post button#delete-post');
   [].forEach.call(postDeleters, function(deleter) {
     deleter.addEventListener('click', sendDeletePostRequest);
   });
@@ -13,7 +13,6 @@ function addEventListeners() {
   if (postEditor != null){
     postEditor.addEventListener('click', editablePost);
   }
-
 
   let messageCreator = document.querySelector('article.message form.new_message');
   if (messageCreator != null)

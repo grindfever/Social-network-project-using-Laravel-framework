@@ -8,19 +8,15 @@
     </div>
    
     @auth
-        <button class="delete-post" data-post-id="{{ $post->id }}" type="submit">Delete</button>
+        <button class="btn btn-primary" id="delete-post" data-post-id="{{ $post->id }}" type="submit">Delete</button>
         <div class="like-post">
             @if (Auth::user()->likesPost($post))
-            {{--<form action="{{ route('post.unlike', $post->id)}}" method="POST">@csrf--}}
                 <button type="submit" class="like-count liked"> <span class="fas fa-heart me-1">
                     </span> {{ $post->likes()->count() }} </button>
-            {{--</form>--}}
             @else
-            {{--<form action="{{ route('post.like', $post->id)}}" method="POST">@csrf--}}
                 
                 <button type="submit" class="like-count"> <span class="far fa-heart me-1">
                     </span> {{ $post->likes()->count() }} </button>
-            {{--</form>--}}
             @endif
         </div>
     @endauth

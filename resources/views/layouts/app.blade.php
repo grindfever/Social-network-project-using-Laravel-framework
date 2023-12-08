@@ -24,37 +24,28 @@
     <body>
         <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
             <div class="container-fluid">
-              <a class="navbar-brand" href="#">Y!</a>
+              <a class="navbar-brand" href="{{ url('/dashboard') }}">Y!</a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon">kkkk</span>
+                <span class="navbar-toggler-icon"></span>
               </button>
               <div class="collapse navbar-collapse" id="navbarColor02">
                 <ul class="navbar-nav me-auto">
                   <li class="nav-item">
-                    <a class="nav-link active" href="#">Home
+                    <a class="nav-link active" href="href="{{ url('/dashboard') }}"">Home
                       <span class="visually-hidden">(current)</span>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
+                    <a class="nav-link" href="{{ url('/messages') }}">Messages</a>
+                  </li>
+                  @if (Auth::check())
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/profile') }}" >{{ Auth::user()->name }}</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
+                    <a class="nav-link" href="{{ url('/logout') }}">Logout</a> 
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                  </li>
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item" href="#">Action</a>
-                      <a class="dropdown-item" href="#">Another action</a>
-                      <a class="dropdown-item" href="#">Something else here</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">Separated link</a>
-                    </div>
-                  </li>
-                </ul>
+                  @endif
                 <form class="d-flex">
                   <input class="form-control me-sm-2" type="search" placeholder="Search">
                   <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
@@ -63,37 +54,9 @@
             </div>
           </nav>
         <main>
-            {{--}}
-            <header class="header1">
-                <div class="logo">
-                    <a href="{{ url('/dashboard') }}">Y!</a>
-                </div>
-                <div class="timeline">
-                    <a href="{{ url('/dashboard') }}">Timeline</a>
-                </div>
-                <div class="messages">
-                    <a href="{{ url('/messages') }}">Messages</a>
-                </div>
-                
-                @if (Auth::check())
-                <div class="user-info">
-                <span><a href="{{ url('/profile') }}" >{{ Auth::user()->name }}</a></span>
-                </div>
-                <div class="logout">
-                <a class="button" href="{{ url('/logout') }}">Logout</a>
-                </div>    
-                @endif
-            </header>
-            <header class="header">
-                <a class="button" href="{{ url('/search') }}"> Search </a>
-                <div class="Profile">
-                    <a href="{{ url('/profile') }}">MyProfile</a>
-                </div>  
-            </header > 
-            {{--}}  
-            <section id="content">
-                @yield('content')
-            </section>
+          <section id="content">
+            @yield('content')
+          </section>
         </main>
     </body>
 </html>

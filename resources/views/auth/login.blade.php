@@ -1,20 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
-<div>
+
 <form method="POST" action="{{ route('login') }}">
     {{ csrf_field() }}
 
-    <label for="email">E-mail</label>
-    <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
+    <div class="form-floating mb-3">
+        <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{ old('email') }}" required autofocus>
+        <label for="floatingInput">Email address</label>
+    </div>
     @if ($errors->has('email'))
-        <span class="error">
-          {{ $errors->first('email') }}
-        </span>
+    <span class="error">
+      {{ $errors->first('email') }}
+    </span>
     @endif
-
-    <label for="password" >Password</label>
-    <input id="password" type="password" name="password" required>
+    <div class="form-floating">
+        <input name="password" type="password" class="form-control" id="floatingPassword" placeholder="Password" autocomplete="off" required>
+        <label for="floatingPassword">Password</label>
+    </div>
     @if ($errors->has('password'))
         <span class="error">
             {{ $errors->first('password') }}
@@ -25,15 +28,13 @@
         <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
     </label>
 
-    <button type="submit">
-        Login
-    </button>
-    <a class="button button-outline" href="{{ route('register') }}">Register</a>
+    <button class="btn btn-primary"type="submit">Login</button>
+    Dont have an account? 7
+    <a class="btn btn-primary" data-bs-toggle="offcanvas" class="button button-outline" href="{{ route('register') }}">Register</a>
     @if (session('success'))
         <p class="success">
             {{ session('success') }}
         </p>
     @endif
 </form>
-</div>
 @endsection
