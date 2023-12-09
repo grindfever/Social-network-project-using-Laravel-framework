@@ -171,9 +171,6 @@ function addEventListeners() {
 
   }
   
-
-  
-  
   function sendCreateMessageRequest(event){
     let id = this.closest('article').getAttribute('data-id');
     let name = this.querySelector('input[name=content]').value;
@@ -212,55 +209,65 @@ function addEventListeners() {
 
   // ########## LIKE BUTTON ##############
   
-  document.addEventListener('DOMContentLoaded', function() {
-    var likeButton = document.querySelector('.like-post');
-
-    if (likeButton) {
-        likeButton.addEventListener('click', function(event) {
-            var postId = event.target.getAttribute('data-post-id');
-            likePost(postId);
-        });
-    }
+  //event listener for like button
+  let likeButtons = document.querySelectorAll('button.like-count');
+  [].forEach.call(likeButtons, function(likeButton) {
+    likeButton.addEventListener('click', sendLikeRequest);
   });
 
-  document.querySelectorAll('.like-count').forEach(function(button) {
-    button.addEventListener('click', function(event) {
-        //event.preventDefault();
-        this.classList.toggle('liked');
-        var icon = this.querySelector('span'); // Select the span element
-        if (this.classList.contains('liked')) {
-            // Perform like action
-            icon.classList.remove('far');
-            icon.classList.add('fas', 'fa-heart');
-        } else {
-            // Perform unlike action
-            icon.classList.remove('fas', 'fa-heart');
-            icon.classList.add('far', 'fa-heart');
-        }
-    });
-  });
- 
-  function likePost(postId) {
-    console.log(2);
-    let data = { id: postId };
-    sendAjaxRequest('post', '/post/like/' + postId, data, handleLikeResponse);
-  }
-
-  function handleLikeResponse() {
-    
-    if (this.status >= 200 && this.status < 400) {
-      let data = JSON.parse(this.responseText);
-    
-      var likeCountElement = document.querySelector('.like-count[data-post-id="' + data.id + '"]');
-      if (likeCountElement) {
-        likeCountElement.textContent = data.likeCount;
-      }
-      console.log(data.message);
+  function sendLikeRequest(event) {
+    let id = this.closest('article').getAttribute('data-id');
+    let likeButton = this;
+    if (likeButton.classList.contains('liked')) {
+      sendAjaxRequest('delete', 'api/post/'+id+'/unlike', null, unlikeHandler);
     } else {
-      console.error('Error:', this.status, this.statusText);
+      sendAjaxRequest('post', '/api/post/'+id+'/like', null, likeHandler);
+    }
+    event.preventDefault();
+  }
+
+  function likeHandler() {
+    
+    if (this.status == 200) {
+      let response = JSON.parse(this.responseText);
+      
+      let likeButton = document.querySelector('button.like-count[data-post-id="'+response.postId+'"]');
+      
+      if (response.isLiked) {
+        
+        likeButton.classList.add('liked');
+        likeButton.classList.add('animate');
+        likeButton.innerHTML = '<span class="fas fa-heart"></span> ' + response.likeCount;
+      }
+    }
+    else {
+      console.error('An error occurred: ' + this.status);
+      console.error('Response: ' + this.responseText);
+    }
+  }
+  function unlikeHandler() {
+ 
+    if (this.status == 200) {
+      let response = JSON.parse(this.responseText);
+   
+      let unlikeButton = document.querySelector('button.like-count[data-post-id="'+response.postId+'"]');
+      
+      if (!response.isLiked) {
+        
+        unlikeButton.classList.remove('liked');
+        unlikeButton.classList.add('animate');
+        unlikeButton.innerHTML = '<span class="far fa-heart"></span> ' + response.likeCount;
+      }
+    }
+    else {
+      console.error('An error occurred: ' + this.status);
+      console.error('Response: ' + this.responseText);
     }
   }
 
+  
+  // ########## SCROLL TO TOP ##############
+  
   function scrollToTop() {
     window.scrollTo({
       top: 0,

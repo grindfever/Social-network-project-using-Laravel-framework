@@ -9,14 +9,13 @@
             <button class="btn btn-primary" id="delete-post" data-post-id="{{ $post->id }}" type="submit">Delete</button>
             <div class="like-post">
                 @if (Auth::user()->likesPost($post))
-                    <button type="submit" class="like-count liked"> 
-                        <span class="fas fa-heart me-1"></span> 
-                        {{ $post->likes()->count() }} 
+                    <button type="submit" class="like-count liked" data-post-id="{{$post->id}}" >
+                        <span class="fas fa-heart me-1"></span>{{ $post->likes()->count() }}
                     </button>
                 @else
-                    
-                    <button type="submit" class="like-count"> <span class="far fa-heart me-1">
-                        </span> {{ $post->likes()->count() }} </button>
+                    <button type="submit" class="like-count" data-post-id="{{$post->id}}">
+                        <span class="far fa-heart me-1"></span>{{ $post->likes()->count() }}
+                    </button>
                 @endif
             </div>
         @endauth

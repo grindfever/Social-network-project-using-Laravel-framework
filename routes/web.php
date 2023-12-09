@@ -40,7 +40,7 @@ Route::controller(DashBoardController::class)->group(function () {
  Route::delete('api/post/{post_id}', [DashBoardController::class, 'delete']);
  Route::put('api/post/{post_id}', [DashBoardController::class, 'update']);
  Route::post('api/post/{post_id}/like', [DashBoardController::class, 'like'])->middleware('auth')->name('post.like');
- Route::post('api/post/{post_id}/unlike', [DashBoardController::class, 'unlike'])->middleware('auth')->name('post.unlike');
+ Route::delete('api/post/{post_id}/unlike', [DashBoardController::class, 'unlike'])->middleware('auth')->name('post.unlike');
 
  // Comments
  Route::post('api/post/{post_id}/comment', [CommentController::class, 'store'])->middleware('auth')->name('post.comment.store');
