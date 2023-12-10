@@ -114,7 +114,7 @@ function addEventListeners() {
   function postAddedHandler() {
     if (this.status != 200) window.location = '/';
     let post = JSON.parse(this.responseText);
-    console.log(post);
+    
     let new_post = createPost(post);
 
     let form = document.querySelector('article.post form.new_post');
@@ -146,7 +146,6 @@ function addEventListeners() {
       let deleter = new_post.querySelector('button.delete-post');
       deleter.addEventListener('click', sendDeletePostRequest);
       
-
       return new_post;
   } 
   
@@ -190,7 +189,7 @@ function addEventListeners() {
   
   document.addEventListener('DOMContentLoaded', function() {
     var likeButton = document.querySelector('.like-post');
-    console.log(1);
+
     if (likeButton) {
         likeButton.addEventListener('click', function(event) {
             var postId = event.target.getAttribute('data-post-id');
@@ -217,7 +216,6 @@ function addEventListeners() {
   });
  
   function likePost(postId) {
-    console.log(2);
     let data = { id: postId };
     sendAjaxRequest('post', '/post/like/' + postId, data, handleLikeResponse);
   }
@@ -235,6 +233,60 @@ function addEventListeners() {
     } else {
       console.error('Error:', this.status, this.statusText);
     }
+  }
+
+  // ########## COMMENTS  ##############
+
+  document.addEventListener('DOMContentLoaded', function() {
+    let commentCreator = document.querySelector('div.comments form.new_comment');
+
+    if (commentCreator != null) {
+      let submitButton = commentCreator.querySelector('button[type="submit"]');
+ 
+      submitButton.addEventListener('click', sendCreateCommentRequest);
+    }
+  });
+
+  function sendCreateCommentRequest(event){
+    let id =  this.closest('article').getAttribute('data-id');
+
+    let textareaContent = document.querySelector('.new_comment #exampleTextarea').value;
+
+    if (textareaContent != ''){
+
+      sendAjaxRequest('post', 'api/post/' + id + '/comment', {content: textareaContent}, commentAddedHandler);
+    }
+    else {
+      console.error('Error:', this.status, this.statusText);
+    }
+    event.preventDefault();
+  }
+
+  function commentAddedHandler(){
+    if (this.status != 200) window.location = '/'
+    let comment = JSON.parse(this.responseText);
+
+    let new_comment = createComment(comment);
+
+    let form = document.querySelector('div.comments form.new_comment');
+    
+    form.querySelector('.new_comment #exampleTextarea').value = "";
+
+    let formParent = form.parentElement;
+  
+    formParent.insertBefore(new_comment, form);
+  
+  }
+
+
+
+  function createComment(comment) {
+    console.log(comment);
+    let new_comment = document.createElement('p');
+    new_comment.classList.add('fw-light', 'fs-6');
+    
+    new_comment.innerHTML = `${comment.user.name}: ${comment.comment.content}`;
+    return new_comment;
   }
   addEventListeners();
   
