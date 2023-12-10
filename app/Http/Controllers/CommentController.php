@@ -15,19 +15,23 @@ class CommentController extends Controller
 {
     public function store(Request $request, $post_id)
     {
-        dump($request->all());
         $request->validate([
             'content' => 'required|max:255',
         ]);
 
         $comment = new Comment();
-        $comment->content = $request->input('content');
+        $comment->content = strip_tags($request->input('content'));
         $comment->user_id = Auth::id();
         $comment->post_id = $post_id;
         $comment->date = now();
         $comment->save();
 
-        return redirect()->route('home', ['id' => $post_id])->with('success', 'Comment created successfully.');
+        $user = Auth::user(); // Get the user who created the post
+
+        return response()->json([
+            'comment' => $comment,
+            'user' => $user,
+        ]);
     }
 
     public function show(string $id)

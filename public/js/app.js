@@ -282,8 +282,60 @@ function addEventListeners() {
     } else {
       button.style.display = "none";
     }
+  }
+
+  // ########## COMMENTS  ##############
+
+  document.addEventListener('DOMContentLoaded', function() {
+    let commentCreator = document.querySelector('div.comments form.new_comment');
+
+    if (commentCreator != null) {
+      let submitButton = commentCreator.querySelector('button[type="submit"]');
+ 
+      submitButton.addEventListener('click', sendCreateCommentRequest);
+    }
   });
 
+  function sendCreateCommentRequest(event){
+    let id =  this.closest('article').getAttribute('data-id');
 
+    let textareaContent = document.querySelector('.new_comment #exampleTextarea').value;
+
+    if (textareaContent != ''){
+
+      sendAjaxRequest('post', 'api/post/' + id + '/comment', {content: textareaContent}, commentAddedHandler);
+    }
+    else {
+      console.error('Error:', this.status, this.statusText);
+    }
+    event.preventDefault();
+  }
+
+  function commentAddedHandler(){
+    if (this.status != 200) window.location = '/'
+    let comment = JSON.parse(this.responseText);
+
+    let new_comment = createComment(comment);
+
+    let form = document.querySelector('div.comments form.new_comment');
+    
+    form.querySelector('.new_comment #exampleTextarea').value = "";
+
+    let formParent = form.parentElement;
+  
+    formParent.insertBefore(new_comment, form);
+  
+  }
+
+
+
+  function createComment(comment) {
+    console.log(comment);
+    let new_comment = document.createElement('p');
+    new_comment.classList.add('fw-light', 'fs-6');
+    
+    new_comment.innerHTML = `${comment.user.name}: ${comment.comment.content}`;
+    return new_comment;
+  }
   addEventListeners();
   
