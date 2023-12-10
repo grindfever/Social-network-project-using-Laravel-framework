@@ -13,7 +13,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashBoardController;
 
 use App\Http\Controllers\SearchController;
-
+use App\Http\Controllers\FriendRequestController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -61,9 +61,10 @@ Route::controller(RegisterController::class)->group(function () {
 Route::controller(ProfileController::class)->group(function () {
     Route::get('/profile', 'myProfile');
     Route::get('/profile/{id}', 'show');
-    Route::get('/friendrequest','showfriendrequest');
+    Route::get('/friendrequest', 'showfriendrequest');
     
-
+    // Correct the route for sending friend requests
+    Route::post('/profile/{id}/send-friend-request', 'sendFriendRequest')->name('send.friend.request');
 });
 
 
@@ -79,4 +80,11 @@ Route::controller(MessageController::class)->group(function () {
 //Search
 Route::controller(SearchController::class)->group(function () {
     Route::get('/search','search');
+});
+
+//FriendRequests
+Route::controller(FriendRequestController::class)->group(function () {
+    Route::get('/friendrequests', 'index')->name('friendrequests.index');
+    Route::post('/friendrequests/accept/{id}', 'accept')->name('friendrequests.accept');
+    Route::post('/friendrequests/reject/{id}', 'reject')->name('friendrequests.reject');
 });
