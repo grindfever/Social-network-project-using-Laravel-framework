@@ -282,27 +282,26 @@ function addEventListeners() {
     } else {
       button.style.display = "none";
     }
-  }
+  });
 
   // ########## COMMENTS  ##############
 
   document.addEventListener('DOMContentLoaded', function() {
-    let commentCreator = document.querySelector('div.comments form.new_comment');
+    let commentCreators = document.querySelectorAll('div.comments form.new_comment');
 
-    if (commentCreator != null) {
+    commentCreators.forEach(function(commentCreator) {
       let submitButton = commentCreator.querySelector('button[type="submit"]');
- 
       submitButton.addEventListener('click', sendCreateCommentRequest);
-    }
+    });
   });
 
   function sendCreateCommentRequest(event){
     let id =  this.closest('article').getAttribute('data-id');
-
-    let textareaContent = document.querySelector('.new_comment #exampleTextarea').value;
-
+    
+    let textareaContent = document.querySelector('div.comments[data-id="' + id + '"] form.new_comment #exampleTextarea').value;
+    
     if (textareaContent != ''){
-
+      
       sendAjaxRequest('post', 'api/post/' + id + '/comment', {content: textareaContent}, commentAddedHandler);
     }
     else {
@@ -317,9 +316,9 @@ function addEventListeners() {
 
     let new_comment = createComment(comment);
 
-    let form = document.querySelector('div.comments form.new_comment');
+    let form = document.querySelector('div.comments[data-id="' + comment.comment.post_id + '"] form.new_comment');
     
-    form.querySelector('.new_comment #exampleTextarea').value = "";
+    form.querySelector('div.comments[data-id="' + comment.comment.post_id + '"] form.new_comment #exampleTextarea').value = "";
 
     let formParent = form.parentElement;
   
@@ -330,7 +329,7 @@ function addEventListeners() {
 
 
   function createComment(comment) {
-    console.log(comment);
+    
     let new_comment = document.createElement('p');
     new_comment.classList.add('fw-light', 'fs-6');
     
