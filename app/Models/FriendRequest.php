@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,7 +13,8 @@ class FriendRequest extends Model
         'sender', 'receiver', 'accepted', 'request_date', 'accept_date'
     ];
 
-
+    // Disable default timestamps
+    public $timestamps = false;
     // Map Eloquent timestamps to custom columns
     const CREATED_AT = 'request_date';
     const UPDATED_AT = 'accept_date';
@@ -27,5 +28,43 @@ class FriendRequest extends Model
     {
         return $this->belongsTo(User::class, 'receiver');
     }
- 
+    public function accept()
+    {
+        // Update the friend request status
+        $this->update([
+            'accepted' => true,
+            'accept_date' => now(),
+        ]);
+
+        // Create a friendship entry in the 'friends' table
+        DB::table('friends')->insert([
+            'userid1' => $this->sender,
+            'userid2' => $this->receiver,
+        ]);
+
+        // Optionally, you may want to insert a reciprocal entry
+        // to ensure friendships are bidirectional
+        DB::table('friends')->insert([
+            'userid1' => $this->receiver,
+            'userid2' => $this->sender,
+        ]);
+    }
+    public function reject()
+    {
+        $this->delete();
+    } 
+    public static function create(array $attributes = [])
+    {
+        $model = new static($attributes);
+    
+        // Get the array of attributes and unset any 'id' key
+        $attributes = $model->getAttributes();
+        unset($attributes['id']);
+    
+        // Insert the record into the database
+        static::insert([$attributes]);
+    
+        return $model;
+    }
+
 }

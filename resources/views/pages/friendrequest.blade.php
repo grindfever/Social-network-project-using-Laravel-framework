@@ -21,15 +21,7 @@
                 <br>
                 Request Date: {{ $request->request_date }}
                
-                <form action="{{ route('friendrequests.accept', ['id' => $request->id]) }}" method="post">
-                @csrf
-                <button type="submit">Accept</button>
-                </form>
-
-                <form action="{{ route('friendrequests.reject', ['id' => $request]) }}" method="post">
-                @csrf
-                <button type="submit">Reject</button>
-                </form>
+        
             </div>
         @endforeach
 
