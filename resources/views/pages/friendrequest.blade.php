@@ -6,21 +6,21 @@
 
     <section id="friendrequests">   
         <h2>Friend Requests</h2>
-
-        @forelse ($friendRequests as $request)
+        @foreach ($friendRequests as $request)
     <div class="friend-request-item">
-        <!-- Display information about the friend request -->
         @if($request->sender)
-            Sender: User ID {{ $request->sender }}
+        @php
+        $sender = \App\Models\User::find($request->sender);
+        @endphp
+
+        Sender: {{ $sender->name ?? '(Name not available)' }}
         @else
-            Sender: User ID {{ $request->sender->name }} (Unknown)
+        Sender: User ID {{ $request->sender }} (Unknown)
         @endif
         <br>
         Request Date: {{ $request->request_date }}
     </div>
-@empty
-    <p>No friend requests</p>
-@endforelse
+@endforeach
 
     </section>
 @endsection

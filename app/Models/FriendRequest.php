@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class FriendRequest extends Model
 {
     protected $table = 'friend_requests';
 
-
+    protected $casts = [
+        'sender' => 'integer',
+        // Add other cast definitions as needed
+    ];
       
     protected $fillable = [
         'sender', 'receiver', 'accepted', 'request_date', 'accept_date'
@@ -36,12 +39,11 @@ class FriendRequest extends Model
     
         return $model;
     }
-    
-    public function sender()
+  
+    public function sender(): BelongsTo
     {
         return $this->belongsTo(User::class, 'sender');
     }
-
     public function receiver()
     {
         return $this->belongsTo(User::class, 'receiver');

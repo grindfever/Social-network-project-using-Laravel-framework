@@ -11,10 +11,7 @@ class FriendRequestController extends Controller
   
     public function index()
     {
-        // Retrieve and display friend requests
-        $friendRequestsQuery = FriendRequest::with('sender')->where('receiver', auth()->id());
-    
-        $friendRequests = $friendRequestsQuery->get();
+        $friendRequests = FriendRequest::with('sender')->where('receiver', auth()->id())->get();
     
         return view('pages.friendrequest', ['friendRequests' => $friendRequests]);
     }
