@@ -21,7 +21,7 @@ DROP TABLE if exists user_likes_posts CASCADE;
 DROP TABLE if exists user_likes_comments CASCADE;
 DROP TABLE if exists post_removals CASCADE;
 DROP TABLE if exists memberships CASCADE; 
-
+DROP TABLE if exists friends CASCADE;
 
 
 CREATE TYPE notification_type_enum AS ENUM ('liked_comment', 
@@ -222,6 +222,12 @@ CREATE TABLE memberships
     member INTEGER CONSTRAINT fk_membership_member REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 				 CONSTRAINT nn_membership_member NOT NULL,
     PRIMARY KEY (possible_member, group_id)
+);
+CREATE TABLE friends
+(
+    userid1 INTEGER CONSTRAINT fk_friends_userid1 REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE ,
+    userid2 INTEGER CONSTRAINT fk_friends_userid2 REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+  
 );
 
 INSERT INTO users VALUES (

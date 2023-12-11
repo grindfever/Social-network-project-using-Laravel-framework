@@ -82,7 +82,7 @@ Route::controller(SearchController::class)->group(function () {
     Route::get('/search','search');
 });
 
-//FriendRequests
+//Friendrequest
 Route::controller(FriendRequestController::class)->group(function () {
     Route::get('/friendrequests', 'index')->name('friendrequests.index');
     Route::post('/friendrequests/accept/{id}', 'accept')->name('friendrequests.accept');
