@@ -8,13 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class FriendRequest extends Model
 {
     protected $table = 'friend_requests';
-      
+    protected $primaryKey = ['sender', 'receiver'];
+    public $incrementing = false; // Disable auto-incrementing for composite primary key
+
     protected $fillable = [
         'sender', 'receiver', 'accepted', 'request_date', 'accept_date'
     ];
-
-    // Disable default timestamps
-    public $timestamps = false;
     // Map Eloquent timestamps to custom columns
     const CREATED_AT = 'request_date';
     const UPDATED_AT = 'accept_date';
@@ -30,12 +29,16 @@ class FriendRequest extends Model
     }
     public function accept()
     {
-        // Update the friend request status
-        $this->update([
-            'accepted' => true,
-            'accept_date' => now(),
-        ]);
+      // Update the friend request status
+      $this->accepted = true;
+      $this->accept_date = now();
 
+      static::where('sender', $this->sender)
+      ->where('receiver', $this->receiver)
+      ->update([
+          'accepted' => true,
+          'accept_date' => now(),
+      ]);
         // Create a friendship entry in the 'friends' table
         DB::table('friends')->insert([
             'userid1' => $this->sender,
@@ -51,8 +54,10 @@ class FriendRequest extends Model
     }
     public function reject()
     {
-        $this->delete();
-    } 
+        static::where('sender', $this->sender)
+               ->where('receiver', $this->receiver)
+               ->delete();
+    }
     public static function create(array $attributes = [])
     {
         $model = new static($attributes);

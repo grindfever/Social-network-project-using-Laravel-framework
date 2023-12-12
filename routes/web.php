@@ -85,6 +85,6 @@ Route::controller(SearchController::class)->group(function () {
 //Friendrequest
 Route::controller(FriendRequestController::class)->group(function () {
     Route::get('/friendrequests', 'index')->name('friendrequests.index');
-    Route::post('/friendrequests/accept/{id}', 'accept')->name('friendrequests.accept');
-    Route::post('/friendrequests/reject/{id}', 'reject')->name('friendrequests.reject');
+    Route::post('/friendrequests/accept/{sender}/{receiver}', 'FriendRequestController@accept')->name('friendrequests.accept');
+    Route::post('/friendrequests/reject/{sender}/{receiver}', 'reject')->name('friendrequests.reject');
 });
