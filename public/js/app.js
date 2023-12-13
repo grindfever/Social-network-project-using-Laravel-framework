@@ -1,27 +1,28 @@
-function addEventListeners() {
+  
+  function addEventListeners() {
+
+    let postDeleter = document.querySelector('button#delete-post');
+    if(postDeleter != null)
+      postDeleter.addEventListener('click', sendDeletePostRequest);
     
-  let postDeleters = document.querySelectorAll('article.post button#delete-post');
-  [].forEach.call(postDeleters, function(deleter) {
-    deleter.addEventListener('click', sendDeletePostRequest);
-  });
+    let postCreator = document.querySelector('form.new_post');
+    if (postCreator != null)
+      postCreator.addEventListener('submit', sendCreatePostRequest);
 
-  let postCreator = document.querySelector('article.post form.new_post');
-  if (postCreator != null)
-    postCreator.addEventListener('submit', sendCreatePostRequest);
+    let postEditor = document.querySelector('button#edit-post');
+    if (postEditor != null){
+      postEditor.addEventListener('click', editablePost);
+    }
 
-  let postEditor = document.querySelector('button.edit-post');
-  if (postEditor != null){
-    postEditor.addEventListener('click', editablePost);
+    let messageCreator = document.querySelector('article.message form.new_message');
+    if (messageCreator != null)
+      messageCreator.addEventListener('submit', sendCreateMessageRequest);
+
   }
-
-  let messageCreator = document.querySelector('article.message form.new_message');
-  if (messageCreator != null)
-    messageCreator.addEventListener('submit', sendCreateMessageRequest);
-
-}
 
   function encodeForAjax(data) {
     if (data == null) return null;
+    
     return Object.keys(data).map(function(k){
       return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
     }).join('&');
@@ -29,12 +30,13 @@ function addEventListeners() {
   
   function sendAjaxRequest(method, url, data, handler) {
     let request = new XMLHttpRequest();
-  
-    request.open(method, url, true);
+    
+    request.open(method, url, true)
     request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     request.addEventListener('load', handler);
     request.send(encodeForAjax(data));
+
   }
   
   function editablePost(event) {
@@ -89,13 +91,14 @@ function addEventListeners() {
   }
 
   function sendDeletePostRequest() {
-    let id = this.closest('article').getAttribute('data-id');
-
+    let deleteButton = document.querySelector('#delete-post');
+    let id = deleteButton.getAttribute('data-post-id');
+    console.log(id);
     sendAjaxRequest('delete', '/api/post/' + id, null, postDeletedHandler);
   }
 
   function sendCreatePostRequest(event) {
-    let name = this.querySelector('input[name=content]').value;
+    let name = this.querySelector('textarea[name=content]').value;
 
     if (name != '')
       sendAjaxRequest('post', '/dashboard', {content: name}, postAddedHandler);
@@ -118,21 +121,34 @@ function addEventListeners() {
    
     let new_post = createPost(post);
 
-    let form = document.querySelector('article.post form.new_post');
-    form.querySelector('[type=text]').value="";
+    //let form = document.querySelector('article.post form.new_post');
+    //form.querySelector('[name=content]').value="";
+    /*
+    let form = document.querySelector('div.post form.new_post');
+    form.querySelector('[name=content]').value="";
 
     let article = form.parentElement;
     let section = article.parentElement;
     section.insertBefore(new_post, article);
-
-
-    let content = document.getElementById('content');
+    
+    let section = document.querySelector('section#post');
+    console.log(section);
+    section.insertBefore(new_post, section);
+    */
+    let form = document.querySelector('form.new_post');
+    form.querySelector('[name=content]').value="";
+    insertAfter(new_post, form);
+    
     content.scrollTop = content.scrollHeight;
   }
   
+  function insertAfter(newNode, referenceNode) {
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+  }
+
   function createPost(post) {
       let new_post = document.createElement('article');
-      console.log(post);
+     
       new_post.classList.add('post');
       new_post.setAttribute('data-id', post.id);
       new_post.innerHTML = `
@@ -146,9 +162,7 @@ function addEventListeners() {
       <button type="submit" class="like-count">
         <span class="far fa-heart"></span> 0
       </button>
-      <button class="delete-post" data-post-id="${post.id}" type="submit">Delete</button>
-
-  
+      
       <form action="api/post/${post.id}/comment" method="POST">
         <div class="mb-3">
           <textarea class="fs-6 form-control" name="content" rows="1" placeholder="Whats on your mind?"></textarea>
@@ -156,9 +170,6 @@ function addEventListeners() {
       <button type="submit" class="btn btn-primary btn-sm"> Post Comment </button>
       </form>
       `;
-
-      let deleter = new_post.querySelector('button.delete-post');
-      deleter.addEventListener('click', sendDeletePostRequest);
       
       // Create a div element, add a class to it, and append new_post to it
       let wrapper = document.createElement('div');
@@ -293,15 +304,14 @@ function addEventListeners() {
       let submitButton = commentCreator.querySelector('button[type="submit"]');
       submitButton.addEventListener('click', sendCreateCommentRequest);
     });
-  });
+  });   
 
   function sendCreateCommentRequest(event){
     let id =  this.closest('article').getAttribute('data-id');
-    
+  
     let textareaContent = document.querySelector('div.comments[data-id="' + id + '"] form.new_comment #exampleTextarea').value;
-    
-    if (textareaContent != ''){
-      
+
+    if (textareaContent != ''){      
       sendAjaxRequest('post', 'api/post/' + id + '/comment', {content: textareaContent}, commentAddedHandler);
     }
     else {
@@ -312,6 +322,7 @@ function addEventListeners() {
 
   function commentAddedHandler(){
     if (this.status != 200) window.location = '/'
+    
     let comment = JSON.parse(this.responseText);
 
     let new_comment = createComment(comment);
@@ -326,8 +337,6 @@ function addEventListeners() {
   
   }
 
-
-
   function createComment(comment) {
     
     let new_comment = document.createElement('p');
@@ -336,5 +345,31 @@ function addEventListeners() {
     new_comment.innerHTML = `${comment.user.name}: ${comment.comment.content}`;
     return new_comment;
   }
+  
+
+
+  // Add event listener for the document click
+  document.addEventListener('click', function(event) {
+    const postId = event.target.closest('section.dashboard article.post'); // Find the closest ancestor with class 'post'
+
+    if (postId) {
+      let postIdValue = postId.getAttribute('data-id'); // Get the post id value
+      // Check if the clicked element was not an interactive element within the post
+      const interactiveElements = ['a', 'button', 'input', 'textarea','span'];
+      const isInteractive = interactiveElements.includes(event.target.tagName.toLowerCase());
+
+      // If the clicked element is not interactive, navigate to the post page
+      if (!isInteractive) {
+        window.location.href = `/post/${postIdValue}`;
+      }
+    }
+  });
+
+
+
+
   addEventListeners();
+  
+
+  
   

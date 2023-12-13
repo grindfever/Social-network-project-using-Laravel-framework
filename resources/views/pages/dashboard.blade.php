@@ -3,25 +3,20 @@
 @section('title', 'DashBoard')
 
 @section('content')
-    <section id="post">
+
+    @auth
+    <form class="new_post" method="POST" action="/dashboard">
+        @csrf
+        <textarea rows="4" cols="40" name="content" placeholder="What's on your mind?"></textarea>
+        <button type="submit" class="btn btn-dark">Create Post</button>
+    </form>
+
+    @endauth
+
+    <section id="post" class="dashboard">
         @foreach($posts as $post)
             @include('partials.post', ['post' => $post])
         @endforeach
-        
-        @guest
-            <article class="post">
-                <p> Please <a href="{{ url('/login') }}">login</a> to create a post </p>
-            </article>
-        @endguest
-        
-        @auth
-            <article class="post">
-                <form class="new_post" method="POST" action="/dashboard">
-                    @csrf
-                    <input type="text" name="content" placeholder="new post">
-                    <button type="submit" class="btn btn-dark">Create Post</button>
-                </form>
-            </article>
-        @endauth
     </section>
 @endsection
+
