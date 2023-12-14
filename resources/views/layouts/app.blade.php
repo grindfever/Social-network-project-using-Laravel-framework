@@ -48,6 +48,10 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/logout') }}">Logout</a> 
                   </li>
+                  @else
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/login') }}" >Login</a>
+                  </li>
                   @endif
                 <form class="d-flex">
                   <input class="form-control me-sm-2" type="search" placeholder="Search">
