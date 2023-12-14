@@ -37,7 +37,7 @@
             @if(isset($noUsersLeftMessage))
             <p>{{ $noUsersLeftMessage }}</p>
             @else
-            <label>Select Members to Add:</label>
+            <label>Select members to Add:</label>
             @foreach($users as $user)
                 <div>
                     <input type="checkbox" name="members[]" value="{{ $user->id }}">
