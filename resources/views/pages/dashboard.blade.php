@@ -28,11 +28,4 @@
     </section>
 @endsection
 
-{{--}}
-<form class="new_post" method="POST" action="/dashboard" style="width: 100%;">
-    @csrf
-    <input type="text" name="title" placeholder="Title" style="width: 100%;"></input>
-    <textarea rows="4" name="content" placeholder="What's on your mind?" style="width: 100%;"></textarea>
-    <button type="submit" class="btn btn-dark">Create Post</button>
-</form>
-{{--}}
+

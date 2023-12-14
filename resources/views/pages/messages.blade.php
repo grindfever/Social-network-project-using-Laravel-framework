@@ -1,7 +1,7 @@
 @extends('layouts.app')  
 
 @section('content')
-    <div>
+    <div id = "chatmenu">
         <h2>Chats</h2>
         <ul>
             @foreach ($users as $user)
