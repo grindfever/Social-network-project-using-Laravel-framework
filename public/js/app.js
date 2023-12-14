@@ -19,15 +19,9 @@ function addEventListeners() {
     messageCreator.addEventListener('submit', sendCreateMessageRequest);
   }
 
-  let searchForm = document.querySelector('article.search-article form.search-form');
+  let searchForm = document.querySelector('article.search-article form.d-flex');
   if (searchForm !== null){  
     searchForm.addEventListener('submit', sendSearchRequest);
-    /*let searchInput = searchResult.querySelector('input[type="text"]');
-    
-    if (searchInput != null) {
-        searchInput.addEventListener('input', sendSearchRequest);
-    }
-    */
   }
 }
   
@@ -109,7 +103,7 @@ function sendUpdatePostRequest(updatedContent, content) {
     let name = this.querySelector('input[name=content]').value;
 
     if (name != '')
-      sendAjaxRequest('post', '/dashboard', {content: name}, postAddedHandler);
+      sendAjaxRequest('post', '/dashboard/create', {content: name}, postAddedHandler);
 
     event.preventDefault();
   }
@@ -182,8 +176,6 @@ function sendUpdatePostRequest(updatedContent, content) {
 
   }
 
-
-
   function createMessage(message) {
     let new_message = document.createElement('article');
     new_message.classList.add('message');
@@ -198,7 +190,7 @@ function sendUpdatePostRequest(updatedContent, content) {
   function sendSearchRequest(event){
     let name = event.target.querySelector('input[name="query"]').value.trim();
     if (name != '')
-      sendAjaxRequest('post', '/search', {query: name}, searchHandler);
+      sendAjaxRequest('post', '/dashboard/search', {query: name}, searchHandler);
 
     event.preventDefault();
   }
@@ -207,23 +199,52 @@ function sendUpdatePostRequest(updatedContent, content) {
     if (this.status != 200) window.location = '/';
     let searchResults = JSON.parse(this.responseText);
 
-    let searchResultList = document.querySelector('ul.results');
+    let searchResultContainer = document.querySelector('div.search-results');
+    searchResultContainer.innerHTML = '';
 
-    searchResultList.innerHTML = '';
+    let listGroupDiv = document.createElement('div');
+    listGroupDiv.classList.add('list-group');
 
-    searchResults.forEach(result => {
-        let li = document.createElement('li');
-        li.textContent = result.name;
+    if (searchResults.users.length > 0) {
+      let userHeading = document.createElement('h2');
+      userHeading.textContent = 'Users';
+      listGroupDiv.appendChild(userHeading);
 
+      searchResults.users.forEach(user => {
         let link = document.createElement('a');
+        link.href = '/profile/' + user.id;
+        link.textContent = user.name;
 
-        link.href = '/profile/' + result.id;
-        link.textContent = result.content;
+        link.classList.add('list-group-item', 'list-group-item-action');
 
-        li.appendChild(link);
+        listGroupDiv.appendChild(link);
+      });
+    }
 
-        searchResultList.appendChild(li);
-    });
+    if (searchResults.posts.length > 0) {
+      let postsHeader = document.createElement('h2');
+      postsHeader.textContent = 'Posts';
+      listGroupDiv.appendChild(postsHeader);
+
+      searchResults.posts.forEach(post => {
+        let link = document.createElement('a');
+        link.href = '/post/' + post.id;
+        link.textContent = post.content;
+
+        link.classList.add('list-group-item', 'list-group-item-action');
+
+        listGroupDiv.appendChild(link);
+      });
+  }
+
+  searchResultContainer.appendChild(listGroupDiv);
+    
+  }
+
+ function clearSearchResults(){
+  if (this.status != 200) window.location = '/';
+    let searchResultContainer = document.querySelector('div.search-results');
+    searchResultContainer.innerHTML = '';
   }
 
   addEventListeners();

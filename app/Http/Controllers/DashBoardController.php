@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\User;
 use App\Models\Post;
 
 
@@ -97,5 +98,18 @@ class DashBoardController extends Controller
         // Delete the post and return it as JSON.
         $post->delete();
         return response()->json($post);
+    }
+
+
+    public function search(Request $request) {
+
+        $query = $request->input('query');
+        $users = User::where('name', 'like', '%' . $query . '%')->take(5)->get();
+
+        $posts = Post::where('content','like', '%' . $query . '%')->take(5)->get();
+
+        //dd(response()->json(['users' => $users, 'posts' => $posts]));
+
+        return response()->json(['users' => $users, 'posts' => $posts]);        
     }
 }

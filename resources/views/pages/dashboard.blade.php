@@ -3,7 +3,7 @@
 @section('title', 'DashBoard')
 
 @section('content')
-
+    @include('partials.search')
     <section id="post">
         @each('partials.post', $post, 'post')
         @guest

@@ -38,8 +38,8 @@ Route::controller(DashBoardController::class)->group(function () {
 /*
  *    API
  */ 
-
- Route::post('/dashboard', [DashBoardController::class, 'create']);
+Route::post('/dashboard/search', [DashBoardController::class, 'search']);
+ Route::post('/dashboard/create', [DashBoardController::class, 'create']);
  Route::delete('api/post/{post_id}', [DashBoardController::class, 'delete']);
  Route::put('api/post/{post_id}', [DashBoardController::class, 'update']);
  
@@ -72,9 +72,3 @@ Route::controller(MessageController::class)->group(function () {
     Route::post('/messages/{id}', 'create');
 });
 
-
-//Search
-Route::controller(SearchController::class)->group(function () {
-    Route::get('/search','show');
-    Route::post('/search','search');
-});
