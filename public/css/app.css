@@ -1,180 +1,88 @@
 
-/* FILEPATH: /home/afg/lbaw23102/public/css/app.css */
-/* BEGIN: ed8c6549bwf9 */
-/*
-body, html {
-  height: 100%;
-  margin: 0;
-  padding-top:50px;
-}
-
-main {
-  display: flex;
-  
-}
-*, *::before, *::after {
-  box-sizing: border-box; 
-}
-
-.header1 {
-  background-color: #000; 
-  color: #fff; 
-  padding: 30px;
-  padding-top:20px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  height:100%;
-  top:0;
-}
-.logo a {
-  font-size: 3em;
-  color: #fff;
-  text-decoration: none;
-  margin-bottom: 1px;
-
-}
-.timeline{
-  margin-top: auto;
-  margin-bottom:15px;
-}
-.messages,
-.user-info{ 
-  margin: 20px 0 ;
-}
-
-
-
-.button {
-  color: #fff;
-  text-decoration: none;
-  padding: 0px 15px;
-  font-size:0.8em;
-}
-.button:hover {
-  background-color: #555;
-}
-
-.header2{
-  background-color: #000;
-  color: #fff;
-  position: fixed;
-  text-align: center;
-  display: flex;
-  padding-top: 40px;
-  padding-bottom: 15px;
-  top: 0;
-  right: 0;
-  left: 210px;
-  z-index: 1030;
-}
-
-.header2 .button {
-  margin-left: 100px;
-}
-.Profile{
-  font-size:1.5em;
-  margin-left:5%;
-  padding-left: 30px;
-}
-.Profile a {
-  color: #fff;
-}
-
-
-.form-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-}
-
-form {
-  text-align: center;
-  max-width: 400px;
+/* Adjust input and textarea size */
+.form-control {
   width: 100%;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  resize: none; /* Prevent textarea from being resized */
 }
 
-#content {
+/* Additional styling for input group */
+.input-group {
+  margin-bottom: 15px;
+}
+
+
+/* Apply hover effect only within the specific page container */
+.dashboard .post {
+  padding: 20px;
+  border: 1px solid #ccc;
+  max-width: 20rem;
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Add hover effect */
+.dashboard .post:hover {
+  background-color: #f0f0f0; /* Change the background color on hover */
+  cursor: pointer; /* Change cursor to indicate interactivity */
+}
+
+.new_post {
+  width: 100%; /* Make the form fill the container */
+  max-width: 20rem; /* Match the maximum width of the posts */
+  padding: 15px;
+  /* Other styles for the new_post form */
+}
+
+.button-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-left: 50%; 
-  padding-top:40px;
-  height: 100%; 
-  overflow-y: auto;
-}
-#content > * {
-  margin-bottom: 10px;
-}
-#content form {
-  width: 1400px;
-  font-size: 2em;
-}
-#content label{
-  font-size:23px;
-}
-.timeline a,
-.messages a,
-.user-info a {
-    font-size: 1.6em;
-    color: #fff;
-    text-decoration: none;
-    margin-bottom: 20px;
-}
-
-.user-info span {
-    font-size: 1.5em;
-    margin-left: 10px;
+  gap: 10px; /* Adjust the spacing between buttons */
 }
 
 
-
-.article.post {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 20px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.article.post h2 {
-  font-size: 24px;
-  margin-bottom: 10px;
-  color: #333;
-}
-.fw-light.nav-link.fs-6:hover {
-  color: #ff0000;
-}
-
-.article.post p {
+/* Style the like button */
+.like-count {
+  background-color: transparent;
+  border: none;
   font-size: 16px;
-  line-height: 1.5;
-  color: #555;
+  color: #ff0000; /* Red color for liked */
+  cursor: pointer;
 }
 
-.article.post .post-footer {
-  margin-top: 15px;
-  padding-top: 10px;
-  border-top: 1px solid #ddd;
+/* Style the comment section */
+.comments {
+  margin-top: 20px;
 }
-*/
-/* END: ed8c6549bwf9 */
+
+.comments p {
+  margin-bottom: 10px;
+}
+
+.new_comment {
+  margin-top: 10px;
+}
+
+.new_comment textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none;
+}
+.new_post textarea {
+  resize: none;
+}
 
 #content {
+  padding-top: 60px; /* Add this line, adjust as needed */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh; /* Adjust this value as needed */
-  overflow-y: auto;
   scroll-behavior: smooth;
 }
+
+
 #scrollToTopButton {
   position: fixed;
   bottom: 20px;

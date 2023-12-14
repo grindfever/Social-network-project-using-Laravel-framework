@@ -24,10 +24,11 @@ class CommentController extends Controller
         $comment->user_id = Auth::id();
         $comment->post_id = $post_id;
         $comment->date = now();
+        
         $comment->save();
 
         $user = Auth::user(); // Get the user who created the post
-
+        
         return response()->json([
             'comment' => $comment,
             'user' => $user,

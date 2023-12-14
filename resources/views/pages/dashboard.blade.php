@@ -3,25 +3,36 @@
 @section('title', 'DashBoard')
 
 @section('content')
-    <section id="post">
+
+    @auth
+    <form class="new_post" method="POST" action="/dashboard" enctype="multipart/form-data">
+        @csrf
+        <div class="input-group">
+            <input type="text" class="form-control" name="title" placeholder="Title">
+        </div>
+        <div class="input-group">
+            <textarea class="form-control" rows="4" cols="40" name="content" placeholder="What's on your mind?"></textarea>
+        </div>
+        <div class="input-group">
+            <input type="file" class="form-control" name="media" accept="image/*, video/*">
+        </div>
+        <button type="submit" class="btn btn-dark">Create Post</button>
+    </form>
+    
+    @endauth
+
+    <section id="post" class="dashboard">
         @foreach($posts as $post)
             @include('partials.post', ['post' => $post])
         @endforeach
-        
-        @guest
-            <article class="post">
-                <p> Please <a href="{{ url('/login') }}">login</a> to create a post </p>
-            </article>
-        @endguest
-        
-        @auth
-            <article class="post">
-                <form class="new_post" method="POST" action="/dashboard">
-                    @csrf
-                    <input type="text" name="content" placeholder="new post">
-                    <button type="submit" class="btn btn-dark">Create Post</button>
-                </form>
-            </article>
-        @endauth
     </section>
 @endsection
+
+{{--}}
+<form class="new_post" method="POST" action="/dashboard" style="width: 100%;">
+    @csrf
+    <input type="text" name="title" placeholder="Title" style="width: 100%;"></input>
+    <textarea rows="4" name="content" placeholder="What's on your mind?" style="width: 100%;"></textarea>
+    <button type="submit" class="btn btn-dark">Create Post</button>
+</form>
+{{--}}
