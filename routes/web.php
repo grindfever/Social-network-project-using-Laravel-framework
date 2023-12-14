@@ -6,9 +6,12 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ProfileController;
+
+use App\Http\Controllers\GroupMessageController;
 use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\GroupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +74,27 @@ Route::controller(MessageController::class)->group(function () {
     Route::get('/messages', 'list_chats');
     Route::get('/messages/{id}','chat');
     Route::post('/messages/{id}', 'create');
+});
+
+// Groups
+Route::controller(GroupController::class)->group(function (){
+    Route::get('/groups', 'showGroups');
+    Route::get('/groups/{group}', 'showGroup');
+    Route::get('/create-group', 'showGroupCreationForm');
+    Route::post('/create-group', 'createGroup');
+    Route::get('/groups/{group}/edit', 'edit');
+    Route::patch('/groups/{group}', 'update');
+    Route::post('/groups/{group}/add-members', 'addMembers');
+    Route::delete('/groups/{group}', 'destroy');
+    Route::post('/groups/{group}/kick-member', 'kickMember');
+    Route::post('/groups/{group}/leave', 'leaveGroup');
+
+});
+
+// GroupChat
+Route::controller(GroupMessageController::class)->group(function (){
+    Route::get('/groups/{groupId}/chat', 'showChat');
+    Route::post('/groups/{groupId}/chat', 'sendMessage');
 });
 
 

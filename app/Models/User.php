@@ -97,4 +97,9 @@ class User extends Authenticatable
         return $this->likes()->where('post_id', $post->id)->exists();
     }
     
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'memberships', 'possible_member', 'group_id');
+    }
+
 }

@@ -38,6 +38,9 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/messages') }}">Messages</a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/groups') }}">Groups</a>
+                  </li>
                   @if (Auth::check())
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/profile') }}" >{{ Auth::user()->name }}</a>
