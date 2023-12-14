@@ -1,5 +1,6 @@
 <div class="card border-dark mb-3" style="max-width: 20rem;" id="{{ $post->id}}">
     <article class="post" data-id="{{ $post->id }}">
+        <h1>{{ $post->title }}</h1>
         <div class="card-header"><a href="/profile/{{ $post->user->id }}">{{ $post->user->name }}</a></div>
             <div class="card-body">
                 <p class="card-text"><div class="content">{{$post->content}}</div></p>

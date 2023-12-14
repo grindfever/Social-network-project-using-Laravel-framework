@@ -98,10 +98,11 @@
   }
 
   function sendCreatePostRequest(event) {
-    let name = this.querySelector('textarea[name=content]').value;
+    let content_post = this.querySelector('textarea[name=content]').value;
+    let title_post = this.querySelector('input[name=title]').value;
 
-    if (name != '')
-      sendAjaxRequest('post', '/dashboard', {content: name}, postAddedHandler);
+    if (title_post != '' && content_post != '' )
+      sendAjaxRequest('post', '/dashboard', {content: content_post,title: title_post}, postAddedHandler);
 
     event.preventDefault();
   }
@@ -121,23 +122,12 @@
    
     let new_post = createPost(post);
 
-    //let form = document.querySelector('article.post form.new_post');
-    //form.querySelector('[name=content]').value="";
-    /*
-    let form = document.querySelector('div.post form.new_post');
-    form.querySelector('[name=content]').value="";
-
-    let article = form.parentElement;
-    let section = article.parentElement;
-    section.insertBefore(new_post, article);
-    
-    let section = document.querySelector('section#post');
-    console.log(section);
-    section.insertBefore(new_post, section);
-    */
     let form = document.querySelector('form.new_post');
     form.querySelector('[name=content]').value="";
-    insertAfter(new_post, form);
+    form.querySelector('[name=title]').value="";
+
+    let section = document.querySelector('section.dashboard');
+    section.prepend(new_post);
     
     content.scrollTop = content.scrollHeight;
   }
@@ -152,6 +142,7 @@
       new_post.classList.add('post');
       new_post.setAttribute('data-id', post.id);
       new_post.innerHTML = `
+      <h1>${post.title}</h1>
       <div class="card-header"><a href="post/${post.id}">  ${post.user.name} </a></div>
       <div class="card-body">
         <p class="card-text">

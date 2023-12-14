@@ -81,6 +81,7 @@ CREATE TABLE posts
     id SERIAL PRIMARY KEY,
     user_id INTEGER CONSTRAINT fk_posts_userid REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 				   CONSTRAINT nn_posts_userid NOT NULL,
+    title character varying(128) ,
     content character varying(512) ,
     date timestamp(0) without time zone CONSTRAINT nn_posts_date NOT NULL DEFAULT now(),
     public boolean NOT NULL DEFAULT TRUE,

@@ -55,6 +55,7 @@ class DashBoardController extends Controller
         $this->authorize('create', $post);
 
         // Set post details
+        $post->title = $request->input('title');
         $post->content = $request->input('content'); 
         $post->user_id = Auth::user()->id;
 

@@ -7,6 +7,7 @@
     @auth
     <form class="new_post" method="POST" action="/dashboard">
         @csrf
+        <input type="text" name="title" placeholder="Title"></input>
         <textarea rows="4" cols="40" name="content" placeholder="What's on your mind?"></textarea>
         <button type="submit" class="btn btn-dark">Create Post</button>
     </form>
