@@ -5,13 +5,20 @@
 @section('content')
 
     @auth
-    <form class="new_post" method="POST" action="/dashboard">
+    <form class="new_post" method="POST" action="/dashboard" enctype="multipart/form-data">
         @csrf
-        <input type="text" name="title" placeholder="Title"></input>
-        <textarea rows="4" cols="40" name="content" placeholder="What's on your mind?"></textarea>
+        <div class="input-group">
+            <input type="text" class="form-control" name="title" placeholder="Title">
+        </div>
+        <div class="input-group">
+            <textarea class="form-control" rows="4" cols="40" name="content" placeholder="What's on your mind?"></textarea>
+        </div>
+        <div class="input-group">
+            <input type="file" class="form-control" name="media" accept="image/*, video/*">
+        </div>
         <button type="submit" class="btn btn-dark">Create Post</button>
     </form>
-
+    
     @endauth
 
     <section id="post" class="dashboard">
@@ -21,3 +28,11 @@
     </section>
 @endsection
 
+{{--}}
+<form class="new_post" method="POST" action="/dashboard" style="width: 100%;">
+    @csrf
+    <input type="text" name="title" placeholder="Title" style="width: 100%;"></input>
+    <textarea rows="4" name="content" placeholder="What's on your mind?" style="width: 100%;"></textarea>
+    <button type="submit" class="btn btn-dark">Create Post</button>
+</form>
+{{--}}

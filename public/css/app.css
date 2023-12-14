@@ -1,11 +1,15 @@
 
-/* Style the card container */
-.card {
-  max-width: 20rem;
-  margin-bottom: 20px;
-  border: 1px solid #343a40; /* Dark border */
-  border-radius: 8px;
+/* Adjust input and textarea size */
+.form-control {
+  width: 100%;
+  resize: none; /* Prevent textarea from being resized */
 }
+
+/* Additional styling for input group */
+.input-group {
+  margin-bottom: 15px;
+}
+
 
 /* Apply hover effect only within the specific page container */
 .dashboard .post {
@@ -33,17 +37,6 @@
   gap: 10px; /* Adjust the spacing between buttons */
 }
 
-.card-header {
-  background-color: #343a40; /* Dark background for header */
-  color: #fff; /* White text */
-  padding: 10px;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-}
-
-.card-body {
-  padding: 20px;
-}
 
 /* Style the like button */
 .like-count {

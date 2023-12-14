@@ -99,8 +99,10 @@
 
   function sendCreatePostRequest(event) {
     let content_post = this.querySelector('textarea[name=content]').value;
-    let title_post = this.querySelector('input[name=title]').value;
-
+    let title_post = this.querySelector('form.new_post input[name=title]').value;
+    console.log(this.querySelector('input[name=title]'));
+    console.log(content_post);
+    console.log(title_post);
     if (title_post != '' && content_post != '' )
       sendAjaxRequest('post', '/dashboard', {content: content_post,title: title_post}, postAddedHandler);
 
@@ -118,6 +120,7 @@
   
   function postAddedHandler() {
     if (this.status != 200) window.location = '/';
+    console.log(this.responseText);
     let post = JSON.parse(this.responseText);
    
     let new_post = createPost(post);

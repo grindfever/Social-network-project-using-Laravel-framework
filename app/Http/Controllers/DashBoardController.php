@@ -48,6 +48,12 @@ class DashBoardController extends Controller
      */
     public function create(Request $request)
     {
+        // Validate the request.
+        $request->validate([
+            'title' => 'required|max:128',
+            'content' => 'required|max:512',
+        ]);
+
         // Create a blank new Post.
         $post = new Post();
         
@@ -55,8 +61,8 @@ class DashBoardController extends Controller
         $this->authorize('create', $post);
 
         // Set post details
-        $post->title = $request->input('title');
-        $post->content = $request->input('content'); 
+        $post->title = strip_tags($request->input('title'));
+        $post->content = strip_tags($request->input('content')); 
         $post->user_id = Auth::user()->id;
 
         // Save the card and return it as JSON.
