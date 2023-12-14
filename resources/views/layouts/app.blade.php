@@ -41,9 +41,20 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/groups') }}">Groups</a>
                   </li>
-                  @if (Auth::check())
+                  
+                <form class="d-flex">
+                  <input class="form-control me-sm-2" type="search" placeholder="Search">
+                  <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                </form>
+                @if (Auth::check())
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/profile') }}" >{{ Auth::user()->name }}</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/about') }}" >About us</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/contact') }}" >Contact us</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/logout') }}">Logout</a> 
@@ -53,10 +64,6 @@
                     <a class="nav-link" href="{{ url('/login') }}" >Login</a>
                   </li>
                   @endif
-                <form class="d-flex">
-                  <input class="form-control me-sm-2" type="search" placeholder="Search">
-                  <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                </form>
               </div>
             </div>
           </nav>

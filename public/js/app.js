@@ -306,7 +306,7 @@
     let textareaContent = document.querySelector('div.comments[data-id="' + id + '"] form.new_comment #exampleTextarea').value;
 
     if (textareaContent != ''){      
-      sendAjaxRequest('post', 'api/post/' + id + '/comment', {content: textareaContent}, commentAddedHandler);
+      sendAjaxRequest('post', '/api/post/' + id + '/comment', {content: textareaContent}, commentAddedHandler);
     }
     else {
       console.error('Error:', this.status, this.statusText);

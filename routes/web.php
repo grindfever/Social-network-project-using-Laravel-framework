@@ -102,3 +102,7 @@ Route::controller(GroupMessageController::class)->group(function (){
 Route::controller(SearchController::class)->group(function () {
     Route::get('/search','search');
 });
+
+Route::get('/about', function () {
+    return view('pages.about_us');
+});

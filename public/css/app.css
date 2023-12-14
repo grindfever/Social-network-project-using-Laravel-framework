@@ -12294,7 +12294,6 @@ textarea.form-control-lg {
 .btn-group .dropdown-toggle.btn-primary ~ .dropdown-menu .dropdown-item {
   color: #fff;
 }
-<<<<<<< HEAD
 .btn-group .dropdown-toggle.btn-primary ~ .dropdown-menu .dropdown-item:hover,
 .btn-group .dropdown-toggle.btn-primary ~ .dropdown-menu .dropdown-item:focus {
   background-color: #00769c;
@@ -12455,30 +12454,8 @@ label,
 .popover-header {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-=======
+}
 
-/* Add your existing form styles here... */
-
-#content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-left:230px;
-  padding-top:40px;
-  height: 100%;
-  overflow-y: auto;
-}
-#content > * {
-  margin-bottom: 10px; /* Add a bottom margin to separate elements */
-}
-#content form {
-  width: 1400px;
-  font-size: 2em;
-}
-#content label{
-  font-size:16px;
-}
-.timeline a,
 .messages a,
 .user-info a {
     font-size: 1.6em; /* Adjust the font size as needed */
@@ -12492,22 +12469,6 @@ label,
     margin-left: 10px; /* Adjust as needed for spacing */
 }
 
-
-.form-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-}
-
-form {
-  text-align: start;
-  max-width: 600px; /* Adjust as needed */
-  width: 100%;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
 /*profile*/
 #profile{
   width:100%;
@@ -12531,22 +12492,7 @@ form {
 #profile .user{
   font-size: 20px;
 }
-/*dashboard*/
-.post{
-  width:80%;
-  padding-left: 230px; 
-  padding-top:40px;
-}
-.post form{
-  width:80%;
-}
-.post .content {
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 16px;
-}
+
 /*Chatmenu*/
 #chatmenu{
   padding-top:40px;
@@ -12639,12 +12585,3 @@ padding-top:10px;
   font-size:16x;
 }
 
-/*postpage*/
-
-.postpage #post{
-  width:60vw;
-}
-.postpage .edit-post{
-  margin-left:230px;
->>>>>>> cd4fdfcc5b8bfb74ddec0a76257aa579606abd82
-}
