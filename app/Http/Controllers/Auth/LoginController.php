@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\View\View;
 
-use App\Models\Admin;
-
 class LoginController extends Controller
 {
 
@@ -36,12 +34,10 @@ class LoginController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-        
-    
+ 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
-                $request->session()->regenerate();
-                return redirect()->intended('/dashboard');
-            }
+            $request->session()->regenerate();
+            return redirect()->intended('/dashboard');
         }
  
         return back()->withErrors([
@@ -53,15 +49,13 @@ class LoginController extends Controller
      * Log out the user from application.
      */
     public function logout(Request $request)
+
     {
-        
         Auth::logout();
-        return redirect()->route('login')
-            ->withSuccess('You have logged out successfully!');
-    
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('login')
             ->withSuccess('You have logged out successfully!');
     } 
 }
+
