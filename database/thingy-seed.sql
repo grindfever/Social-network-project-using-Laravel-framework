@@ -258,7 +258,7 @@ ADD COLUMN search TSVECTOR;
 CREATE FUNCTION post_search_update() RETURNS TRIGGER AS $$
 BEGIN
   NEW.search = (
-    to_tsvector('english',NEW.content)
+    to_tsvector('english',NEW.title)
   );
   RETURN NEW;
 END $$

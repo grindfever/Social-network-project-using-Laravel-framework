@@ -18,11 +18,10 @@
     if (messageCreator != null)
       messageCreator.addEventListener('submit', sendCreateMessageRequest);
 
-    let searchForm = document.querySelector('article.search-article form.d-flex');
+    let searchForm = document.querySelector('form.d-flex');
     if (searchForm !== null){  
       searchForm.addEventListener('submit', sendSearchRequest);
     }
-
   }
 
   function encodeForAjax(data) {
@@ -372,57 +371,87 @@
     event.preventDefault();
   }
 
-  function searchHandler(){
-    if (this.status != 200) window.location = '/';
+  function searchHandler() {
+    console.log('Search handler called.');
+    
+    if (this.status != 200) {
+        console.log('Error: ', this.status);
+        window.location = '/';
+        return;
+    }
     let searchResults = JSON.parse(this.responseText);
 
-    let searchResultContainer = document.querySelector('div.search-results');
-    searchResultContainer.innerHTML = '';
-
-    let listGroupDiv = document.createElement('div');
-    listGroupDiv.classList.add('list-group');
-
-    if (searchResults.users.length > 0) {
-      let userHeading = document.createElement('h2');
-      userHeading.textContent = 'Users';
-      listGroupDiv.appendChild(userHeading);
-
-      searchResults.users.forEach(user => {
-        let link = document.createElement('a');
-        link.href = '/profile/' + user.id;
-        link.textContent = user.name;
-
-        link.classList.add('list-group-item', 'list-group-item-action');
-
-        listGroupDiv.appendChild(link);
-      });
+    let searchResultContainer = document.querySelector('.search-results .list-group');
+    if (!searchResultContainer) {
+        searchResultContainer = document.createElement('div');
+        searchResultContainer.classList.add('list-group');
+        document.querySelector('.search-results').appendChild(searchResultContainer);
+    } 
+    else {
+      searchResultContainer.innerHTML = '';
     }
 
+    var gotResults = false;
+
+    if (searchResults.users.length > 0) {
+        gotResults = true;
+        let userHeading = document.createElement('h2');
+        userHeading.textContent = 'Users';
+        searchResultContainer.appendChild(userHeading);
+
+        searchResults.users.forEach(user => {
+            let link = document.createElement('a');
+            link.href = '/profile/' + user.id;
+            link.textContent = user.name;
+
+            link.classList.add('list-group-item', 'list-group-item-action');
+
+            searchResultContainer.appendChild(link);
+        });
+    } 
     if (searchResults.posts.length > 0) {
-      let postsHeader = document.createElement('h2');
-      postsHeader.textContent = 'Posts';
-      listGroupDiv.appendChild(postsHeader);
+        gotResults = true;
+        let postsHeader = document.createElement('h2');
+        postsHeader.textContent = 'Posts';
+        searchResultContainer.appendChild(postsHeader);
 
-      searchResults.posts.forEach(post => {
-        let link = document.createElement('a');
-        link.href = '/post/' + post.id;
-        link.textContent = post.content;
+        searchResults.posts.forEach(post => {
+            let link = document.createElement('a');
+            link.href = '/post/' + post.id;
+            link.textContent = post.title;
 
-        link.classList.add('list-group-item', 'list-group-item-action');
+            link.classList.add('list-group-item', 'list-group-item-action');
 
-        listGroupDiv.appendChild(link);
-      });
-  }
+            searchResultContainer.appendChild(link);
+        });
+    }
 
-  searchResultContainer.appendChild(listGroupDiv);
-    
-  }
+    if (!gotResults){
+      let noResult = document.createElement('p');
+      searchResultContainer.appendChild(noResult);
+    }
 
+    let clearButton = document.createElement('button');
+    clearButton.innerHTML = 'Clear Results';
+    clearButton.onclick = clearSearchResults;
+    searchResultContainer.appendChild(clearButton);
+
+
+    showSearchResults();
+}
+
+function showSearchResults(){
+  let searchResultContainer = document.querySelector('.search-results-container');
+  searchResultContainer.style.display = "block";
+}
+ 
  function clearSearchResults(){
-  if (this.status != 200) window.location = '/';
-    let searchResultContainer = document.querySelector('div.search-results');
-    searchResultContainer.innerHTML = '';
-  }
+  let searchResult = document.querySelector('.search-results');
+  searchResult.innerHTML = '';
+  let searchResultContainer = document.querySelector('.search-results-container');
+  searchResultContainer.style.display = "none";
+}
+  
 
   addEventListeners();
   

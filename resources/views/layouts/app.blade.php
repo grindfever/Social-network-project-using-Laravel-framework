@@ -35,17 +35,21 @@
                       <span class="visually-hidden">(current)</span>
                     </a>
                   </li>
+                  <form class="d-flex" action="/dashboard">
+                    @csrf
+                    <input class="form-control me-sm-2" name="query" type="search" placeholder="search">
+                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                  </form>
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/messages') }}">Messages</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/groups') }}">Groups</a>
                   </li>
+
                   
-                <form class="d-flex">
-                  <input class="form-control me-sm-2" type="search" placeholder="Search">
-                  <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                </form>
+                
+
                 @if (Auth::check())
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/profile') }}" >{{ Auth::user()->name }}</a>
@@ -66,7 +70,12 @@
                   @endif
               </div>
             </div>
-          </nav>
+          </nav>      
+          <section id="search-section">
+            <div class="search-results-container">
+                <div class="search-results"></div>
+            </div>
+          </section>  
         <main>
           <section id="content">
             @yield('content')
