@@ -112,13 +112,4 @@ class DashBoardController extends Controller
         
         return response()->json(['users' => $users, 'posts' => $posts]);        
     }
-
-    public function teste() {
-
-        $query = "Work";
-        
-        $posts = Post::whereRaw("search @@ to_tsquery('english', ?)", [$query])->get();    
-        
-        dd($query,$posts);        
-    }
 }

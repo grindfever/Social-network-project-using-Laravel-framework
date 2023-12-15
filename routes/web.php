@@ -32,7 +32,6 @@ Route::redirect('/', '/dashboard');
 Route::controller(DashBoardController::class)->group(function () {
     Route::get('/dashboard','list')->name('DashBoard');
     Route::get('/post/{id}','show');
-    Route::get('/dashboard/teste','teste');
 });
 
 
