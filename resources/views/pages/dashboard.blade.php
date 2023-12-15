@@ -3,6 +3,11 @@
 @section('title', 'DashBoard')
 
 @section('content')
+    
+    @guest
+    <article class="post">
+        <p> Please <a href="{{ url('/login') }}">login</a> to create a post </p>
+    @endguest
 
     @auth
     <form class="new_post" method="POST" action="/dashboard" enctype="multipart/form-data">

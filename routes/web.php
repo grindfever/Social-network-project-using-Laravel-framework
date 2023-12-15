@@ -13,6 +13,8 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GroupController;
 
+use App\Http\Controllers\AdminController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,9 +39,8 @@ Route::controller(DashBoardController::class)->group(function () {
 /*
  *    API
  */ 
-
- // Posts
- Route::post('/dashboard', [DashBoardController::class, 'create']);
+ Route::post('/dashboard/search', [DashBoardController::class, 'search']);
+ Route::post('/dashboard/create', [DashBoardController::class, 'create']);
  Route::delete('api/post/{post_id}', [DashBoardController::class, 'delete']);
  Route::put('api/post/{post_id}', [DashBoardController::class, 'update']);
  Route::post('api/post/{post_id}/like', [DashBoardController::class, 'like'])->middleware('auth')->name('post.like');
@@ -95,12 +96,6 @@ Route::controller(GroupController::class)->group(function (){
 Route::controller(GroupMessageController::class)->group(function (){
     Route::get('/groups/{groupId}/chat', 'showChat');
     Route::post('/groups/{groupId}/chat', 'sendMessage');
-});
-
-
-//Search
-Route::controller(SearchController::class)->group(function () {
-    Route::get('/search','search');
 });
 
 Route::get('/about', function () {

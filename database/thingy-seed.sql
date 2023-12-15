@@ -25,6 +25,13 @@ DROP TABLE if exists memberships CASCADE;
 DROP TABLE if exists group_messages CASCADE;  
 
 
+DROP TRIGGER IF EXISTS post_search_update ON posts;
+
+DROP FUNCTION IF EXISTS post_search_update;
+
+DROP INDEX IF EXISTS idx_post_search;
+
+
 
 CREATE TYPE notification_type_enum AS ENUM ('liked_comment', 
                                        'reply_comment',
@@ -72,7 +79,10 @@ CREATE TABLE moderators
 
 CREATE TABLE admins
 (
-    id INTEGER PRIMARY KEY CONSTRAINT fk_admin_username REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+  id SERIAL,
+  email VARCHAR UNIQUE NOT NULL,
+  password VARCHAR NOT NULL,
+  remember_token VARCHAR
 );
 
 --POST
@@ -238,7 +248,30 @@ CREATE TABLE memberships
     PRIMARY KEY (possible_member, group_id)
 );
 
+
 --- INDEXES ---
+
+ALTER TABLE posts
+ADD COLUMN search TSVECTOR;
+
+
+CREATE FUNCTION post_search_update() RETURNS TRIGGER AS $$
+BEGIN
+  NEW.search = (
+    to_tsvector('english',NEW.title)
+  );
+  RETURN NEW;
+END $$
+LANGUAGE plpgsql;  
+
+
+CREATE TRIGGER post_search_update
+  BEFORE INSERT ON posts
+  FOR EACH ROW
+  EXECUTE PROCEDURE post_search_update();
+
+CREATE INDEX idx_post_search ON posts USING GIN (search);
+
 
 --- TRIGGERS ---
 
@@ -262,6 +295,7 @@ CREATE TABLE group_messages
     img character varying(256) ,
     CHECK (content IS NOT NULL OR img IS NOT NULL)
 );
+
 
 INSERT INTO users VALUES (
   DEFAULT,
@@ -383,6 +417,7 @@ INSERT INTO messages VALUES (
   DEFAULT, 3, 2, 'Blah6', DEFAULT, DEFAULT
 );
 
+
 INSERT INTO groups VALUES (
     DEFAULT,
     1, 
@@ -431,3 +466,4 @@ INSERT INTO group_messages VALUES (
 INSERT INTO group_messages VALUES (
   DEFAULT, 1, 3, 'terceira', DEFAULT, DEFAULT
 );
+

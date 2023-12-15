@@ -49,6 +49,7 @@ class LoginController extends Controller
      * Log out the user from application.
      */
     public function logout(Request $request)
+
     {
         Auth::logout();
         $request->session()->invalidate();
@@ -57,3 +58,4 @@ class LoginController extends Controller
             ->withSuccess('You have logged out successfully!');
     } 
 }
+

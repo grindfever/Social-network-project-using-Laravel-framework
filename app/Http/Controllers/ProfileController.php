@@ -27,7 +27,6 @@ class ProfileController extends Controller {
         $user = User::findOrFail($id);
         // Get posts for user ordered by id.
         $post = Post::where('user_id','=',$id)->orderBy('id')->get();
-
         
         if(Auth::guest()){
             if($user->priv == TRUE) return redirect('/dashboard');

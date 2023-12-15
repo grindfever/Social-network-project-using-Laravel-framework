@@ -50,9 +50,7 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    /**
-     * Get the cards for a user.
-     */
+    
 
     public function messages()
     {

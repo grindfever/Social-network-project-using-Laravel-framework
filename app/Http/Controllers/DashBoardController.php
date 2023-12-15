@@ -8,6 +8,7 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+use App\Models\User;
 use App\Models\Post;
 use App\Models\PostLike;
 
@@ -107,6 +108,19 @@ class DashBoardController extends Controller
         $post->delete();
         return response()->json($post);
     }
+
+
+    public function search(Request $request) {
+
+        $query = $request->input('query');
+        
+        $users = User::where('username','=', $query)->take(5)->get();
+        $posts = Post::whereRaw("search @@ to_tsquery('english', ?)", [$query])->get();
+
+        
+        return response()->json(['users' => $users, 'posts' => $posts]);        
+    }
+
     
     public function like($id){
         $liker = auth()->user();
@@ -134,6 +148,5 @@ class DashBoardController extends Controller
         //return redirect()->route('DashBoard')->with('success', 'Post unliked');
         return response()->json(['message' => 'Post unliked','isLiked' => False, 'likeCount' => $likeCount,'postId' => $id], 200);
     }
-    
     
 }
