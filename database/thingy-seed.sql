@@ -23,6 +23,13 @@ DROP TABLE if exists post_removals CASCADE;
 DROP TABLE if exists memberships CASCADE; 
 
 
+DROP TRIGGER IF EXISTS post_search_update ON posts;
+
+DROP FUNCTION IF EXISTS post_search_update;
+
+DROP INDEX IF EXISTS idx_post_search;
+
+
 
 CREATE TYPE notification_type_enum AS ENUM ('liked_comment', 
                                        'reply_comment',
@@ -225,6 +232,34 @@ CREATE TABLE memberships
     PRIMARY KEY (possible_member, group_id)
 );
 
+
+/*-------------------INDEXES-----------------*/
+
+ALTER TABLE posts
+ADD COLUMN search TSVECTOR;
+
+
+CREATE FUNCTION post_search_update() RETURNS TRIGGER AS $$
+BEGIN
+  NEW.search = (
+    to_tsvector('english',NEW.content)
+  );
+  RETURN NEW;
+END $$
+LANGUAGE plpgsql;  
+
+
+CREATE TRIGGER post_search_update
+  BEFORE INSERT ON posts
+  FOR EACH ROW
+  EXECUTE PROCEDURE post_search_update();
+
+CREATE INDEX idx_post_search ON posts USING GIN (search);
+
+
+/*-------------------------------------------*/
+
+
 INSERT INTO users VALUES (
   DEFAULT,
   'John Doe',
@@ -292,3 +327,7 @@ INSERT INTO messages VALUES (
 INSERT INTO messages VALUES (
   DEFAULT, 3, 2, 'Blah6', DEFAULT, DEFAULT
 );
+
+
+
+

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Post;
 
+use Illuminate\Support\Facades\DB;
 
 class DashBoardController extends Controller
 {
@@ -104,12 +105,20 @@ class DashBoardController extends Controller
     public function search(Request $request) {
 
         $query = $request->input('query');
-        $users = User::where('name', 'like', '%' . $query . '%')->take(5)->get();
+        
+        $users = User::where('username','=', $query)->take(5)->get();
+        $posts = Post::whereRaw("search @@ to_tsquery('english', ?)", [$query])->get();
 
-        $posts = Post::where('content','like', '%' . $query . '%')->take(5)->get();
-
-        //dd(response()->json(['users' => $users, 'posts' => $posts]));
-
+        
         return response()->json(['users' => $users, 'posts' => $posts]);        
+    }
+
+    public function teste() {
+
+        $query = "Work";
+        
+        $posts = Post::whereRaw("search @@ to_tsquery('english', ?)", [$query])->get();    
+        
+        dd($query,$posts);        
     }
 }

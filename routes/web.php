@@ -32,13 +32,14 @@ Route::redirect('/', '/dashboard');
 Route::controller(DashBoardController::class)->group(function () {
     Route::get('/dashboard','list')->name('DashBoard');
     Route::get('/post/{id}','show');
+    Route::get('/dashboard/teste','teste');
 });
 
 
 /*
  *    API
  */ 
-Route::post('/dashboard/search', [DashBoardController::class, 'search']);
+ Route::post('/dashboard/search', [DashBoardController::class, 'search']);
  Route::post('/dashboard/create', [DashBoardController::class, 'create']);
  Route::delete('api/post/{post_id}', [DashBoardController::class, 'delete']);
  Route::put('api/post/{post_id}', [DashBoardController::class, 'update']);
@@ -71,4 +72,8 @@ Route::controller(MessageController::class)->group(function () {
     Route::get('/messages/{id}','chat');
     Route::post('/messages/{id}', 'create');
 });
+
+
+
+
 
