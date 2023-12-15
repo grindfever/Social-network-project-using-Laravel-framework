@@ -35,6 +35,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
+        'email',
         'password',
         'remember_token',
     ];
@@ -83,4 +84,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class);
     }
+
+    public function likes()
+    {
+        return $this->belongsToMany(Post::class, 'post_likes');
+    }
+
+    public function likesPost(Post $post)
+    {
+        return $this->likes()->where('post_id', $post->id)->exists();
+    }
+    
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'memberships', 'possible_member', 'group_id');
+    }
+
 }

@@ -10,6 +10,7 @@ DROP TABLE if exists users CASCADE;
 DROP TABLE if exists moderators CASCADE;
 DROP TABLE if exists admins CASCADE;
 DROP TABLE if exists posts CASCADE;
+DROP TABLE if exists post_likes CASCADE;
 DROP TABLE IF EXISTS messages CASCADE;
 DROP TABLE if exists comments CASCADE;
 DROP TABLE if exists friend_requests CASCADE;
@@ -20,7 +21,8 @@ DROP TABLE if exists user_tagged_posts CASCADE;
 DROP TABLE if exists user_likes_posts CASCADE;
 DROP TABLE if exists user_likes_comments CASCADE;
 DROP TABLE if exists post_removals CASCADE;
-DROP TABLE if exists memberships CASCADE; 
+DROP TABLE if exists memberships CASCADE;
+DROP TABLE if exists group_messages CASCADE;  
 
 
 
@@ -83,10 +85,23 @@ CREATE TABLE posts
     id SERIAL PRIMARY KEY,
     user_id INTEGER CONSTRAINT fk_posts_userid REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 				   CONSTRAINT nn_posts_userid NOT NULL,
+    title character varying(128) ,
     content character varying(512) ,
     date timestamp(0) without time zone CONSTRAINT nn_posts_date NOT NULL DEFAULT now(),
+    public boolean NOT NULL DEFAULT TRUE,
     img character varying(256),
     CHECK (content IS NOT NULL OR img IS NOT NULL)
+);
+
+--Post likes
+
+CREATE TABLE post_likes
+(
+    post_id INTEGER CONSTRAINT fk_post_likes_post_id REFERENCES posts(id) ON DELETE CASCADE ON UPDATE CASCADE
+            CONSTRAINT nn_post_likes_post_id NOT NULL,
+    user_id INTEGER CONSTRAINT fk_post_likes_user_id REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+            CONSTRAINT nn_post_likes_user_id NOT NULL,
+    PRIMARY KEY (post_id, user_id)
 );
 
 --MESSAGE
@@ -209,7 +224,6 @@ CREATE TABLE post_removals
 				    CONSTRAINT nn_post_removal_moderator NOT NULL,
     reason character varying(128) CONSTRAINT nn_post_removal_reason NOT NULL,
     date timestamp(0) without time zone CONSTRAINT nn_post_removal_date NOT NULL
-
 );
 
 --MEMBERSHIP
@@ -225,6 +239,31 @@ CREATE TABLE memberships
     member INTEGER CONSTRAINT fk_membership_member REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 				 CONSTRAINT nn_membership_member NOT NULL,
     PRIMARY KEY (possible_member, group_id)
+);
+
+--- INDEXES ---
+
+--- TRIGGERS ---
+
+
+
+--- TRANSACTIONS ---
+
+--- DATA ---
+--GROUP MESSAGES
+
+CREATE TABLE group_messages
+(
+    id SERIAL PRIMARY KEY,
+    group_id INTEGER CONSTRAINT fk_group_message_group_id REFERENCES groups(id) ON DELETE CASCADE ON UPDATE CASCADE
+                 CONSTRAINT nn_group_message_group_id NOT NULL,
+    sender INTEGER CONSTRAINT fk_group_message_sender REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+                 CONSTRAINT nn_group_message_sender NOT NULL,
+    content character varying(128),
+    date timestamp(0) without time zone CONSTRAINT nn_group_message_date NOT NULL DEFAULT now(),
+    viewed boolean DEFAULT FALSE,
+    img character varying(256) ,
+    CHECK (content IS NOT NULL OR img IS NOT NULL)
 );
 
 INSERT INTO users VALUES (
@@ -260,16 +299,67 @@ INSERT INTO users VALUES (
   FALSE
 ); -- Password is 1234. Generated using Hash::make('1234')
 
+-- Populating users table
+INSERT INTO users VALUES (
+  DEFAULT,
+  'Emily',
+  'Emily Smith',
+  'emily@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', -- Password is 1234
+  'Coder and designer',
+  25,
+  DEFAULT
+);
+
+INSERT INTO users VALUES (
+  DEFAULT,
+  'Mark',
+  'Mark Johnson',
+  'mark@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', -- Password is 1234
+  'Travel enthusiast',
+  30,
+  DEFAULT
+);
+
+-- Add more users as needed
+
 
 
 INSERT INTO posts VALUES (
     DEFAULT,
     1, 
     'My first post', 
-    '2023-08-08'
+    '2023-08-08',
+    DEFAULT
 );
 
+INSERT INTO posts VALUES (
+    DEFAULT,
+    1, 
+    'My second post', 
+    '2023-08-09',
+    DEFAULT
+);
 
+-- Populating posts table
+INSERT INTO posts VALUES (
+    DEFAULT,
+    2, 
+    'Exploring the world', 
+    '2023-09-15',
+    DEFAULT
+);
+
+INSERT INTO posts VALUES (
+    DEFAULT,
+    3, 
+    'New coding project!', 
+    '2023-09-20',
+    DEFAULT
+);
+
+-- Add more posts as needed
 
 
 INSERT INTO messages VALUES (
@@ -297,8 +387,51 @@ INSERT INTO messages VALUES (
 );
 
 
-INSERT INTO admins VALUES (
-  DEFAULT,
-  'm@example.com',
-  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W'
+INSERT INTO groups VALUES (
+    DEFAULT,
+    1, 
+    'Loucos', 
+    'os mais loucos do leic'
+);
+
+INSERT INTO memberships VALUES (
+    1,
+    1,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    1
+);
+
+INSERT INTO memberships VALUES (
+    2,
+    1,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    1
+);
+
+INSERT INTO memberships VALUES (
+    3,
+    1,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    1
+);
+
+INSERT INTO group_messages VALUES (
+  DEFAULT, 1, 1, 'primeira', DEFAULT, DEFAULT
+);
+
+INSERT INTO group_messages VALUES (
+  DEFAULT, 1, 2, 'segunda', DEFAULT, DEFAULT
+);
+
+INSERT INTO group_messages VALUES (
+  DEFAULT, 1, 3, 'terceira', DEFAULT, DEFAULT
 );
