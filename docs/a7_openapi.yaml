@@ -1,0 +1,343 @@
+openapi: 3.0.0
+info:
+  version: '1.0'
+  title: 'Y API'
+  description: 'Web Resources Specification (A7) for Y'
+
+servers:
+- url: https://lbaw23102.lbaw.fe.up.pt
+  description: Production server
+
+externalDocs:
+ description: Find more info here.
+ url: https://git.fe.up.pt/lbaw/lbaw2324/lbaw23102/-/wikis/eap
+
+tags:
+  - name: 'M01: Authentication'
+  - name: 'M02: Users'
+  - name: 'M03: Posts'
+  - name: 'M04: Search'
+  - name: 'M05: Administration'
+
+paths:
+  /login:
+    get:
+      summary: 'R101: Login Form'
+      description: 'Provide login form. Access: GST'
+      tags:
+        - 'M01: Authentication'
+      responses:
+        '200':
+          description: 'Ok. Show Log-in UI'
+    post:
+      summary: 'R102: Login Action'
+      description: 'Processes the login form submission. Access: GST'
+      tags:
+        - 'M01: Authentication'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '302':
+          description: 'Redirect after processing the login credentials.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful authentication. Redirect to user profile.'
+                  value: '/dashboard'
+                302Error:
+                  description: 'Failed authentication. Redirect to login form.'
+                  value: '/login'
+  /logout:
+    post:
+      summary: 'R103: Logout Action'
+      description: 'Logout the current authenticated user. Access: USR, ADM'
+      tags:
+        - 'M01: Authentication'
+      responses:
+        '302':
+          description: 'Redirect after processing logout.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful logout. Redirect to login form.'
+                  value: '/login'
+  /register:
+    get:
+      summary: 'R104: Register Form'
+      description: 'Provide new user registration form. Access: GST'
+      tags:
+        - 'M01: Authentication'
+      responses:
+        '200':
+          description: 'Ok. Show Sign-Up UI'
+    post:
+      summary: 'R105: Register Action'
+      description: 'Processes the new user registration form submission. Access: GST'
+      tags:
+        - 'M01: Authentication'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - email
+                - password
+      responses:
+        '302':
+          description: 'Redirect after processing the new user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful registration. Redirect to user profile.'
+                  value: '/dashboard'
+                302Failure:
+                  description: 'Failed registration. Redirect to registration form.'
+                  value: '/register'
+  /dashboard:
+    get:
+      summary: 'R106: View user dashboard'
+      description: 'Show the user dashboard. Access: USR'
+      tags:
+        - 'M02: Users'
+      responses:
+        '200':
+          description: 'Ok. Show User Dashboard UI'
+    post:
+      summary: 'R107: Create Post'
+      description: 'Create a new post. Access: USR'
+      tags:
+        - 'M03: Posts'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+              required:
+                - content
+      responses:
+        '201':
+          description: 'Post created successfully'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                201Success:
+                  description: 'Post created successfully. Redirect to post.'
+                  value: '/post/{post_id}'
+
+  /post/{post_id}:
+    get:
+      summary: 'R108: View Post'
+      description: 'View a specific post. Access: USR'
+      tags:
+        - 'M03: Posts'
+      parameters:
+        - in: path
+          name: post_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show Post UI'
+    post:
+      summary: 'R109: Update Post'
+      description: 'Update an existing post. Access: OWN'
+      tags:
+        - 'M03: Posts'
+      parameters:
+        - in: path
+          name: post_id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+              required:
+                - content
+      responses:
+        '302':
+          description: 'Redirect after processing the post update.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Post updated successfully. Redirect to post.'
+                  value: '/post/{post_id}'
+    delete:
+      summary: 'R110: Delete Post'
+      description: 'Delete an existing post. Access: OWN'
+      tags:
+        - 'M03: Posts'
+      parameters:
+        - in: path
+          name: post_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '302':
+          description: 'Redirect after processing the post deletion.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Post deleted successfully. Redirect to user dashboard.'
+                  value: '/dashboard'
+/profile:
+    get:
+      summary: 'R701: View My Profile'
+      description: 'View the profile of the authenticated user. Access: USR'
+      tags:
+        - 'M02: Users'
+      responses:
+        '200':
+          description: 'Ok. Show User Profile UI'
+
+  /profile/{user_id}:
+    get:
+      summary: 'R702: View User Profile'
+      description: 'View the profile of another user. Access: USR'
+      tags:
+        - 'M02: Users'
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show User Profile UI'
+
+  /messages:
+    get:
+      summary: 'R801: List Chats'
+      description: 'List the chats of the authenticated user. Access: USR'
+      tags:
+        - 'M02: Users'
+      responses:
+        '200':
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    user_id:
+                      type: integer
+                    username:
+                      type: string
+                    last_message:
+                      type: string
+                    timestamp:
+                      type: string
+                  example:
+                    - user_id: 101
+                      username: 'john_doe'
+                      last_message: 'Hello, how are you?'
+                    - user_id: 102
+                      username: 'jane_doe'
+                      last_message: 'I'm doing well, thanks!'
+
+  /messages/{user_id}:
+    get:
+      summary: 'R802: View Chat'
+      description: 'View the chat with another user. Access: USR'
+      tags:
+        - 'M02: Users'
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'Ok. Show Chat UI'
+
+    post:
+      summary: 'R803: Send Message'
+      description: 'Send a message to another user. Access: USR'
+      tags:
+        - 'M02: Users'
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+              required:
+                - content
+      responses:
+        '201':
+          description: 'Message sent successfully'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                201Success:
+                  description: 'Message sent successfully. Redirect to chat.'
+                  value: '/messages/{user_id}'
+

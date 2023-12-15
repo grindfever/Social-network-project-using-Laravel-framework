@@ -6,11 +6,12 @@ use Illuminate\Http\Request;
 
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\User;
 use App\Models\Post;
+use App\Models\PostLike;
 
-use Illuminate\Support\Facades\DB;
 
 class DashBoardController extends Controller
 {
@@ -22,10 +23,10 @@ class DashBoardController extends Controller
      {   
         // Get the post.
         $post = Post::findOrFail($id);
-
+      
         // Use the pages.post template to display the post.
         return view('pages.post', [
-            'post' => $post
+            'post' => $post, 
         ]);
     }
 
@@ -34,20 +35,26 @@ class DashBoardController extends Controller
      */
     public function list()
     {
+        $posts = Post::orderBy('date', 'desc')->get();
         
-        $post = Post::all();
-
         // Use the pages.dashboard template to display all posts.
         return view('pages.dashboard', [
-            'post' => $post,
+            'posts' => $posts
         ]);
     }
+    
 
     /**
      * Create a new post
      */
     public function create(Request $request)
     {
+        // Validate the request.
+        $request->validate([
+            'title' => 'required|max:128',
+            'content' => 'required|max:512',
+        ]);
+
         // Create a blank new Post.
         $post = new Post();
         
@@ -55,7 +62,8 @@ class DashBoardController extends Controller
         $this->authorize('create', $post);
 
         // Set post details
-        $post->content = $request->input('content'); 
+        $post->title = strip_tags($request->input('title'));
+        $post->content = strip_tags($request->input('content')); 
         $post->user_id = Auth::user()->id;
 
         // Save the card and return it as JSON.
@@ -71,13 +79,13 @@ class DashBoardController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Find the item.
+        // Find the post.
         $post = Post::find($id);
 
-        // Check if the current user is authorized to update this item.
+        // Check if the current user is authorized to update this post.
         $this->authorize('update', $post);
 
-        // Update the done property of the item.
+        // Update the content property of the post.
         $post->content = $request->input('content');
 
         // Save the post and return it as JSON.
@@ -112,4 +120,33 @@ class DashBoardController extends Controller
         
         return response()->json(['users' => $users, 'posts' => $posts]);        
     }
+
+    
+    public function like($id){
+        $liker = auth()->user();
+        $post = Post::find($id);
+    
+        if (!$liker->likes()->where('post_id', $post->id)->exists()) {
+            $liker->likes()->attach($post);
+        }
+    
+        $likeCount = $post->likes()->count(); // Calculate likes count if needed
+        //return redirect()->route('DashBoard')->with('success', 'Post liked');
+        return response()->json(['message' => 'Post liked','isLiked' => True, 'likeCount' => $likeCount, 'postId' => $id], 200);
+    }
+    
+    
+    public function unlike($id){
+        $liker = auth()->user();
+        $post = Post::find($id);
+    
+        if ($liker->likes()->where('post_id', $post->id)->exists()) {
+            $liker->likes()->detach($post);
+        }
+    
+        $likeCount = $post->likes()->count(); // Calculate likes count if needed
+        //return redirect()->route('DashBoard')->with('success', 'Post unliked');
+        return response()->json(['message' => 'Post unliked','isLiked' => False, 'likeCount' => $likeCount,'postId' => $id], 200);
+    }
+    
 }

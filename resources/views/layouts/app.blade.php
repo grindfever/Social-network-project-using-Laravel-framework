@@ -13,6 +13,7 @@
         <!-- Styles -->
         <link href="{{ url('css/milligram.min.css') }}" rel="stylesheet">
         <link href="{{ url('css/app.css') }}" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
             // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
@@ -21,16 +22,57 @@
         </script>
     </head>
     <body>
-        <main>
-            <header>
-                <h1><a href="{{ url('/dashboard') }}">Y</a></h1>
+        <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="{{ url('/dashboard') }}">Y!</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarColor02">
+                <ul class="navbar-nav me-auto">
+                  <li class="nav-item">
+                    <a class="nav-link active" href="{{ url('/dashboard') }}">Home
+                      <span class="visually-hidden">(current)</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/messages') }}">Messages</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/groups') }}">Groups</a>
+                  </li>
+                  
+                <form class="d-flex">
+                  <input class="form-control me-sm-2" type="search" placeholder="Search">
+                  <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                </form>
                 @if (Auth::check())
-                    <a class="button" href="{{ url('/logout') }}"> Logout </a> <a class="button" href="{{ url('/profile') }}">{{ Auth::user()->name }}</a> <a class="button" href="{{ url('/messages') }}"> Messages </a> <a class="button" href="{{ url('/search') }}"> Search </a>
-                @endif
-            </header>
-            <section id="content">
-                @yield('content')
-            </section>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/profile') }}" >{{ Auth::user()->name }}</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/about') }}" >About us</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/contact') }}" >Contact us</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/logout') }}">Logout</a> 
+                  </li>
+                  @else
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/login') }}" >Login</a>
+                  </li>
+                  @endif
+              </div>
+            </div>
+          </nav>
+        <main>
+          <section id="content">
+            @yield('content')
+            <button id="scrollToTopButton" onclick="scrollToTop()">Scroll to top</button>
+          </section>
         </main>
     </body>
 </html>
+
