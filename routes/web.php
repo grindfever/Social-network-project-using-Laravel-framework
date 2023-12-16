@@ -91,6 +91,7 @@ Route::controller(FriendRequestController::class)->group(function () {
 
 //Friends
 Route::controller(FriendController::class)->group(function () {
-    Route::get('/friends', 'index')->name('friends.index');
-    Route::post('/friends/{friendId}/remove', 'removeFriend')->name('friends.remove');
+    Route::get('/friends', 'show')->name('friends.show');
+    Route::get('/friends/test/{id}', 'test')->name('friends.test');
 });
+Route::delete('/friends/{id}', [FriendController::class, 'removeFriend'])->name('friends.remove');

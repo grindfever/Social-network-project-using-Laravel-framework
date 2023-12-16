@@ -4,7 +4,10 @@ function addEventListeners() {
   [].forEach.call(postDeleters, function(deleter) {
     deleter.addEventListener('click', sendDeletePostRequest);
   });
-
+  let friendDeleters = document.querySelectorAll('article.friend button.delete-friend');
+  [].forEach.call(friendDeleters, function(deleter) {
+    deleter.addEventListener('click', sendDeleteFriendRequest);
+  });
   let postCreator = document.querySelector('article.post form.new_post');
   if (postCreator != null)
     postCreator.addEventListener('submit', sendCreatePostRequest);
@@ -92,6 +95,12 @@ function sendUpdatePostRequest(updatedContent, content) {
     
     sendAjaxRequest('delete', '/api/post/' + id, null, postDeletedHandler);
   }
+    
+  function sendDeleteFriendRequest(event) {
+    let id = this.closest('article').getAttribute('data-id');
+    console.log(id);
+    sendAjaxRequest('delete', '/friends/' + id, null, friendDeletedHandler);
+  }
 
   function sendCreatePostRequest(event) {
     let name = this.querySelector('input[name=content]').value;
@@ -107,6 +116,24 @@ function sendUpdatePostRequest(updatedContent, content) {
     let post = JSON.parse(this.responseText);
     let article = document.querySelector('article.post[data-id="'+ post.id + '"]');
     article.remove();
+  }
+  
+  function friendDeletedHandler() {
+    if (this.status != 200){
+      window.location = '/';
+      console.log("errordif200");
+  } 
+  try {
+    let friend = JSON.parse(this.responseText);
+    console.log(friend);
+    let article = document.querySelector('article.friend[data-id="'+ friend.id + '"]');
+    article.remove();
+ 
+} catch (error) {
+    console.error('Error parsing JSON:', error);
+}
+
+
   }
   
   function postAddedHandler() {

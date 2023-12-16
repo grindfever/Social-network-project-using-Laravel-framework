@@ -9,7 +9,7 @@
 
     @if(count($friends) > 0)
     @foreach($friends as $friend)
-        @include('partials._friend', ['friend' => $friend])
+        @include('partials.friend', ['friend' => $friend,'userid'=>$userid])
     @endforeach
     @else
     <p>No friends yet.</p>

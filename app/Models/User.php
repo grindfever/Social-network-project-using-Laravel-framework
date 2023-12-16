@@ -85,4 +85,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class);
     }
+    public function friends($id) {
+
+        return Friend::where("userid1", "=", $id)->orWhere("userid2", "=", $id)->get();      
+
+    }
+    
+    
 }

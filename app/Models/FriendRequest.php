@@ -44,11 +44,6 @@ class FriendRequest extends Model
             'userid1' => $this->sender,
             'userid2' => $this->receiver,
         ]);
-        //add 2nd time delete this 
-        DB::table('friends')->insert([
-            'userid1' => $this->receiver,
-            'userid2' => $this->sender,
-        ]);
     }
     public function reject()
     {

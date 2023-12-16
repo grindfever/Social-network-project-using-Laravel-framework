@@ -17,7 +17,8 @@
     </form>
     @else
     <!-- Display friend requests link or any other information -->
-    <section id="friendrequests">
+    <section id="friends">
+    <a href="{{ route('friends.show') }}">Friend List  </a>
     <a href="{{ route('friendrequests.index') }}">Friend Requests</a>
     </section>
 
