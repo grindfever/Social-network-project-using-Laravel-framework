@@ -340,12 +340,51 @@
   }
 
   function createComment(comment) {
-    
-    let new_comment = document.createElement('p');
-    new_comment.classList.add('fw-light', 'fs-6');
-    
-    new_comment.innerHTML = `${comment.user.name}: ${comment.comment.content}`;
-    return new_comment;
+    // Create elements
+    console.log(comment);
+    var a = document.createElement('a');
+    var img = document.createElement('img');
+    var span = document.createElement('span');
+    var li = document.createElement('li');
+    var div = document.createElement('div');
+    var editButton = document.createElement('button');
+    var deleteButton = document.createElement('button');
+
+    // Set attributes and content
+    a.href = "/profile/" + comment.user.id;
+    img.src = comment.user.getProfileImage();
+    img.className = "avatar";
+    a.appendChild(img);
+    a.appendChild(document.createTextNode(comment.user.name));
+
+    span.className = "float-end";
+    span.textContent = comment.date; // You'll need to format this date on the server side or use a JS library
+
+    li.className = "list-group-item";
+    li.textContent = comment.content;
+
+    div.className = "float-end";
+
+    editButton.className = "btn btn-sm btn-primary";
+    editButton.textContent = "Edit";
+    div.appendChild(editButton);
+
+    deleteButton.className = "btn btn-sm btn-danger";
+    deleteButton.textContent = "Delete";
+    div.appendChild(deleteButton);
+
+    // Append elements to the parent element
+    var parent = document.createElement('div');
+    parent.appendChild(a);
+    parent.appendChild(span);
+    parent.appendChild(li);
+
+    // Check if the comment belongs to the authenticated user
+    if (comment.user_id === auth().id()) {
+        parent.appendChild(div);
+    }
+
+    return parent;
   }
   
 

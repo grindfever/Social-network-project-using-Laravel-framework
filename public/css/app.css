@@ -6,7 +6,15 @@
     object-fit: cover;
 }
 
+.profile-avatar a {
+  color: black;
+  text-decoration: none;
+  font-size: 20px; /* Increase the font size to 20 pixels */
+}
 
+.profile-avatar a:hover {
+  text-decoration: none;
+}
 
 
 /* Adjust input and textarea size */

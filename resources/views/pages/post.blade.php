@@ -5,6 +5,8 @@
 @section('content')
     <section id="post_page">
         @include('partials.post', ['post' => $post])
+        {{-- comments --}}
+        @include('partials.comments', ['post' => $post])
     </section>
     
     @if(Auth::check() && Auth::user()->id === $post->user_id)
