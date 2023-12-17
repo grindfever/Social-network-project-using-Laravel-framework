@@ -41,8 +41,13 @@ class FriendRequest extends Model
       ]);
         // Create a friendship entry in the 'friends' table
         DB::table('friends')->insert([
-            'userid1' => $this->sender,
-            'userid2' => $this->receiver,
+            'user_id1' => $this->sender,
+            'user_id2' => $this->receiver,
+        ]);
+
+        DB::table('friends')->insert([
+            'user_id1' => $this->receiver,
+            'user_id2' => $this->sender,
         ]);
     }
     public function reject()

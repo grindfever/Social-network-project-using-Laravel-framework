@@ -23,7 +23,7 @@ class FriendRequestController extends Controller
             ->firstOrFail();
     
         $friendRequest->accept();
-    
+
         return redirect()->route('friendrequests.index');
     }
     

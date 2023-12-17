@@ -118,5 +118,5 @@ Route::controller(FriendRequestController::class)->group(function () {
 Route::controller(FriendController::class)->group(function () {
     Route::get('/friends', 'show')->name('friends.show');
     Route::get('/friends/test/{id}', 'test')->name('friends.test');
+    Route::delete('/friends/{id}/remove', 'removeFriend')->name('friends.remove');
 });
-Route::delete('/friends/{id}', [FriendController::class, 'removeFriend'])->name('friends.remove');

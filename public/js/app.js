@@ -3,7 +3,7 @@ function addEventListeners() {
     if(postDeleter != null)
       postDeleter.addEventListener('click', sendDeletePostRequest);
 
-    let friendDeleters = document.querySelectorAll('article.friend button.delete-friend');
+    let friendDeleters = document.querySelectorAll('article.friend button#delete-friend');
     [].forEach.call(friendDeleters, function(deleter) {
       deleter.addEventListener('click', sendDeleteFriendRequest);
     });
@@ -106,14 +106,7 @@ function addEventListeners() {
     
   function sendDeleteFriendRequest(event) {
     let id = this.closest('article').getAttribute('data-id');
-    console.log(id);
-    sendAjaxRequest('delete', '/friends/' + id, null, friendDeletedHandler);
-  }
-    
-  function sendDeleteFriendRequest(event) {
-    let id = this.closest('article').getAttribute('data-id');
-    console.log(id);
-    sendAjaxRequest('delete', '/friends/' + id, null, friendDeletedHandler);
+    sendAjaxRequest('delete', '/friends/' + id +'/remove', null, friendDeletedHandler);
   }
 
   function sendCreatePostRequest(event) {
@@ -132,46 +125,21 @@ function addEventListeners() {
     if (this.status != 200) window.location = '/';
     let post = JSON.parse(this.responseText);
     console.log(post.id);
-    
     let div = document.getElementById(post.id);
     div.remove();
   }
   
   function friendDeletedHandler() {
-    if (this.status != 200){
-      window.location = '/';
-      console.log("errordif200");
-  } 
-  try {
+    if (this.status != 200) console.log(this.status); //window.location = '/';
     let friend = JSON.parse(this.responseText);
     console.log(friend);
-    let article = document.querySelector('article.friend[data-id="'+ friend.id + '"]');
+
+    let article = document.querySelector('article.friend[data-id="' + friend.friend_id + '"]');
+    console.log(article);
     article.remove();
- 
-} catch (error) {
-    console.error('Error parsing JSON:', error);
-}
-
-
+    console.log("deleted friend");
   }
-  
-  function friendDeletedHandler() {
-    if (this.status != 200){
-      window.location = '/';
-      console.log("errordif200");
-  } 
-  try {
-    let friend = JSON.parse(this.responseText);
-    console.log(friend);
-    let article = document.querySelector('article.friend[data-id="'+ friend.id + '"]');
-    article.remove();
- 
-} catch (error) {
-    console.error('Error parsing JSON:', error);
-}
 
-
-  }
   
   function postAddedHandler() {
     if (this.status != 200) window.location = '/';
@@ -395,7 +363,7 @@ function addEventListeners() {
     return new_comment;
   }
   
-
+  // ########## SEARCH  ##############
 
   // Add event listener for the document click
   document.addEventListener('click', function(event) {
@@ -489,12 +457,12 @@ function addEventListeners() {
 
 
     showSearchResults();
-}
+  }
 
-function showSearchResults(){
-  let searchResultContainer = document.querySelector('.search-results-container');
-  searchResultContainer.style.display = "block";
-}
+  function showSearchResults(){
+    let searchResultContainer = document.querySelector('.search-results-container');
+    searchResultContainer.style.display = "block";
+  }
  
  function clearSearchResults(){
   let searchResult = document.querySelector('.search-results');

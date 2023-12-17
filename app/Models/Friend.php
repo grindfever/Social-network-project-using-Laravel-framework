@@ -8,9 +8,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Friend extends Model
 {
     use HasFactory;
-    public function friendUser()
-    {
-        return $this->belongsTo(User::class, 'userid1');
-    }
+
+    protected $fillable = [
+        'user_id1',
+        'user_id2',
+    ];
+    
+   public function first()
+   {
+       return $this->belongsTo(User::class, 'user_id1');
+   }
+
+   public function second()
+   {
+       return $this->belongsTo(User::class, 'user_id2');
+   }
  
 }

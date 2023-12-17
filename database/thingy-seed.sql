@@ -251,10 +251,9 @@ CREATE TABLE memberships
 );
 CREATE TABLE friends
 (
-    id SERIAL PRIMARY KEY, 
-    userid1 INTEGER CONSTRAINT fk_friends_userid1 REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE ,
-    userid2 INTEGER CONSTRAINT fk_friends_userid2 REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
-  
+  id SERIAL PRIMARY KEY, 
+  user_id1 INTEGER CONSTRAINT fk_friends_user_id1 REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  user_id2 INTEGER CONSTRAINT fk_friends_user_id2 REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -476,9 +475,5 @@ INSERT INTO group_messages VALUES (
   DEFAULT, 1, 3, 'terceira', DEFAULT, DEFAULT
 );
 
-INSERT INTO friends VALUES (
-  DEFAULT,1,2
-);
-INSERT INTO friends VALUES(
-  DEFAULT,3,1
-);
+INSERT INTO friend_requests (sender, receiver, accepted, request_date)
+VALUES (2, 1, FALSE, NOW());
