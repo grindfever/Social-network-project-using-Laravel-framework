@@ -1,11 +1,14 @@
-  
-  function addEventListeners() {
-
-    let postDeleter = document.querySelector('button#delete-post');
+function addEventListeners() {
+  let postDeleter = document.querySelector('button#delete-post');
     if(postDeleter != null)
       postDeleter.addEventListener('click', sendDeletePostRequest);
-    
-    let postCreator = document.querySelector('form.new_post');
+
+  let friendDeleters = document.querySelectorAll('article.friend button.delete-friend');
+  [].forEach.call(friendDeleters, function(deleter) {
+    deleter.addEventListener('click', sendDeleteFriendRequest);
+  });
+  
+  let postCreator = document.querySelector('form.new_post');
     if (postCreator != null)
       postCreator.addEventListener('submit', sendCreatePostRequest);
 
@@ -100,6 +103,18 @@
     console.log(id);
     sendAjaxRequest('delete', '/api/post/' + id, null, postDeletedHandler);
   }
+    
+  function sendDeleteFriendRequest(event) {
+    let id = this.closest('article').getAttribute('data-id');
+    console.log(id);
+    sendAjaxRequest('delete', '/friends/' + id, null, friendDeletedHandler);
+  }
+    
+  function sendDeleteFriendRequest(event) {
+    let id = this.closest('article').getAttribute('data-id');
+    console.log(id);
+    sendAjaxRequest('delete', '/friends/' + id, null, friendDeletedHandler);
+  }
 
   function sendCreatePostRequest(event) {
     let content_post = this.querySelector('textarea[name=content]').value;
@@ -120,6 +135,42 @@
     
     let div = document.getElementById(post.id);
     div.remove();
+  }
+  
+  function friendDeletedHandler() {
+    if (this.status != 200){
+      window.location = '/';
+      console.log("errordif200");
+  } 
+  try {
+    let friend = JSON.parse(this.responseText);
+    console.log(friend);
+    let article = document.querySelector('article.friend[data-id="'+ friend.id + '"]');
+    article.remove();
+ 
+} catch (error) {
+    console.error('Error parsing JSON:', error);
+}
+
+
+  }
+  
+  function friendDeletedHandler() {
+    if (this.status != 200){
+      window.location = '/';
+      console.log("errordif200");
+  } 
+  try {
+    let friend = JSON.parse(this.responseText);
+    console.log(friend);
+    let article = document.querySelector('article.friend[data-id="'+ friend.id + '"]');
+    article.remove();
+ 
+} catch (error) {
+    console.error('Error parsing JSON:', error);
+}
+
+
   }
   
   function postAddedHandler() {

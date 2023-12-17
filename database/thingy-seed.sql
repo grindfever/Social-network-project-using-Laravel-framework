@@ -23,13 +23,15 @@ DROP TABLE if exists user_likes_comments CASCADE;
 DROP TABLE if exists post_removals CASCADE;
 DROP TABLE if exists memberships CASCADE;
 DROP TABLE if exists group_messages CASCADE;  
-
+DROP TABLE if exists friends CASCADE;
 
 DROP TRIGGER IF EXISTS post_search_update ON posts;
 
 DROP FUNCTION IF EXISTS post_search_update;
 
 DROP INDEX IF EXISTS idx_post_search;
+
+
 
 
 
@@ -246,6 +248,13 @@ CREATE TABLE memberships
     member INTEGER CONSTRAINT fk_membership_member REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 				 CONSTRAINT nn_membership_member NOT NULL,
     PRIMARY KEY (possible_member, group_id)
+);
+CREATE TABLE friends
+(
+    id SERIAL PRIMARY KEY, 
+    userid1 INTEGER CONSTRAINT fk_friends_userid1 REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE ,
+    userid2 INTEGER CONSTRAINT fk_friends_userid2 REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+  
 );
 
 
@@ -467,3 +476,9 @@ INSERT INTO group_messages VALUES (
   DEFAULT, 1, 3, 'terceira', DEFAULT, DEFAULT
 );
 
+INSERT INTO friends VALUES (
+  DEFAULT,1,2
+);
+INSERT INTO friends VALUES(
+  DEFAULT,3,1
+);

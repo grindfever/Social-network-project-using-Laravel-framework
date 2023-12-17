@@ -15,6 +15,7 @@ use App\Http\Controllers\GroupController;
 
 use App\Http\Controllers\AdminController;
 
+use App\Http\Controllers\FriendRequestController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -66,6 +67,10 @@ Route::controller(RegisterController::class)->group(function () {
 Route::controller(ProfileController::class)->group(function () {
     Route::get('/profile', 'myProfile');
     Route::get('/profile/{id}', 'show');
+    Route::get('/friendrequest', 'showfriendrequest');
+    
+    // Correct the route for sending friend requests
+    Route::post('/profile/{id}/send-friend-request', 'sendFriendRequest')->name('send.friend.request');
 });
 
 
@@ -101,3 +106,17 @@ Route::controller(GroupMessageController::class)->group(function (){
 Route::get('/about', function () {
     return view('pages.about_us');
 });
+
+//Friendrequest
+Route::controller(FriendRequestController::class)->group(function () {
+    Route::get('/friendrequests', 'index')->name('friendrequests.index');
+    Route::post('/friendrequests/accept/{sender}/{receiver}', 'accept')->name('friendrequests.accept');
+    Route::post('/friendrequests/reject/{sender}/{receiver}', 'reject')->name('friendrequests.reject');
+});
+
+//Friends
+Route::controller(FriendController::class)->group(function () {
+    Route::get('/friends', 'show')->name('friends.show');
+    Route::get('/friends/test/{id}', 'test')->name('friends.test');
+});
+Route::delete('/friends/{id}', [FriendController::class, 'removeFriend'])->name('friends.remove');
