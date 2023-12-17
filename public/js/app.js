@@ -97,7 +97,6 @@
   function sendDeletePostRequest() {
     let deleteButton = document.querySelector('#delete-post');
     let id = deleteButton.getAttribute('data-post-id');
-    console.log(id);
     sendAjaxRequest('delete', '/api/post/' + id, null, postDeletedHandler);
   }
 
@@ -114,9 +113,14 @@
   }
   
   function postDeletedHandler() {
-    if (this.status != 200) window.location = '/';
+    if (this.status === 200) window.location = '/dashboard';
+    else {
+      const errorMessage = document.createElement('div');
+      errorMessage.textContent = 'Failed to delete the post. Please try again.';
+      errorMessage.style.color = 'red'; 
+      document.body.appendChild(errorMessage);
+    }
     let post = JSON.parse(this.responseText);
-    console.log(post.id);
     
     let div = document.getElementById(post.id);
     div.remove();

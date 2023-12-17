@@ -1,7 +1,11 @@
-<div class="card border-dark mb-3" style="max-width: 20rem;" id="{{ $post->id}}">
+<div class="card border-dark mb-3"  id="{{ $post->id}}">
     <article class="post" data-id="{{ $post->id }}">
         <div class="card-header">
-            <a href="/profile/{{ $post->user->id }}">{{ $post->user->name }}</a>
+            <a href="/profile/{{ $post->user->id }}">
+                <img src="{{ $post->user->getProfileImage() }}" class="avatar">
+            {{ $post->user->name }}
+            </a>
+            <span class="float-end">{{ \Carbon\Carbon::parse($post->date)->diffForHumans() }}</span>
         </div>
         <h1>{{ $post->title }}</h1>
         <div class="card-body">
@@ -28,18 +32,7 @@
     </span> {{ $post->likes()->count() }} </a>
     @endguest
     {{-- comments --}}
-    <div class="comments" data-id="{{ $post->id }}">
-         @foreach ($post->comments as $comment)
-        <p class="fw-light fs-6"> {{ $comment->user->name }}: {{ $comment->content }} </p>
-         @endforeach
-        <form class="new_comment" action="{{ route('post.comment.store', $post->id)}}" method="POST">
-            @csrf
-            <div class="form-group">
-                <textarea placeholder="Post your comment" class="form-control" id="exampleTextarea" rows="3" data-lt-tmp-id="lt-205407" spellcheck="false" data-gramm="false" style="line-height: 24px;"></textarea>
-            </div>
-            <button id="submit_comment" type="submit" class="btn btn-dark"> Post Comment </button>
-        </form>
-    </div>
+    @include('partials.comments', ['post' => $post])
 </article>
 </div>
 
