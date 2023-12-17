@@ -84,7 +84,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class);
     }
-<<<<<<< HEAD
 
     public function likes()
     {
@@ -101,14 +100,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Group::class, 'memberships', 'possible_member', 'group_id');
     }
 
-}
-=======
     public function friends($id) {
-
         return Friend::where("userid1", "=", $id)->orWhere("userid2", "=", $id)->get();      
-
     }
     
     
 }
->>>>>>> 982d15fdc37dfc41bdb2cb35e5148b1c3e57fb7d

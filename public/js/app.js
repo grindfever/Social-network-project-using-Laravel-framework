@@ -3,12 +3,12 @@ function addEventListeners() {
     if(postDeleter != null)
       postDeleter.addEventListener('click', sendDeletePostRequest);
 
-  let friendDeleters = document.querySelectorAll('article.friend button.delete-friend');
-  [].forEach.call(friendDeleters, function(deleter) {
-    deleter.addEventListener('click', sendDeleteFriendRequest);
-  });
+    let friendDeleters = document.querySelectorAll('article.friend button.delete-friend');
+    [].forEach.call(friendDeleters, function(deleter) {
+      deleter.addEventListener('click', sendDeleteFriendRequest);
+    });
   
-  let postCreator = document.querySelector('form.new_post');
+    let postCreator = document.querySelector('form.new_post');
     if (postCreator != null)
       postCreator.addEventListener('submit', sendCreatePostRequest);
 

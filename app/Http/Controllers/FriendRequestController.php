@@ -13,10 +13,9 @@ class FriendRequestController extends Controller
     {
         $friendRequests = FriendRequest::with('sender')->where('receiver', auth()->id())->get();
         
-       
-    
         return view('pages.friendrequest', ['friendRequests' => $friendRequests]);
     }
+    
     public function accept($sender, $receiver)
     {
         $friendRequest = FriendRequest::where('sender', $sender)
