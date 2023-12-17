@@ -79,7 +79,7 @@
         <main>
           <section id="content">
             @yield('content')
-            <button id="scrollToTopButton" onclick="scrollToTop()">Scroll to top</button>
+            <button class="btn btn-dark" id="scrollToTopButton" onclick="scrollToTop()">Scroll to top</button>
           </section>
         </main>
     </body>
