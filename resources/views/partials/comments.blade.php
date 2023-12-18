@@ -19,8 +19,8 @@
                 <li class="list-group-item" >{{ $comment->content }}</li>
                 @if ($comment->user_id === auth()->id())
                     <div class="float-end" style="padding-top: 10px;">
-                        <button class="btn btn-sm btn-primary">Edit</button>
-                        <button class="btn btn-sm btn-danger">Delete</button>
+                        <button data-id="{{$comment->id}}" class="btn btn-sm btn-primary" onClick="editComment({{$comment->id}})">Edit</button>
+                        <button data-id="{{$comment->id}}" class="btn btn-sm btn-danger" onClick="sendDeleteCommentRequest({{$comment->id}})">Delete</button>
                     </div>
                 @endif
             </div>

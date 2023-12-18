@@ -48,8 +48,8 @@ Route::controller(DashBoardController::class)->group(function () {
 
  // Comments
  Route::post('api/post/{post_id}/comment', [CommentController::class, 'store'])->middleware('auth')->name('post.comment.store');
- Route::delete('api/post/{post_id}/comment/{comment_id}', [CommentController::class, 'delete'])->middleware('auth')->name('post.comment.destroy');
- Route::put('api/post/{post_id}/comment/{comment_id}', [CommentController::class, 'edit'])->middleware('auth')->name('post.comment.update');
+ Route::delete('api/comment/{comment_id}', [CommentController::class, 'delete'])->middleware('auth')->name('post.comment.destroy');
+ Route::put('api/comment/{comment_id}', [CommentController::class, 'edit'])->middleware('auth')->name('post.comment.update');
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {

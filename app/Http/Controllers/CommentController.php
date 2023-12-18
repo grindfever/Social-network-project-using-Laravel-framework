@@ -36,23 +36,11 @@ class CommentController extends Controller
         ]);
     }
 
-    public function show(string $id)
-    {
-        // Get the post.
-        $post = Post::findOrFail($id);
-
-        // Use the pages.post template to display the post.
-        return view('pages.post', [
-            'post' => $post,
-        ]);
-    }
-
     public function edit(Request $request, $id)
     {
         $request->validate([
             'content' => 'required|max:255',
         ]);
-
         $comment = Comment::findOrFail($id);
         $comment->content = strip_tags($request->input('content'));
         $comment->save();
@@ -62,7 +50,7 @@ class CommentController extends Controller
         ]);
     }
 
-    public function delete($id)
+    public function delete(Request $request, $id)
     {
         $comment = Comment::findOrFail($id);
         $comment->delete();

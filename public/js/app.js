@@ -22,6 +22,7 @@
     if (searchForm !== null){  
       searchForm.addEventListener('submit', sendSearchRequest);
     }
+
   }
 
   function encodeForAjax(data) {
@@ -369,29 +370,10 @@
  
   // ########## EDIT AND DELETE COMMENTS  ##############
 
-  document.addEventListener('DOMContentLoaded', function() {
-    let commentEditors = document.querySelectorAll('div.comments div.comment-container button.btn-primary');
-    commentEditors.forEach(function(commentEditor) {
-      commentEditor.addEventListener('click', function() {
-        let commentId = this.closest('div.comment-container').getAttribute('data-id');
-        editComment(commentId);
-      });
-    });
 
-    let commentDeleters = document.querySelectorAll('div.comments div.comment-container button.btn-danger');
-    commentDeleters.forEach(function(commentDeleter) {
-      commentDeleter.addEventListener('click', function() {
-        let commentId = this.closest('div.comment-container').getAttribute('data-id');
-        deleteComment(commentId);
-      });
-    });
-  });
-
-  function sendDeleteCommentRequest() {
-
-    let commentId = document.querySelector('div.comment-container').getAttribute('data-id');  
-    let postID = document.querySelector('div.comments').getAttribute('data-id');
-    sendAjaxRequest('delete', '/api/post/' + postID + '/comment/' + commentId, null, commentDeletedHandler);
+  function sendDeleteCommentRequest(commentID) {
+    
+    sendAjaxRequest('delete', '/api/comment/' + commentID, null, commentDeletedHandler);
   }
 
   function commentDeletedHandler() {
@@ -405,82 +387,77 @@
     }
   }
 
-  function sendEditCommentRequest() {
-    let postID = document.querySelector('div.comments').getAttribute('data-id');
-    let commentID = document.querySelector('div.comment-container').getAttribute('data-id');  
-    sendAjaxRequest('put', '/api/post/' + postID + '/comment/' + commentID, {content: content}, commentEditedHandler);
+  function editComment(commentId) {
+    // Find the comment element with the given commentId
+    let commentElement = document.querySelector(`div.comment-container[data-id="${commentId}"]`);
+  
+    // Get the comment content
+    let commentContent = commentElement.querySelector('li.list-group-item').textContent;
+
+    // Create an input element for editing the comment
+    let inputElement = document.createElement('input');
+    inputElement.type = 'text';
+    inputElement.value = commentContent;
+
+    // Replace the comment content with the input element
+    commentElement.querySelector('li.list-group-item').textContent = '';
+    commentElement.querySelector('li.list-group-item').appendChild(inputElement);
+
+    // Create a save button for saving the edited comment
+    let saveButton = document.createElement('button');
+    saveButton.textContent = 'Save';
+    saveButton.classList.add('btn', 'btn-sm', 'btn-primary');
+
+ 
+    saveButton.addEventListener('click', function() {
+      sendEditCommentRequest(commentId, inputElement.value);
+    });
+
+    // Replace the edit button with the save button
+    let editButton = commentElement.querySelector('button.btn-primary');
+    editButton.replaceWith(saveButton);
   }
 
-  function commentEditedHandler(){
-    if (this.status === 200) {
-      let comment = JSON.parse(this.responseText);
-      editComment(comment.id, comment.content);
-      console.log('Comment edited successfully');
-    }
-    else {
-      console.log('Failed to edit the comment. Please try again.');
-    }
+  function sendEditCommentRequest(commentID,content) {
+ 
+    sendAjaxRequest('put', '/api/comment/' + commentID, {content: content}, commentEditedHandler);
   }
 
-function editComment(commentId) {
-  // Find the comment element with the given commentId
-  let commentElement = document.querySelector(`div.comment-container[data-id="${commentId}"]`);
+  function commentEditedHandler() {
 
-  // Get the comment content
-  let commentContent = commentElement.querySelector('li.list-group-item').textContent;
+    let comment = JSON.parse(this.responseText);
 
-  // Create an input element for editing the comment
-  let inputElement = document.createElement('input');
-  inputElement.type = 'text';
-  inputElement.value = commentContent;
 
-  // Replace the comment content with the input element
-  commentElement.querySelector('li.list-group-item').textContent = '';
-  commentElement.querySelector('li.list-group-item').appendChild(inputElement);
+    // Find the comment element with the given commentId
+    let commentElement = document.querySelector(`div.comment-container[data-id="${comment.comment.id}"]`);
 
-  // Create a save button for saving the edited comment
-  let saveButton = document.createElement('button');
-  saveButton.textContent = 'Save';
-  saveButton.classList.add('btn', 'btn-sm', 'btn-primary');
-  saveButton.addEventListener('click', function() {
-    saveEditedComment(commentId);
-  });
+    // Get the edited comment content
+    let editedCommentContent = commentElement.querySelector('li.list-group-item input').value;
 
-  // Replace the edit button with the save button
-  let editButton = commentElement.querySelector('button.btn-primary');
-  editButton.replaceWith(saveButton);
-}
 
-function saveEditedComment(commentId) {
-  // Find the comment element with the given commentId
-  let commentElement = document.querySelector(`div.comment-container[data-id="${commentId}"]`);
+    // Update the comment content
+    commentElement.querySelector('li.list-group-item').textContent = editedCommentContent;
 
-  // Get the edited comment content
-  let editedCommentContent = commentElement.querySelector('li.list-group-item input').value;
+    // Create an edit button for editing the comment again
+    let editButton = document.createElement('button');
+    editButton.textContent = 'Edit';
+    editButton.classList.add('btn', 'btn-sm', 'btn-primary');
+    editButton.addEventListener('click', function() {
+      editComment(commentId);
+    });
 
-  // Update the comment content
-  commentElement.querySelector('li.list-group-item').textContent = editedCommentContent;
+    // Replace the save button with the edit button
+    let saveButton = commentElement.querySelector('button.btn-primary');
+    saveButton.replaceWith(editButton);
+  }
 
-  // Create an edit button for editing the comment again
-  let editButton = document.createElement('button');
-  editButton.textContent = 'Edit';
-  editButton.classList.add('btn', 'btn-sm', 'btn-primary');
-  editButton.addEventListener('click', function() {
-    editComment(commentId);
-  });
+  function deleteComment(commentId) {
+    // Find the comment element with the given commentId
+    let commentElement = document.querySelector(`div.comment-container[data-id="${commentId}"]`);
 
-  // Replace the save button with the edit button
-  let saveButton = commentElement.querySelector('button.btn-primary');
-  saveButton.replaceWith(editButton);
-}
-
-function deleteComment(commentId) {
-  // Find the comment element with the given commentId
-  let commentElement = document.querySelector(`div.comment-container[data-id="${commentId}"]`);
-
-  // Remove the comment element from the DOM
-  commentElement.remove();
-}
+    // Remove the comment element from the DOM
+    commentElement.remove();
+  }
 
   // ########## SEARCH  ##############
 
