@@ -23,7 +23,7 @@
         <article class="message" data-id="{{ $group->id }}">
             <form class="new_message" method="POST" action="/groups/{{ $group->id }}/chat">
                 @csrf
-                <input type="text" name="content" placeholder="Type your message">
+                <input type="text" name="message" placeholder="Type your message">
                 <button type="submit">Send</button>
             </form>
         </article>
