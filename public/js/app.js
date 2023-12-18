@@ -13,7 +13,7 @@
     if (postEditor != null){
       postEditor.addEventListener('click', editablePost);
     }
-
+  
     let messageCreator = document.querySelector('article.message form.new_message');
     if (messageCreator != null)
       messageCreator.addEventListener('submit', sendCreateMessageRequest);
@@ -22,6 +22,7 @@
     if (searchForm !== null){  
       searchForm.addEventListener('submit', sendSearchRequest);
     }
+
   }
 
   function encodeForAjax(data) {
@@ -43,61 +44,69 @@
 
   }
   
-  function editablePost(event) {
-    let content = document.querySelector('div.content');
+  function editablePost() {
+      let contentDiv = document.querySelector('div.content');
+      let titleHeader = document.querySelector('h1'); // Adjust the selector if your title is in a different header tag
 
-    if (!content.isContentEditable) {
-      content.setAttribute('contenteditable', 'true');
-      content.focus();
-      content.style.borderColor = 'red';
-      // Create a new button element
-      let saveButton = document.createElement('button');
-      // Set button properties (e.g., text content, attributes, event listeners)
-      saveButton.textContent = 'Save'; // Set button text
-      saveButton.setAttribute('class', 'save-button'); // Set button class
-      saveButton.addEventListener('click', function () {
-        // Add functionality for when the button is clicked
-        console.log('post saved');
-        let updatedContent = content.textContent.trim();
+      // Create editable textareas for content and title
+      let contentInput = document.createElement('textarea');
+      contentInput.name = 'content';
+      contentInput.classList.add('edit-textarea');
+      contentInput.textContent = contentDiv.textContent;
+      contentDiv.replaceWith(contentInput);
 
-        // Send AJAX request to update post
-        sendUpdatePostRequest(updatedContent, content);
+      let titleInput = document.createElement('textarea');
+      titleInput.name = 'title';
+      titleInput.classList.add('edit-textarea');
+      titleInput.textContent = titleHeader.textContent;
+      titleHeader.replaceWith(titleInput);
+
+      // Show save button
+      let saveButton = document.querySelector('button#save-post');
+      saveButton.style.display = 'block';
+
+      // Add event listener to save changes on submit
+      saveButton.addEventListener('click', function() {
+        saveEditedPost(contentInput.value, titleInput.value);
       });
-      // Find the reference button (the button above which you want to insert the new button)
-      let referenceButton = document.querySelector('.edit-post'); // Replace '.reference-button' with your reference button selector
-
-      // Insert the new button below the reference button using insertAdjacentElement
-      referenceButton.insertAdjacentElement('afterend', saveButton);
-    }
-    event.preventDefault();
   }
 
-  function sendUpdatePostRequest(updatedContent, content) {
-    let id = content.closest('article.post').getAttribute('data-id');
-    let data = { content: updatedContent };
+  function saveEditedPost(content, title) {
+    // Perform AJAX request to save the edited post
+    let id = document.querySelector('#delete-post').getAttribute('data-post-id');
+    sendAjaxRequest('put', '/api/post/' + id, { content: content, title: title }, postEditedHandler);
+  }
 
-    sendAjaxRequest('put', '/api/post/' + id, data, function() {
-        // Handler for the response after the content is updated
-        if (this.status === 200) {
-            // Content successfully updated, update the UI
-            content.contentEditable = false; // Set content back to non-editable
+  function postEditedHandler() {
+    if (this.status === 200) {
+      // Handle successful post edit
+      console.log('Post edited successfully');
 
-            // Remove the 'Save' button
-            let saveButton = content.nextElementSibling;
-            if (saveButton && saveButton.classList.contains('save-button')) {
-                saveButton.remove();
-            }
-        } else {
-            // Handle error, for example:
-            console.error('Failed to update content.');
-        }
-    });
+      // Hide save button
+      let saveButton = document.querySelector('button#save-post');
+      saveButton.style.display = 'none';
+
+      // Remove text areas
+      let contentInput = document.querySelector('textarea[name=content]');
+      let titleInput = document.querySelector('textarea[name=title]');
+      let contentDiv = document.createElement('div');
+      contentDiv.classList.add('content');
+      let titleHeader = document.createElement('h1');
+
+      contentDiv.textContent = contentInput.value;
+      titleHeader.textContent = titleInput.value;
+
+      contentInput.replaceWith(contentDiv);
+      titleInput.replaceWith(titleHeader);
+    } else {
+      // Handle error in post edit
+      console.log('Failed to edit the post. Please try again.');
+    }
   }
 
   function sendDeletePostRequest() {
     let deleteButton = document.querySelector('#delete-post');
     let id = deleteButton.getAttribute('data-post-id');
-    console.log(id);
     sendAjaxRequest('delete', '/api/post/' + id, null, postDeletedHandler);
   }
 
@@ -114,9 +123,14 @@
   }
   
   function postDeletedHandler() {
-    if (this.status != 200) window.location = '/';
+    if (this.status === 200) window.location = '/dashboard';
+    else {
+      const errorMessage = document.createElement('div');
+      errorMessage.textContent = 'Failed to delete the post. Please try again.';
+      errorMessage.style.color = 'red'; 
+      document.body.appendChild(errorMessage);
+    }
     let post = JSON.parse(this.responseText);
-    console.log(post.id);
     
     let div = document.getElementById(post.id);
     div.remove();
@@ -228,7 +242,7 @@
     let id = this.closest('article').getAttribute('data-id');
     let likeButton = this;
     if (likeButton.classList.contains('liked')) {
-      sendAjaxRequest('delete', 'api/post/'+id+'/unlike', null, unlikeHandler);
+      sendAjaxRequest('delete', '/api/post/'+id+'/unlike', null, unlikeHandler);
     } else {
       sendAjaxRequest('post', '/api/post/'+id+'/like', null, likeHandler);
     }
@@ -305,8 +319,8 @@
   });   
 
   function sendCreateCommentRequest(event){
-    let id =  this.closest('article').getAttribute('data-id');
-  
+    let id =  this.closest('div').getAttribute('data-id');
+    
     let textareaContent = document.querySelector('div.comments[data-id="' + id + '"] form.new_comment #exampleTextarea').value;
 
     if (textareaContent != ''){      
@@ -322,29 +336,130 @@
     if (this.status != 200) window.location = '/'
     
     let comment = JSON.parse(this.responseText);
-
-    let new_comment = createComment(comment);
-
-    let form = document.querySelector('div.comments[data-id="' + comment.comment.post_id + '"] form.new_comment');
     
-    form.querySelector('div.comments[data-id="' + comment.comment.post_id + '"] form.new_comment #exampleTextarea').value = "";
+    let new_comment = createComment(comment);
+   
+    let textareaContent = document.querySelector('div.form-group textarea#exampleTextarea');
+    textareaContent.value = "";
 
-    let formParent = form.parentElement;
-  
-    formParent.insertBefore(new_comment, form);
-  
+    let ul = document.querySelector('ul.list-group.list-group-flush');
+    ul.prepend(new_comment);
+    
   }
 
   function createComment(comment) {
-    
-    let new_comment = document.createElement('p');
-    new_comment.classList.add('fw-light', 'fs-6');
-    
-    new_comment.innerHTML = `${comment.user.name}: ${comment.comment.content}`;
+    let new_comment = document.createElement('div');
+    new_comment.classList.add('comment-container');
+    new_comment.setAttribute('data-id', comment.comment.id);
+    let avatar = comment.user.img || '/profile/default.jpg';
+   
+    new_comment.innerHTML = `
+      <a href="/profile/${comment.user.id}" class="profile_avatar">
+        <img src="${avatar}" class="avatar">${comment.user.name}
+      </a>
+      <span class="float-end">Just now</span>
+      <li class="list-group-item">${comment.comment.content}</li>
+        <div class="float-end" style="padding-top: 10px;">
+          <button class="btn btn-sm btn-primary">Edit</button>
+          <button class="btn btn-sm btn-danger">Delete</button>
+        </div>
+    `;
+
     return new_comment;
   }
-  
+ 
+  // ########## EDIT AND DELETE COMMENTS  ##############
 
+
+  function sendDeleteCommentRequest(commentID) {
+    
+    sendAjaxRequest('delete', '/api/comment/' + commentID, null, commentDeletedHandler);
+  }
+
+  function commentDeletedHandler() {
+    if (this.status === 200) {
+      let comment = JSON.parse(this.responseText);
+      deleteComment(comment.id);
+      console.log('Comment deleted successfully');
+    }
+    else {
+      console.log('Failed to delete the comment. Please try again.');
+    }
+  }
+
+  function editComment(commentId) {
+    // Find the comment element with the given commentId
+    let commentElement = document.querySelector(`div.comment-container[data-id="${commentId}"]`);
+  
+    // Get the comment content
+    let commentContent = commentElement.querySelector('li.list-group-item').textContent;
+
+    // Create an input element for editing the comment
+    let inputElement = document.createElement('input');
+    inputElement.type = 'text';
+    inputElement.value = commentContent;
+
+    // Replace the comment content with the input element
+    commentElement.querySelector('li.list-group-item').textContent = '';
+    commentElement.querySelector('li.list-group-item').appendChild(inputElement);
+
+    // Create a save button for saving the edited comment
+    let saveButton = document.createElement('button');
+    saveButton.textContent = 'Save';
+    saveButton.classList.add('btn', 'btn-sm', 'btn-primary');
+
+ 
+    saveButton.addEventListener('click', function() {
+      sendEditCommentRequest(commentId, inputElement.value);
+    });
+
+    // Replace the edit button with the save button
+    let editButton = commentElement.querySelector('button.btn-primary');
+    editButton.replaceWith(saveButton);
+  }
+
+  function sendEditCommentRequest(commentID,content) {
+ 
+    sendAjaxRequest('put', '/api/comment/' + commentID, {content: content}, commentEditedHandler);
+  }
+
+  function commentEditedHandler() {
+
+    let comment = JSON.parse(this.responseText);
+
+
+    // Find the comment element with the given commentId
+    let commentElement = document.querySelector(`div.comment-container[data-id="${comment.comment.id}"]`);
+
+    // Get the edited comment content
+    let editedCommentContent = commentElement.querySelector('li.list-group-item input').value;
+
+
+    // Update the comment content
+    commentElement.querySelector('li.list-group-item').textContent = editedCommentContent;
+
+    // Create an edit button for editing the comment again
+    let editButton = document.createElement('button');
+    editButton.textContent = 'Edit';
+    editButton.classList.add('btn', 'btn-sm', 'btn-primary');
+    editButton.addEventListener('click', function() {
+      editComment(commentId);
+    });
+
+    // Replace the save button with the edit button
+    let saveButton = commentElement.querySelector('button.btn-primary');
+    saveButton.replaceWith(editButton);
+  }
+
+  function deleteComment(commentId) {
+    // Find the comment element with the given commentId
+    let commentElement = document.querySelector(`div.comment-container[data-id="${commentId}"]`);
+
+    // Remove the comment element from the DOM
+    commentElement.remove();
+  }
+
+  // ########## SEARCH  ##############
 
   // Add event listener for the document click
   document.addEventListener('click', function(event) {

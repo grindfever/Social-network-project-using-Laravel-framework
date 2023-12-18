@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+use App\Http\Controllers\FileController;
+
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -99,5 +101,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Group::class, 'memberships', 'possible_member', 'group_id');
     }
+
+    public function getProfileImage() {
+        return FileController::get('profile', $this->id);
+    }
+    
 
 }

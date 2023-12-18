@@ -136,8 +136,8 @@ CREATE TABLE comments
     user_id INTEGER CONSTRAINT fk_comment_userid REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 				   CONSTRAINT nn_commente_userid NOT NULL,
     content character varying(128) ,
-    img character varying(256) ,
     date timestamp(0) without time zone CONSTRAINT nn_comment_date NOT NULL,
+    img character varying(256) ,
     post_id integer CONSTRAINT fk_comment_post_id REFERENCES posts(id) ON DELETE CASCADE ON UPDATE CASCADE
                     CONSTRAINT nn_comment_post_id NOT NULL,
     CHECK (content IS NOT NULL OR img IS NOT NULL)
@@ -327,7 +327,7 @@ INSERT INTO users VALUES (
   '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
   'a',
   18,
-  FALSE
+  DEFAULT
 ); -- Password is 1234. Generated using Hash::make('1234')
 
 -- Populating users table
@@ -355,40 +355,111 @@ INSERT INTO users VALUES (
 
 -- Add more users as needed
 
-
-
 INSERT INTO posts VALUES (
-    DEFAULT,
-    1, 
-    'My first post', 
-    '2023-08-08',
-    DEFAULT
+  DEFAULT,
+  1,
+  'Hello World',
+  'Hello World! This is my first post.',
+  '2022-01-01 12:00:00',
+  DEFAULT,
+  DEFAULT
 );
 
 INSERT INTO posts VALUES (
-    DEFAULT,
-    1, 
-    'My second post', 
-    '2023-08-09',
-    DEFAULT
-);
-
--- Populating posts table
-INSERT INTO posts VALUES (
-    DEFAULT,
-    2, 
-    'Exploring the world', 
-    '2023-09-15',
-    DEFAULT
+  DEFAULT,
+  1,
+  'Exciting News!',
+  'I just got accepted into my dream university! So excited to start this new chapter in my life.',
+  '2022-01-02 13:30:00',
+  DEFAULT,
+  DEFAULT
 );
 
 INSERT INTO posts VALUES (
-    DEFAULT,
-    3, 
-    'New coding project!', 
-    '2023-09-20',
-    DEFAULT
+  DEFAULT,
+  2,
+  'Travel Adventures',
+  'Just came back from an amazing trip to Bali. The beaches were stunning and the food was incredible!',
+  '2022-01-03 15:45:00',
+  DEFAULT,
+  DEFAULT
 );
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  2,
+  'New Recipe',
+  'Tried out a new recipe today and it turned out delicious! Sharing it with you all.',
+  '2022-01-04 09:15:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  3,
+  'Fitness Journey',
+  'Started my fitness journey today. Looking forward to getting healthier and stronger!',
+  '2022-01-05 17:20:00',
+  DEFAULT,
+  DEFAULT
+);
+
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  1,
+  'Congratulations! That is amazing news!',
+  '2022-01-01 12:30:00',
+  DEFAULT,
+  1
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  1,
+  'So happy for you! Best of luck in your new adventure.',
+  '2022-01-01 13:00:00',
+  DEFAULT,
+  2
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  2,
+  'Bali is definitely on my bucket list. Your pictures look incredible!',
+  '2022-01-02 14:00:00',
+  DEFAULT,
+  3
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  2,
+  'Please share the recipe! I am always looking for new dishes to try.',
+  '2022-01-02 15:30:00',
+  DEFAULT,
+  4
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  3,
+  'You got this! Stay motivated and enjoy the journey.',
+  '2022-01-03 16:45:00',
+  DEFAULT,
+  5
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  3,
+  'Let me know if you need any workout tips. I am happy to help!',
+  '2022-01-03 18:00:00',
+  DEFAULT,
+  5
+);
+
 
 -- Add more posts as needed
 

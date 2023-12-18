@@ -23,7 +23,7 @@ class DashBoardController extends Controller
      {   
         // Get the post.
         $post = Post::findOrFail($id);
-      
+
         // Use the pages.post template to display the post.
         return view('pages.post', [
             'post' => $post, 

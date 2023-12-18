@@ -36,14 +36,30 @@ class CommentController extends Controller
         ]);
     }
 
-    public function show(string $id)
+    public function edit(Request $request, $id)
     {
-        // Get the post.
-        $post = Post::findOrFail($id);
+        $request->validate([
+            'content' => 'required|max:255',
+        ]);
+        $comment = Comment::findOrFail($id);
+        $comment->content = strip_tags($request->input('content'));
+        $comment->save();
 
-        // Use the pages.post template to display the post.
-        return view('pages.post', [
-            'post' => $post,
+        return response()->json([
+            'comment' => $comment,
+        ]);
+    }
+
+    public function delete(Request $request, $id)
+    {
+        $comment = Comment::findOrFail($id);
+        $comment->delete();
+
+        return response()->json([
+            'message' => 'Comment deleted successfully',
+            'id' => $id,
         ]);
     }
 }
+
+    
