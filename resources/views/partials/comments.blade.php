@@ -11,7 +11,7 @@
     
     <ul class="list-group list-group-flush">
             @foreach ($post->comments as $comment)
-            <div class="comment-container" style="border: 2px solid #000; border-radius: 10px; padding: 15px; margin-bottom: 10px">
+            <div class="comment-container" data-id="{{$comment->id}}">
                 <a href="/profile/{{ $comment->user->id }}" class="profile_avatar">
                     <img src="{{ $comment->user->getProfileImage() }}" class="avatar">{{ $comment->user->name }}
                 </a>

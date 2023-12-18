@@ -46,4 +46,32 @@ class CommentController extends Controller
             'post' => $post,
         ]);
     }
+
+    public function edit(Request $request, $id)
+    {
+        $request->validate([
+            'content' => 'required|max:255',
+        ]);
+
+        $comment = Comment::findOrFail($id);
+        $comment->content = strip_tags($request->input('content'));
+        $comment->save();
+
+        return response()->json([
+            'comment' => $comment,
+        ]);
+    }
+
+    public function delete($id)
+    {
+        $comment = Comment::findOrFail($id);
+        $comment->delete();
+
+        return response()->json([
+            'message' => 'Comment deleted successfully',
+            'id' => $id,
+        ]);
+    }
 }
+
+    
