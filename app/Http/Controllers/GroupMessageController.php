@@ -20,7 +20,7 @@ class GroupMessageController extends Controller
         return view('pages.group_chat', compact('group_messages', 'group'));
     }
 
-    public function sendMessage(Request $request, string $groupId)   
+    public function sendMessage(Request $request, string $groupId)
     {
         $group_message = new GroupMessage();
 
@@ -28,9 +28,9 @@ class GroupMessageController extends Controller
 
         $group_message->content = $request->input('message');
         $group_message->sender = Auth::user()->id;
-        $group_message->group_id = $groupId;  
+        $group_message->group_id = $groupId;
 
         $group_message->save();
-        return response()->json($group_message);
+        return redirect("/groups/{$groupId}/chat");
     }
 }
