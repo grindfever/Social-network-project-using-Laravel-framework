@@ -214,22 +214,20 @@
       mediaElement = document.createElement('video');
       mediaElement.setAttribute('controls', '');
       let source = document.createElement('source');
-      source.src = post.file;
+      source.src = currentURL + '/post/' + post.file;
       source.type = `video/${extension}`;
       mediaElement.appendChild(source);
     } else if (['mp3', 'wav', 'ogg'].includes(extension)) {
       mediaElement = document.createElement('audio');
       mediaElement.setAttribute('controls', '');
       let source = document.createElement('source');
-      source.src = post.file;
+      source.src = currentURL + '/post/'+post.file;
       source.type = `audio/${extension}`;
       mediaElement.appendChild(source);
     } else {
-      mediaElement = document.createElement('img');
-      mediaElement.src = post.file;
-      mediaElement.className = 'post-image';
+      mediaElement = `<img src="${currentURL}/post/${post.file}" class="avatar">`;
     }
-
+    console.log(mediaElement);
     new_post.classList.add('post');
     new_post.setAttribute('data-id', post.post.id);
     new_post.innerHTML = `

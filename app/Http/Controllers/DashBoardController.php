@@ -38,7 +38,10 @@ class DashBoardController extends Controller
      * Shows all posts.
      */
     public function list()
-    {
+    {   
+
+    
+        // Get all posts ordered by date.
         $posts = Post::orderBy('date', 'desc')->get();
         
         // Use the pages.dashboard template to display all posts.
