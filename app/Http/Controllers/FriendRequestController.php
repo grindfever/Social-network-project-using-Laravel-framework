@@ -23,8 +23,12 @@ class FriendRequestController extends Controller
             ->firstOrFail();
     
         $friendRequest->accept();
-
-        return redirect()->route('friendrequests.index');
+    
+        return response()->json([
+            'message' => 'Friend request accepted successfully',
+            'sender' => $sender,
+            'receiver' => $receiver,
+        ]);
     }
     
     public function reject($sender, $receiver)
@@ -35,6 +39,10 @@ class FriendRequestController extends Controller
     
         $friendRequest->reject();
     
-        return redirect()->route('friendrequests.index');
+        return response()->json([
+            'message' => 'Friend request rejected successfully',
+            'sender' => $sender,
+            'receiver' => $receiver,
+        ]);
     }
 }

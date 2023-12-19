@@ -25,7 +25,72 @@ function addEventListeners() {
     if (searchForm !== null){  
       searchForm.addEventListener('submit', sendSearchRequest);
     }
+    let friendAccepters = document.querySelectorAll('article.friend button#accept-friend');
+    [].forEach.call(friendAccepters, function (accepter) {
+        accepter.addEventListener('click', sendAcceptFriendRequest);
+    });
+
+    let friendRejecters = document.querySelectorAll('article.friend button#reject-friend');
+    [].forEach.call(friendRejecters, function (rejecter) {
+        rejecter.addEventListener('click', sendRejectFriendRequest);
+    });
+    }
+
+    function sendAcceptFriendRequest(sender, receiver) {
+      fetch('/friendrequests/accept/' + sender + '/' + receiver, {
+          method: 'POST',
+          headers: {
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({}),
+      })
+      .then(response => response.json())
+      .then(acceptFriendRequestHandler)
+      .catch(error => console.error('Error:', error));
   }
+  
+  function sendRejectFriendRequest(sender, receiver) {
+      fetch('/friendrequests/reject/' + sender + '/' + receiver, {
+          method: 'POST',
+          headers: {
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({}),
+      })
+      .then(response => response.json())
+      .then(rejectFriendRequestHandler)
+      .catch(error => console.error('Error:', error));
+  }
+  
+  function acceptFriendRequestHandler(response) {
+      if (response.message === 'Friend request accepted successfully') {
+    
+          console.log('Friend request accepted');
+
+          let requestItem = document.querySelector(`div[data-sender="${response.sender}"][data-receiver="${response.receiver}"]`);
+          if (requestItem) {
+              requestItem.remove();
+          }
+      } else {
+          console.error('Error:', response.message);
+      }
+  }
+  
+  function rejectFriendRequestHandler(response) {
+      if (response.message === 'Friend request rejected successfully') {
+          console.log('Friend request rejected');
+       
+          let requestItem = document.querySelector(`div[data-sender="${response.sender}"][data-receiver="${response.receiver}"]`);
+          if (requestItem) {
+              requestItem.remove();
+          }
+      } else {
+          console.error('Error:', response.message);
+      }
+  }
+  
 
   function encodeForAjax(data) {
     if (data == null) return null;
