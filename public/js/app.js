@@ -8,7 +8,7 @@
     let postCreator = document.querySelector('form.new_post');
     if (postCreator != null)
       postCreator.addEventListener('submit', sendCreatePostRequest);
-
+    
     let postEditor = document.querySelector('button#edit-post');
     if (postEditor != null){
       postEditor.addEventListener('click', editablePost);
@@ -24,7 +24,8 @@
     }
 
   }
-
+  
+  /*
   function encodeForAjax(data) {
     if (data == null) return null;
     
@@ -35,13 +36,28 @@
   
   function sendAjaxRequest(method, url, data, handler) {
     let request = new XMLHttpRequest();
-    
+    \
     request.open(method, url, true)
     request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     request.addEventListener('load', handler);
     request.send(encodeForAjax(data));
 
+  }
+  */
+
+  function sendAjaxRequest(method, url, data, handler) {
+    let request = new XMLHttpRequest();
+    let formData = new FormData();
+
+    for(let key in data) {
+      formData.append(key, data[key]);
+    }
+    
+    request.open(method, url, true);
+    request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
+    request.addEventListener('load', handler);
+    request.send(formData);
   }
   
   function editablePost() {
@@ -111,15 +127,27 @@
   }
 
   function sendCreatePostRequest(event) {
-    let content_post = this.querySelector('textarea[name=content]').value;
-    let title_post = this.querySelector('form.new_post input[name=title]').value;
-    console.log(this.querySelector('input[name=title]'));
-    console.log(content_post);
-    console.log(title_post);
-    if (title_post != '' && content_post != '' )
-      sendAjaxRequest('post', '/dashboard/create', {content: content_post,title: title_post}, postAddedHandler);
-
     event.preventDefault();
+
+    let content_post = this.querySelector('form.new_post textarea[name=content]').value;
+    let title_post = this.querySelector('form.new_post input[name=title]').value;
+    let type = this.querySelector('form.new_post input[name=type]').value;
+    let fileInput = this.querySelector('form.new_post input[name=file]');
+    let file = fileInput.files[0];
+
+    if (title_post != '' && content_post != '') {
+      let data = {
+        content: content_post,
+        title: title_post,
+        type: type
+      };
+
+      if (file) {
+        data.file = file;
+      }
+      console.log(data);
+      sendAjaxRequest('post', '/dashboard/create', data, postAddedHandler);
+    }
   }
   
   function postDeletedHandler() {
@@ -140,12 +168,13 @@
     if (this.status != 200) window.location = '/';
     console.log(this.responseText);
     let post = JSON.parse(this.responseText);
-   
+
     let new_post = createPost(post);
 
     let form = document.querySelector('form.new_post');
     form.querySelector('[name=content]').value="";
     form.querySelector('[name=title]').value="";
+    form.querySelector('[name=file]').value="";
 
     let section = document.querySelector('section.dashboard');
     section.prepend(new_post);
@@ -158,40 +187,81 @@
   }
 
   function createPost(post) {
-      let new_post = document.createElement('article');
-     
-      new_post.classList.add('post');
-      new_post.setAttribute('data-id', post.id);
-      new_post.innerHTML = `
-      <h1>${post.title}</h1>
-      <div class="card-header"><a href="post/${post.id}">  ${post.user.name} </a></div>
+    let new_post = document.createElement('article');
+    let imgHTML = '';
+    let currentURLhost = window.location.host;
+    let currentURLprotocol = window.location.protocol;
+    let currentURL = currentURLprotocol + '//' + currentURLhost;
+   
+    
+    if (typeof post.file === 'string' && post.file.length > 0) {
+      imgHTML = `<img class="post-image" src="${currentURL}/post/${post.file}">`;
+    }
+
+    if (typeof post.post.user.img === 'string' && post.post.user.img.length > 0) {
+      avatarHTML = `<img src="${currentURL}/profile/${post.post.user.img}" class="avatar">`;
+    }
+    else{
+      avatarHTML = `<img src="${currentURL}/profile/default.jpg" class="avatar">`;
+    }
+
+    // Get the extension of the file
+    let extension = post.file.split('.').pop();
+
+    // Create a new element based on the file type
+    let mediaElement;
+    if (['mp4', 'webm', 'ogg'].includes(extension)) {
+      mediaElement = document.createElement('video');
+      mediaElement.setAttribute('controls', '');
+      let source = document.createElement('source');
+      source.src = post.file;
+      source.type = `video/${extension}`;
+      mediaElement.appendChild(source);
+    } else if (['mp3', 'wav', 'ogg'].includes(extension)) {
+      mediaElement = document.createElement('audio');
+      mediaElement.setAttribute('controls', '');
+      let source = document.createElement('source');
+      source.src = post.file;
+      source.type = `audio/${extension}`;
+      mediaElement.appendChild(source);
+    } else {
+      mediaElement = document.createElement('img');
+      mediaElement.src = post.file;
+      mediaElement.className = 'post-image';
+    }
+
+    new_post.classList.add('post');
+    new_post.setAttribute('data-id', post.post.id);
+    new_post.innerHTML = `
+      <div class="card-header">
+        <a href="/profile/${post.post.user.id}">
+          ${avatarHTML}
+          ${post.post.user.name}
+        </a>
+        <span class="float-end">Just now</span>
+      </div>
+      <h1>${post.post.title}</h1>
       <div class="card-body">
         <p class="card-text">
-          <div class="content">${post.content}</div>
+          <div class="content">${post.post.content}</div>
+          ${mediaElement}
         </p>
       </div>
       <div class="like-post">
-      <button type="submit" class="like-count">
-        <span class="far fa-heart"></span> 0
-      </button>
-      
-      <form action="api/post/${post.id}/comment" method="POST">
-        <div class="mb-3">
-          <textarea class="fs-6 form-control" name="content" rows="1" placeholder="Whats on your mind?"></textarea>
-        </div>
-      <button type="submit" class="btn btn-primary btn-sm"> Post Comment </button>
-      </form>
-      `;
-      
-      // Create a div element, add a class to it, and append new_post to it
-      let wrapper = document.createElement('div');
-      wrapper.classList.add('card', 'border-dark', 'mb-3');
-      wrapper.id = post.id;
-      wrapper.style.maxWidth = '20rem'; // Replace 'your-class-name' with the actual class name
-      wrapper.appendChild(new_post);
+        <button type="submit" class="like-count">
+          <span class="far fa-heart"></span> 0
+        </button>
+      </div>
+    `;
 
-      return wrapper;
 
+    // Create a div element, add a class to it, and append new_post to it
+    let wrapper = document.createElement('div');
+    wrapper.classList.add('post-border');
+    wrapper.id = post.post.id;
+    wrapper.appendChild(new_post);
+
+    return wrapper;
   }
   
   function sendCreateMessageRequest(event){
@@ -351,11 +421,21 @@
     let new_comment = document.createElement('div');
     new_comment.classList.add('comment-container');
     new_comment.setAttribute('data-id', comment.comment.id);
-    let avatar = comment.user.img || '/profile/default.jpg';
+
+    let currentURLhost = window.location.host;
+    let currentURLprotocol = window.location.protocol;
+    let currentURL = currentURLprotocol + '//' + currentURLhost;
    
+    if(comment.user.img != null){
+      avatarHTML = `<img src="${currentURL}/profile/${comment.user.img}" class="avatar">`;
+    }
+    else{
+      avatarHTML = `<img src="${currentURL}/profile/default.jpg" class="avatar">`;
+    }
+
     new_comment.innerHTML = `
       <a href="/profile/${comment.user.id}" class="profile_avatar">
-        <img src="${avatar}" class="avatar">${comment.user.name}
+        ${avatarHTML}
       </a>
       <span class="float-end">Just now</span>
       <li class="list-group-item">${comment.comment.content}</li>

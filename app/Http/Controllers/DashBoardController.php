@@ -12,6 +12,10 @@ use App\Models\User;
 use App\Models\Post;
 use App\Models\PostLike;
 
+use App\Http\Controllers\FileController;
+
+use Illuminate\Support\Facades\Log;
+
 
 class DashBoardController extends Controller
 {
@@ -49,29 +53,41 @@ class DashBoardController extends Controller
      */
     public function create(Request $request)
     {
+
         // Validate the request.
         $request->validate([
             'title' => 'required|max:128',
             'content' => 'required|max:512',
+            'file' => 'nullable|file|mimes:jpeg,png,jpg,gif,mp3,mp4',
         ]);
 
         // Create a blank new Post.
         $post = new Post();
         
-        // Check if the current user is authorized to create this card.
-        $this->authorize('create', $post);
-
         // Set post details
         $post->title = strip_tags($request->input('title'));
         $post->content = strip_tags($request->input('content')); 
         $post->user_id = Auth::user()->id;
-
-        // Save the card and return it as JSON.
         $post->save();
+        // Check if the current user is authorized to create this card.
+        $this->authorize('create', $post);
+ 
+        // Call the upload function from FileController
 
-        $post->load('user:id,name');
+        $request->merge(['id' => $post->id]);
+        $fileController = new FileController();
+        $uploadResult = $fileController->upload($request);
 
-        return response()->json($post);
+        if ($uploadResult === null) {
+            // Handle error, maybe return a response indicating the upload failed
+            return response()->json(['post' => $post, 'file' => 'error']);
+        }
+
+        $post->load('user:id,name,img');
+        
+        $type = $request->input('type');
+        
+        return response()->json(['post' => $post, 'file' => $uploadResult]);
     }
 
     /**

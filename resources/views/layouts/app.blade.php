@@ -46,28 +46,26 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/groups') }}">Groups</a>
                   </li>
-
-                  
-                
-
-                @if (Auth::check())
-                  <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/profile') }}" >{{ Auth::user()->name }}</a>
-                  </li>
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/about') }}" >About us</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/contact') }}" >Contact us</a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/logout') }}">Logout</a> 
-                  </li>
-                  @else
-                  <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/login') }}" >Login</a>
-                  </li>
-                  @endif
+                  @if (Auth::check())
+                    <li class="nav-item">
+                      <a class="nav-link" href="{{ url('/profile/' . Auth::user()->id) }}" >{{ Auth::user()->name }}</a>
+                    </li>
+        
+                    <li class="nav-item">
+                      <a class="nav-link" href="{{ url('/logout') }}">Logout</a> 
+                    </li>
+                    @else
+                    <li class="nav-item">
+                      <a class="nav-link" href="{{ url('/login') }}" >Login</a>
+                    </li>
+                    @endif
+                </ul>
               </div>
             </div>
           </nav>      

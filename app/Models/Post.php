@@ -37,7 +37,7 @@ class Post extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public function getProfileImage() {
-        return FileController::get('profile', $this->id);
+    public function getPostImage() {
+        return FileController::get('post', $this->id);
     }
 }

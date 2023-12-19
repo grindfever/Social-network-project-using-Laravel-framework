@@ -19,7 +19,8 @@
             <textarea class="form-control" rows="4" cols="40" name="content" placeholder="What's on your mind?"></textarea>
         </div>
         <div class="input-group">
-            <input type="file" class="form-control" name="media" accept="image/*, video/*">
+            <input type="file" class="form-control" name="file">
+            <input  name="type" type="text" value="post" hidden>
         </div>
         <button type="submit" class="btn btn-dark">Create Post</button>
     </form>

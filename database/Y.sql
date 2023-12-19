@@ -63,7 +63,7 @@ CREATE TABLE users (
   password VARCHAR NOT NULL,
   bio character varying(256),
   age INTEGER, --CONSTRAINT nn_users_age NOT NULL,
-  img character varying(256),
+  img VARCHAR,
   priv BOOLEAN DEFAULT TRUE,
   remember_token VARCHAR
 );
@@ -96,7 +96,7 @@ CREATE TABLE posts
     content character varying(512) ,
     date timestamp(0) without time zone CONSTRAINT nn_posts_date NOT NULL DEFAULT now(),
     public boolean NOT NULL DEFAULT TRUE,
-    img character varying(256),
+    img VARCHAR,
     CHECK (content IS NOT NULL OR img IS NOT NULL)
 );
 

@@ -1,4 +1,4 @@
-<div class="card border-dark mb-3"  id="{{ $post->id}}">
+<div class="post-border" style ="width=60vh;"  id="{{ $post->id}}">
     <article class="post" data-id="{{ $post->id }}">
         <div class="card-header">
             <a href="/profile/{{ $post->user->id }}">
@@ -11,6 +11,24 @@
         <div class="card-body">
             <p class="card-text">
                 <div class="content">{{$post->content}}</div>
+                @if ($post->img != null)
+                    @php
+                        $extension = pathinfo($post->img, PATHINFO_EXTENSION);
+                    @endphp
+                    @if (in_array($extension, ['mp4', 'webm', 'ogg']))
+                        <video controls controlsList="nodownload">
+                            <source id="videoSource" src="{{ $post->getPostImage() }}" type="video/{{ $extension }}">
+                            Your browser does not support the video tag.
+                        </video>
+                    @elseif (in_array($extension, ['mp3', 'wav', 'ogg']))
+                        <audio controls controlsList="nodownload">
+                            <source id="audioSource" src="{{ $post->getPostImage() }}" type="audio/{{ $extension }}">
+                            Your browser does not support the audio element.
+                        </audio>
+                    @else
+                        <img src="{{ $post->getPostImage() }}" class="post-image">
+                    @endif
+                @endif
             </p>
         </div>
         @auth
