@@ -102,6 +102,27 @@ class User extends Authenticatable
         return $this->belongsToMany(Group::class, 'memberships', 'possible_member', 'group_id');
     }
 
+    
+
+    public function friendships()
+    {
+        return $this->hasMany(Friend::class, 'user_id1');
+    }
+
+    public function friends()
+    {
+        // Get the friends where the user is the user_id1
+        $friends1 = $this->hasMany(Friend::class, 'user_id1')->get()->pluck('user_id2');
+        // Get the friends where the user is the user_id2
+        $friends2 = $this->hasMany(Friend::class, 'user_id2')->get()->pluck('user_id1');
+
+        // Merge both collections and get unique values
+        $friends = $friends1->concat($friends2)->unique();
+
+        // Get the User instances for the friends
+        return User::whereIn('id', $friends)->get();
+    }
+    
     public function getProfileImage() {
         return FileController::get('profile', $this->id);
     }

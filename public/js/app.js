@@ -1,10 +1,13 @@
-  
-  function addEventListeners() {
-
-    let postDeleter = document.querySelector('button#delete-post');
+function addEventListeners() {
+  let postDeleter = document.querySelector('button#delete-post');
     if(postDeleter != null)
       postDeleter.addEventListener('click', sendDeletePostRequest);
-    
+
+    let friendDeleters = document.querySelectorAll('article.friend button#delete-friend');
+    [].forEach.call(friendDeleters, function(deleter) {
+      deleter.addEventListener('click', sendDeleteFriendRequest);
+    });
+  
     let postCreator = document.querySelector('form.new_post');
     if (postCreator != null)
       postCreator.addEventListener('submit', sendCreatePostRequest);
@@ -23,9 +26,120 @@
       searchForm.addEventListener('submit', sendSearchRequest);
     }
 
+    let friendRequestForm = document.getElementById('friendRequestForm');
+    if (friendRequestForm) {
+        friendRequestForm.addEventListener('submit', sendFriendRequest);
+    }
+
+    let friendAccepters = document.querySelectorAll('article.friend button#accept-friend');
+    [].forEach.call(friendAccepters, function (accepter) {
+        accepter.addEventListener('click', sendAcceptFriendRequest);
+    });
+
+    let friendRejecters = document.querySelectorAll('article.friend button#reject-friend');
+    [].forEach.call(friendRejecters, function (rejecter) {
+        rejecter.addEventListener('click', sendRejectFriendRequest);
+    });
+    }
+
+    function sendAcceptFriendRequest(sender, receiver) {
+      fetch('/friendrequests/accept/' + sender + '/' + receiver, {
+          method: 'POST',
+          headers: {
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({}),
+      })
+      .then(response => response.json())
+      .then(acceptFriendRequestHandler)
+      .catch(error => console.error('Error:', error));
   }
   
+  function sendFriendRequest(event) {
+    event.preventDefault();
+
+    let sender = event.target.getAttribute('data-sender');
+    let receiver = event.target.getAttribute('data-receiver');
+
+    fetch(`/profile/${receiver}/send-friend-request`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
+    })
+    .then(response => response.json())
+    .then(sendFriendRequestHandler)
+    .catch(error => console.error('Error:', error));
+}
+
+function sendFriendRequestHandler(response) {
+  if (response.success) {
+      console.log('Friend request sent successfully');
+
+      let sender = response.sender;
+      let receiver = response.receiver;
+      
+      console.log('Attempting to remove friend request item:', sender, receiver);
+
+      let friendRequestItem = document.querySelector(`div[data-sender="${sender}"][data-receiver="${receiver}"]`);
+      
+      if (friendRequestItem) {
+          friendRequestItem.remove();
+          console.log('Friend request item removed from the DOM');
+      } else {
+          console.log('Friend request item not found in the DOM');
+      }
+  } else {
+      console.error('Error:', response.message);
+      // Handle the error, show a message, etc.
+  }
+}
+
+  function sendRejectFriendRequest(sender, receiver) {
+      fetch('/friendrequests/reject/' + sender + '/' + receiver, {
+          method: 'POST',
+          headers: {
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({}),
+      })
+      .then(response => response.json())
+      .then(rejectFriendRequestHandler)
+      .catch(error => console.error('Error:', error));
+  }
   
+  function acceptFriendRequestHandler(response) {
+      if (response.message === 'Friend request accepted successfully') {
+    
+          console.log('Friend request accepted');
+
+          let requestItem = document.querySelector(`div[data-sender="${response.sender}"][data-receiver="${response.receiver}"]`);
+          if (requestItem) {
+              requestItem.remove();
+          }
+      } else {
+          console.error('Error:', response.message);
+      }
+  }
+  
+  function rejectFriendRequestHandler(response) {
+      if (response.message === 'Friend request rejected successfully') {
+          console.log('Friend request rejected');
+       
+          let requestItem = document.querySelector(`div[data-sender="${response.sender}"][data-receiver="${response.receiver}"]`);
+          if (requestItem) {
+              requestItem.remove();
+          }
+      } else {
+          console.error('Error:', response.message);
+      }
+  }
+  
+
   function encodeForAjax(data) {
     if (data == null) return null;
     
@@ -127,6 +241,11 @@
     let id = deleteButton.getAttribute('data-post-id');
     sendAjaxRequest('delete', '/api/post/' + id, null, postDeletedHandler);
   }
+    
+  function sendDeleteFriendRequest(event) {
+    let id = this.closest('article').getAttribute('data-id');
+    sendAjaxRequest('delete', '/friends/' + id +'/remove', null, friendDeletedHandler);
+  }
 
   function sendCreatePostRequest(event) {
     event.preventDefault();
@@ -165,6 +284,18 @@
     let div = document.getElementById(post.id);
     div.remove();
   }
+  
+  function friendDeletedHandler() {
+    if (this.status != 200) console.log(this.status); //window.location = '/';
+    let friend = JSON.parse(this.responseText);
+    console.log(friend);
+
+    let article = document.querySelector('article.friend[data-id="' + friend.friend_id + '"]');
+    console.log(article);
+    article.remove();
+    console.log("deleted friend");
+  }
+
   
   function postAddedHandler() {
     if (this.status != 200) window.location = '/';
@@ -652,12 +783,12 @@ document.addEventListener('click', function(event) {
 
 
     showSearchResults();
-}
+  }
 
-function showSearchResults(){
-  let searchResultContainer = document.querySelector('.search-results-container');
-  searchResultContainer.style.display = "block";
-}
+  function showSearchResults(){
+    let searchResultContainer = document.querySelector('.search-results-container');
+    searchResultContainer.style.display = "block";
+  }
  
  function clearSearchResults(){
   let searchResult = document.querySelector('.search-results');
