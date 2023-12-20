@@ -13,6 +13,7 @@
         <!-- Styles -->
         <link href="{{ url('css/milligram.min.css') }}" rel="stylesheet">
         <link href="{{ url('css/app.css') }}" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
             // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
@@ -21,46 +22,64 @@
         </script>
     </head>
     <body>
-
-    <main>
-        <header1>
-
-            <div class="logo">
-                <a href="{{ url('/dashboard') }}">Thingy!</a>
+        <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="{{ url('/dashboard') }}">Y!</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarColor02">
+                <ul class="navbar-nav me-auto">
+                  <li class="nav-item">
+                    <a class="nav-link active" href="{{ url('/dashboard') }}">Home
+                      <span class="visually-hidden">(current)</span>
+                    </a>
+                  </li>
+                  <form class="d-flex" action="/dashboard">
+                    @csrf
+                    <input class="form-control me-sm-2" name="query" type="search" placeholder="search">
+                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                  </form>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/messages') }}">Messages</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/groups') }}">Groups</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/about') }}" >About us</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/contact') }}" >Contact us</a>
+                  </li>
+                  @if (Auth::check())
+                    <li class="nav-item">
+                      <a class="nav-link" href="{{ url('/profile/' . Auth::user()->id) }}" >{{ Auth::user()->name }}</a>
+                    </li>
+        
+                    <li class="nav-item">
+                      <a class="nav-link" href="{{ url('/logout') }}">Logout</a> 
+                    </li>
+                    @else
+                    <li class="nav-item">
+                      <a class="nav-link" href="{{ url('/login') }}" >Login</a>
+                    </li>
+                    @endif
+                </ul>
+              </div>
             </div>
-            <div class="timeline">
-                <a href="{{ url('/dashboard') }}">Timeline</a>
+          </nav>      
+          <section id="search-section">
+            <div class="search-results-container">
+                <div class="search-results"></div>
             </div>
-            <div class="messages">
-                <a href="{{ url('/messages') }}">Messages</a>
-            </div>
-            
-            @auth('web')
-            <div class="user-info">
-             <span><a href="{{ url('/profile') }}" >{{ Auth::user()->name }}</a></span>
-            </div>
-            <div class="logout">
-            <a class="button" href="{{ url('/logout') }}">Logout</a>
-            </div>    
-            @endauth
-            @auth('admin')
-            <div class="logout">
-            <a class="button" href="{{ url('/logout') }}">Logout</a>
-            </div>    
-            @endauth
-        </header1>
-        <header2>
-            <a class="button" href="{{ url('/search') }}"> Search </a>
-        <div class="Profile">
-                <a href="{{ url('/profile') }}">MyProfile</a>
-                
-            </div>  
-        </header2>    
-        <section id="content">
+          </section>  
+        <main>
+          <section id="content">
             @yield('content')
-        </section>
-    </main>
-
+            <button class="btn btn-dark" id="scrollToTopButton" onclick="scrollToTop()">Scroll to top</button>
+          </section>
+        </main>
     </body>
 </html>
 

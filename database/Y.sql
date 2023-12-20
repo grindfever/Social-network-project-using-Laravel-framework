@@ -10,6 +10,7 @@ DROP TABLE if exists users CASCADE;
 DROP TABLE if exists moderators CASCADE;
 DROP TABLE if exists admins CASCADE;
 DROP TABLE if exists posts CASCADE;
+DROP TABLE if exists post_likes CASCADE;
 DROP TABLE IF EXISTS messages CASCADE;
 DROP TABLE if exists comments CASCADE;
 DROP TABLE if exists friend_requests CASCADE;
@@ -24,6 +25,17 @@ DROP TABLE if exists memberships CASCADE;
 DROP TABLE if exists report_users CASCADE; 
 DROP TABLE if exists report_posts CASCADE;
 DROP TABLE if exists report_groups CASCADE;
+DROP TABLE if exists group_messages CASCADE;  
+DROP TABLE if exists friends CASCADE;
+
+DROP TRIGGER IF EXISTS post_search_update ON posts;
+
+DROP FUNCTION IF EXISTS post_search_update;
+
+DROP INDEX IF EXISTS idx_post_search;
+
+
+
 
 
 CREATE TYPE notification_type_enum AS ENUM ('liked_comment', 
@@ -56,9 +68,10 @@ CREATE TABLE users (
   password VARCHAR NOT NULL,
   bio character varying(256),
   age INTEGER, --CONSTRAINT nn_users_age NOT NULL,
-  img character varying(256),
+  img VARCHAR,
   priv BOOLEAN DEFAULT TRUE,
-  remember_token VARCHAR
+  remember_token VARCHAR,
+  recover_token VARCHAR
 );
 
 --MODERATOR
@@ -85,10 +98,23 @@ CREATE TABLE posts
     id SERIAL PRIMARY KEY,
     user_id INTEGER CONSTRAINT fk_posts_userid REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 				   CONSTRAINT nn_posts_userid NOT NULL,
+    title character varying(128) ,
     content character varying(512) ,
     date timestamp(0) without time zone CONSTRAINT nn_posts_date NOT NULL DEFAULT now(),
-    img character varying(256),
+    public boolean NOT NULL DEFAULT TRUE,
+    img VARCHAR,
     CHECK (content IS NOT NULL OR img IS NOT NULL)
+);
+
+--Post likes
+
+CREATE TABLE post_likes
+(
+    post_id INTEGER CONSTRAINT fk_post_likes_post_id REFERENCES posts(id) ON DELETE CASCADE ON UPDATE CASCADE
+            CONSTRAINT nn_post_likes_post_id NOT NULL,
+    user_id INTEGER CONSTRAINT fk_post_likes_user_id REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+            CONSTRAINT nn_post_likes_user_id NOT NULL,
+    PRIMARY KEY (post_id, user_id)
 );
 
 --MESSAGE
@@ -116,8 +142,8 @@ CREATE TABLE comments
     user_id INTEGER CONSTRAINT fk_comment_userid REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 				   CONSTRAINT nn_commente_userid NOT NULL,
     content character varying(128) ,
-    img character varying(256) ,
     date timestamp(0) without time zone CONSTRAINT nn_comment_date NOT NULL,
+    img character varying(256) ,
     post_id integer CONSTRAINT fk_comment_post_id REFERENCES posts(id) ON DELETE CASCADE ON UPDATE CASCADE
                     CONSTRAINT nn_comment_post_id NOT NULL,
     CHECK (content IS NOT NULL OR img IS NOT NULL)
@@ -228,6 +254,61 @@ CREATE TABLE memberships
 				 CONSTRAINT nn_membership_member NOT NULL,
     PRIMARY KEY (possible_member, group_id)
 );
+CREATE TABLE friends
+(
+  id SERIAL PRIMARY KEY, 
+  user_id1 INTEGER CONSTRAINT fk_friends_user_id1 REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  user_id2 INTEGER CONSTRAINT fk_friends_user_id2 REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+--- INDEXES ---
+
+ALTER TABLE posts
+ADD COLUMN search TSVECTOR;
+
+
+CREATE FUNCTION post_search_update() RETURNS TRIGGER AS $$
+BEGIN
+  NEW.search = (
+    to_tsvector('english',NEW.title)
+  );
+  RETURN NEW;
+END $$
+LANGUAGE plpgsql;  
+
+
+CREATE TRIGGER post_search_update
+  BEFORE INSERT ON posts
+  FOR EACH ROW
+  EXECUTE PROCEDURE post_search_update();
+
+CREATE INDEX idx_post_search ON posts USING GIN (search);
+
+
+--- TRIGGERS ---
+
+
+
+--- TRANSACTIONS ---
+
+--- DATA ---
+--GROUP MESSAGES
+
+CREATE TABLE group_messages
+(
+    id SERIAL PRIMARY KEY,
+    group_id INTEGER CONSTRAINT fk_group_message_group_id REFERENCES groups(id) ON DELETE CASCADE ON UPDATE CASCADE
+                 CONSTRAINT nn_group_message_group_id NOT NULL,
+    sender INTEGER CONSTRAINT fk_group_message_sender REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+                 CONSTRAINT nn_group_message_sender NOT NULL,
+    content character varying(128),
+    date timestamp(0) without time zone CONSTRAINT nn_group_message_date NOT NULL DEFAULT now(),
+    viewed boolean DEFAULT FALSE,
+    img character varying(256) ,
+    CHECK (content IS NOT NULL OR img IS NOT NULL)
+);
+
 
 --REPORT USER
 CREATE TABLE report_users
@@ -286,19 +367,141 @@ INSERT INTO users VALUES (
   '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
   'a',
   18,
-  FALSE
+  DEFAULT
 ); -- Password is 1234. Generated using Hash::make('1234')
 
+-- Populating users table
+INSERT INTO users VALUES (
+  DEFAULT,
+  'Emily',
+  'Emily Smith',
+  'emily@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', -- Password is 1234
+  'Coder and designer',
+  25,
+  DEFAULT
+);
 
+INSERT INTO users VALUES (
+  DEFAULT,
+  'Mark',
+  'Mark Johnson',
+  'mark@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', -- Password is 1234
+  'Travel enthusiast',
+  30,
+  DEFAULT
+);
+
+-- Add more users as needed
 
 INSERT INTO posts VALUES (
-    DEFAULT,
-    1, 
-    'My first post', 
-    '2023-08-08'
+  DEFAULT,
+  1,
+  'Hello World',
+  'Hello World! This is my first post.',
+  '2022-01-01 12:00:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  1,
+  'Exciting News!',
+  'I just got accepted into my dream university! So excited to start this new chapter in my life.',
+  '2022-01-02 13:30:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  2,
+  'Travel Adventures',
+  'Just came back from an amazing trip to Bali. The beaches were stunning and the food was incredible!',
+  '2022-01-03 15:45:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  2,
+  'New Recipe',
+  'Tried out a new recipe today and it turned out delicious! Sharing it with you all.',
+  '2022-01-04 09:15:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  3,
+  'Fitness Journey',
+  'Started my fitness journey today. Looking forward to getting healthier and stronger!',
+  '2022-01-05 17:20:00',
+  DEFAULT,
+  DEFAULT
 );
 
 
+INSERT INTO comments VALUES (
+  DEFAULT,
+  1,
+  'Congratulations! That is amazing news!',
+  '2022-01-01 12:30:00',
+  DEFAULT,
+  1
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  1,
+  'So happy for you! Best of luck in your new adventure.',
+  '2022-01-01 13:00:00',
+  DEFAULT,
+  2
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  2,
+  'Bali is definitely on my bucket list. Your pictures look incredible!',
+  '2022-01-02 14:00:00',
+  DEFAULT,
+  3
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  2,
+  'Please share the recipe! I am always looking for new dishes to try.',
+  '2022-01-02 15:30:00',
+  DEFAULT,
+  4
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  3,
+  'You got this! Stay motivated and enjoy the journey.',
+  '2022-01-03 16:45:00',
+  DEFAULT,
+  5
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  3,
+  'Let me know if you need any workout tips. I am happy to help!',
+  '2022-01-03 18:00:00',
+  DEFAULT,
+  5
+);
+
+
+-- Add more posts as needed
 
 
 INSERT INTO messages VALUES (
@@ -326,10 +529,11 @@ INSERT INTO messages VALUES (
 );
 
 
-INSERT INTO admins VALUES (
-  DEFAULT,
-  'm@example.com',
-  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W'
+INSERT INTO groups VALUES (
+    DEFAULT,
+    1, 
+    'Loucos', 
+    'os mais loucos do leic'
 );
 
 
@@ -345,3 +549,47 @@ INSERT INTO report_posts (post_id, user_id)
 VALUES (1, 3);
 
 
+INSERT INTO memberships VALUES (
+    1,
+    1,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    1
+);
+
+INSERT INTO memberships VALUES (
+    2,
+    1,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    1
+);
+
+INSERT INTO memberships VALUES (
+    3,
+    1,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    1
+);
+
+INSERT INTO group_messages VALUES (
+  DEFAULT, 1, 1, 'primeira', DEFAULT, DEFAULT
+);
+
+INSERT INTO group_messages VALUES (
+  DEFAULT, 1, 2, 'segunda', DEFAULT, DEFAULT
+);
+
+INSERT INTO group_messages VALUES (
+  DEFAULT, 1, 3, 'terceira', DEFAULT, DEFAULT
+);
+
+INSERT INTO friend_requests (sender, receiver, accepted, request_date)
+VALUES (2, 1, FALSE, NOW());

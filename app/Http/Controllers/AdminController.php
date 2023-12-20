@@ -1,3 +1,4 @@
+
 <?php
 
 namespace App\Http\Controllers;
@@ -19,14 +20,6 @@ class AdminController extends Controller
         }
         else { 
 
-
-            /*
-            $weekly_posts = array();
-            for ($i = 0; $i < 7 ; $i++) {
-                 $weekly_posts[] = Post::where('date','>',Carbon::now()->subDays($i))->get()->count();
-            }
-            */
-
             $total_weekly_posts = Post::where('date','>',Carbon::now()->subDays(7))->get()->count();
             $total_monthly_posts = Post::where('date','>', Carbon::now()->subDays(30))->get()->count();
             $total_daily_posts = Post::where('date','>', Carbon::now()->subDays(1))->get()->count();
@@ -45,3 +38,8 @@ class AdminController extends Controller
     }
 
 }
+
+
+
+
+<?php

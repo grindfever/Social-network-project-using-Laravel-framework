@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\View\View;
 
-use App\Models\Admin;
-
 class LoginController extends Controller
 {
 
@@ -36,24 +34,10 @@ class LoginController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-        
-        $email = $credentials['email'];
-        $exist = Admin::where('email','=',$email)->exists();
-
-        if ($exist) {
-            if (Auth::guard('admin')->attempt($credentials, $request->filled('remember'))) {            
-                $request->session()->regenerate();
-                return redirect()->intended('/admin')->with('success','Logged in.');
-            }
-            else return back()->withErrors([
-                'email' => 'The provided credentials do not match our records of admins.',
-            ])->onlyInput('email');
-        }
-        else {
-            if (Auth::attempt($credentials, $request->filled('remember'))) {
-                $request->session()->regenerate();
-                return redirect()->intended('/dashboard');
-            }
+ 
+        if (Auth::attempt($credentials, $request->filled('remember'))) {
+            $request->session()->regenerate();
+            return redirect()->intended('/dashboard');
         }
  
         return back()->withErrors([
@@ -65,18 +49,13 @@ class LoginController extends Controller
      * Log out the user from application.
      */
     public function logout(Request $request)
+
     {
-        if (Auth::guard('admin')->check()){
-            Auth::guard('admin')->logout();
-        }
-        else {
-            Auth::logout();
-            return redirect()->route('login')
-                ->withSuccess('You have logged out successfully!');
-        }
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('login')
             ->withSuccess('You have logged out successfully!');
     } 
 }
+

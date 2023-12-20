@@ -1,5 +1,3 @@
-<?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -43,3 +41,4 @@ class Admin extends Model implements Authenticatable
         return User::where('id','=', $this->id)->get();
     }
 }
+
