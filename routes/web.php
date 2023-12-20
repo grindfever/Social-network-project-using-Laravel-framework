@@ -6,17 +6,28 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ProfileController;
-
 use App\Http\Controllers\GroupMessageController;
 use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\FileController;
-
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\AdminController;
-
 use App\Http\Controllers\FriendRequestController;
+use App\Http\Controllers\ForgotPasswordController;
+
+
+use App\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
+
+use Illuminate\Support\Facades\DB;
+
+use App\Mail\MyEmail;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -51,7 +62,7 @@ Route::controller(DashBoardController::class)->group(function () {
  //Route::post('/file/upload', [FileController::class, 'upload']);
 
 
- // Comments
+ // Commentspassword.request
  Route::post('api/post/{post_id}/comment', [CommentController::class, 'store'])->middleware('auth')->name('post.comment.store');
  Route::delete('api/comment/{comment_id}', [CommentController::class, 'delete'])->middleware('auth')->name('post.comment.destroy');
  Route::put('api/comment/{comment_id}', [CommentController::class, 'edit'])->middleware('auth')->name('post.comment.update');
@@ -63,6 +74,20 @@ Route::controller(LoginController::class)->group(function () {
     Route::get('/logout', 'logout')->name('logout');
 });
 
+
+Route::get('/forgot-password-form', [ForgotPasswordController::class,'showForgotPasswordForm'])->middleware('guest')->name('password.form');
+
+Route::post('/forgot-password', [ForgotPasswordController::class,'sendEmail'])->name('password.email');
+
+
+Route::get('/reset-password/{token}', function ($token) {
+    return view('auth.reset-password', ['token' => $token]);
+})->middleware('guest')->name('password.reset');
+
+Route::post('/reset-password', [ForgotPasswordController::class,'resetPassword'])->middleware('guest')->name('password.update');
+
+
+// Register
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');

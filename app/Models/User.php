@@ -10,6 +10,8 @@ use Laravel\Sanctum\HasApiTokens;
 
 use App\Http\Controllers\FileController;
 
+use Illuminate\Contracts\Auth\CanResetPassword;
+
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\HasMany;
 

@@ -67,7 +67,8 @@ CREATE TABLE users (
   age INTEGER, --CONSTRAINT nn_users_age NOT NULL,
   img VARCHAR,
   priv BOOLEAN DEFAULT TRUE,
-  remember_token VARCHAR
+  remember_token VARCHAR,
+  recover_token VARCHAR
 );
 
 --MODERATOR

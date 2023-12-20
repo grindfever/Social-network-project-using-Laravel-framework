@@ -28,9 +28,12 @@
         <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
     </label>
 
-    <button class="btn btn-primary"type="submit">Login</button>
-    Dont have an account?
-    <a class="btn btn-primary" data-bs-toggle="offcanvas" class="button button-outline" href="{{ route('register') }}">Register</a>
+    <button class="btn btn-primary "type="submit" style="margin-top:10px;">Login</button>
+    <div class="login-buttons" style="margin-top: 10px;">
+        <a class="btn btn-primary" href="/forgot-password-form">Forgot Your Password?</a>
+        <a class="btn btn-primary" data-bs-toggle="offcanvas" class="button button-outline" href="{{ route('register') }}">Register</a>
+    </div>
+        
     @if (session('success'))
         <p class="success">
             {{ session('success') }}
