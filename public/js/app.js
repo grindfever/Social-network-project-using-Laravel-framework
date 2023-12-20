@@ -53,7 +53,9 @@
     for(let key in data) {
       formData.append(key, data[key]);
     }
-    
+    for (let pair of formData.entries()) {
+      console.log(pair[0]+ ', ' + pair[1]); 
+    }
     request.open(method, url, true);
     request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
     request.addEventListener('load', handler);
@@ -438,8 +440,8 @@
       <span class="float-end">Just now</span>
       <li class="list-group-item">${comment.comment.content}</li>
         <div class="float-end" style="padding-top: 10px;">
-          <button class="btn btn-sm btn-primary">Edit</button>
-          <button class="btn btn-sm btn-danger">Delete</button>
+          <button id="edit-comment" data-id="${comment.comment.id}" class="btn btn-sm btn-primary">Edit</button>
+          <button id="delete-comment" data-id="${comment.comment.id}" class="btn btn-sm btn-danger">Delete</button>
         </div>
     `;
 
@@ -448,6 +450,33 @@
  
   // ########## EDIT AND DELETE COMMENTS  ##############
 
+// Event listener for delete comment button
+document.addEventListener('click', function(event) {
+  if (event.target.id === 'delete-comment') {
+    console.log('Delete comment button clicked');
+    let commentId = event.target.closest('.comment-container').getAttribute('data-id');
+    sendDeleteCommentRequest(commentId);
+  }
+});
+
+// Event listener for edit comment button
+document.addEventListener('click', function(event) {
+  if (event.target.id === 'edit-comment') {
+    let commentId = event.target.closest('.comment-container').getAttribute('data-id');
+    editComment(commentId);
+  }
+});
+
+/*
+// Event listener for save comment button
+document.addEventListener('click', function(event) {
+  if (event.target.id === 'save-comment') {
+    let commentId = event.target.closest('.comment-container').getAttribute('data-id');
+    let commentContent = event.target.closest('.comment-container').querySelector('textarea').value;
+    saveComment(commentId, commentContent);
+  }
+});
+*/
 
   function sendDeleteCommentRequest(commentID) {
     
@@ -484,7 +513,9 @@
     // Create a save button for saving the edited comment
     let saveButton = document.createElement('button');
     saveButton.textContent = 'Save';
+    saveButton.setAttribute('data-id', commentId);
     saveButton.classList.add('btn', 'btn-sm', 'btn-primary');
+    saveButton.id = 'save-comment';
 
  
     saveButton.addEventListener('click', function() {
@@ -497,12 +528,14 @@
   }
 
   function sendEditCommentRequest(commentID,content) {
- 
+    console.log('Send edit comment request called.');
+    console.log('Comment ID: ' + commentID);
+    console.log('Comment content: ' + content);
     sendAjaxRequest('put', '/api/comment/' + commentID, {content: content}, commentEditedHandler);
   }
 
   function commentEditedHandler() {
-
+    console.log('Comment edited handler called.');
     let comment = JSON.parse(this.responseText);
 
 
@@ -520,6 +553,7 @@
     let editButton = document.createElement('button');
     editButton.textContent = 'Edit';
     editButton.classList.add('btn', 'btn-sm', 'btn-primary');
+    editButton.id = 'edit-comment';
     editButton.addEventListener('click', function() {
       editComment(commentId);
     });
