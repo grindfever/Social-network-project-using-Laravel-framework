@@ -25,6 +25,12 @@ function addEventListeners() {
     if (searchForm !== null){  
       searchForm.addEventListener('submit', sendSearchRequest);
     }
+
+    let friendRequestForm = document.getElementById('friendRequestForm');
+    if (friendRequestForm) {
+        friendRequestForm.addEventListener('submit', sendFriendRequest);
+    }
+
     let friendAccepters = document.querySelectorAll('article.friend button#accept-friend');
     [].forEach.call(friendAccepters, function (accepter) {
         accepter.addEventListener('click', sendAcceptFriendRequest);
@@ -50,6 +56,48 @@ function addEventListeners() {
       .catch(error => console.error('Error:', error));
   }
   
+  function sendFriendRequest(event) {
+    event.preventDefault();
+
+    let sender = event.target.getAttribute('data-sender');
+    let receiver = event.target.getAttribute('data-receiver');
+
+    fetch(`/profile/${receiver}/send-friend-request`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
+    })
+    .then(response => response.json())
+    .then(sendFriendRequestHandler)
+    .catch(error => console.error('Error:', error));
+}
+
+function sendFriendRequestHandler(response) {
+  if (response.success) {
+      console.log('Friend request sent successfully');
+
+      let sender = response.sender;
+      let receiver = response.receiver;
+      
+      console.log('Attempting to remove friend request item:', sender, receiver);
+
+      let friendRequestItem = document.querySelector(`div[data-sender="${sender}"][data-receiver="${receiver}"]`);
+      
+      if (friendRequestItem) {
+          friendRequestItem.remove();
+          console.log('Friend request item removed from the DOM');
+      } else {
+          console.log('Friend request item not found in the DOM');
+      }
+  } else {
+      console.error('Error:', response.message);
+      // Handle the error, show a message, etc.
+  }
+}
+
   function sendRejectFriendRequest(sender, receiver) {
       fetch('/friendrequests/reject/' + sender + '/' + receiver, {
           method: 'POST',

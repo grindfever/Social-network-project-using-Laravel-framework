@@ -49,22 +49,22 @@ class ProfileController extends Controller {
         return view('pages.friendrequest');
     }
 
-    public function sendFriendRequest($id){
-
+    public function sendFriendRequest($id)
+    {
         $user = Auth::user();
-
+    
         if (!$user) {
-            return redirect("/dashboard");
+            return response()->json(['error' => 'User not authenticated'], 401);
         }
-
+    
         $senderId = Auth::user()->id;
         $receiverId = $id;
-
+    
         // Check if a friend request already exists
         $existingRequest = FriendRequest::where('sender', $senderId)
             ->where('receiver', $receiverId)
             ->first();
-
+    
         if (!$existingRequest) {
             // Create a new friend request
             FriendRequest::create([
@@ -73,13 +73,18 @@ class ProfileController extends Controller {
                 'accepted' => false, // Assuming default is not accepted
                 'request_date' => now(),
             ]);
-
-            // Redirect back to the profile with a success message or other indication
-            return redirect()->back()->with('success', 'Friend request sent successfully.');
+    
+            // Return success as JSON response with sender and receiver
+            return response()->json([
+                'success' => true,
+                'message' => 'Friend request sent successfully',
+                'sender' => $senderId,
+                'receiver' => $receiverId,
+            ]);
         }
-
-        // Redirect back to the profile with a message indicating that a request already exists
-        return redirect()->back()->with('info', 'Friend request already sent.');
+    
+        // Return info as JSON response
+        return response()->json(['success' => false, 'message' => 'Friend request already sent']);
     }
 }
 

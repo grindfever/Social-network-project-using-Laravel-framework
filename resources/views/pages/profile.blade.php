@@ -11,10 +11,12 @@
     </section>
     
     @if (!$me)
-    <form action="{{ route('send.friend.request', ['id' => $user->id]) }}" method="post">
-    @csrf
-    <button type="submit">Send Friend Request</button>
-    </form>
+    <div class="friend-request-item" data-sender="{{ auth()->id() }}" data-receiver="{{ $user->id }}">
+        <form id="friendRequestForm" data-sender="{{ auth()->id() }}" data-receiver="{{ $user->id }}">
+            @csrf
+            <button type="submit">Send Friend Request</button>
+        </form>
+    </div>
     @else
     <!-- Display friend requests link or any other information -->
     <section id="friends">
