@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\Friend;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\FriendRequest;
@@ -23,26 +24,32 @@ class ProfileController extends Controller {
         return redirect('/profile/'.$user->id);
     }
     public function show(string $id)
-    {
-        $user = User::findOrFail($id);
-        // Get posts for user ordered by id.
-        $post = Post::where('user_id','=',$id)->orderBy('id')->get();
-        
-        if(Auth::guest()){
-            if($user->priv == TRUE) return redirect('/dashboard');
-            else return view('pages.profile', ['user'=> $user]);
+{
+    $user = User::findOrFail($id);
+    $post = Post::where('user_id', $id)->orderBy('id')->get();
+
+    if (Auth::guest()) {
+        if ($user->priv == TRUE) {
+            return redirect('/dashboard');
+        } else {
+            return view('pages.profile', ['user' => $user, 'areFriends' => false, 'post' => $post]);
         }
-      
-        else {
-            $me = Auth::user()->id == $id;
-            return view('pages.profile', ['user'=> $user,'post'=>$post,'me'=>$me]);}
-        //policy ainda n funciona
-        /* 
-        if ($this->authorize('show', $user)) return view('pages.profile', ['user'=> $user]);
-        else return redirect('/cards');
-        */
-        //usar policy 
+    } else {
+        $me = Auth::user()->id == $id;
+        $areFriends = $this->areFriends(Auth::user()->id, $id);
+        return view('pages.profile', ['user' => $user, 'areFriends' => $areFriends, 'post' => $post, 'me' => $me]);
     }
+}
+
+    protected function areFriends($user1Id, $user2Id)
+{
+    return Friend::where(function ($query) use ($user1Id, $user2Id) {
+        $query->where('user_id1', $user1Id)->where('user_id2', $user2Id);
+    })->orWhere(function ($query) use ($user1Id, $user2Id) {
+        $query->where('user_id1', $user2Id)->where('user_id2', $user1Id);
+    })->exists();
+}
+
     public function showfriendrequest(){
         if (Auth::guest()){ return redirect("/dashboard") ; }
         $user = Auth::user();

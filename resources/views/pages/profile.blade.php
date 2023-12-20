@@ -10,7 +10,7 @@
         @include('partials.profile', ['user' => $user])
     </section>
     
-    @if (!$me)
+    @if (!$me && !$areFriends)
     <div class="friend-request-item" data-sender="{{ auth()->id() }}" data-receiver="{{ $user->id }}">
         <form id="friendRequestForm" data-sender="{{ auth()->id() }}" data-receiver="{{ $user->id }}">
             @csrf
