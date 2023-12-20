@@ -17,6 +17,14 @@ function addEventListeners() {
   let messageCreator = document.querySelector('article.message form.new_message');
   if (messageCreator != null)
     messageCreator.addEventListener('submit', sendCreateMessageRequest);
+
+  let createModerator = document.querySelector('article.set_moderator button.add_moderator');
+  if (createModerator != null)
+    createModerator.addEventListener('click',sendCreateModeratorRequest);
+
+  let removeModerator = document.querySelector('article.set_moderator button.remove_moderator');
+  if (removeModerator != null)
+    removeModerator.addEventListener('click',sendDeleteModeratorRequest);
 }
   
 function editablePost(event) {
@@ -170,8 +178,6 @@ function sendUpdatePostRequest(updatedContent, content) {
 
   }
 
-
-
   function createMessage(message) {
     let new_message = document.createElement('article');
     new_message.classList.add('message');
@@ -181,6 +187,63 @@ function sendUpdatePostRequest(updatedContent, content) {
     `;
     return new_message;
 }
+
+
+  function sendCreateModeratorRequest(event){
+
+    let id = this.closest('article').getAttribute('data-id');
+    
+
+    sendAjaxRequest('post', '/moderator/create/' + id, null, moderatorCreateHandler);
+    
+    event.preventDefault();
+  }
+
+  function sendDeleteModeratorRequest(event){
+
+    let id = this.closest('article').getAttribute('data-id');
+    
+    sendAjaxRequest('delete', '/moderator/remove/' + id, null, moderatorDeleteHandler);
+  }
+
+  function moderatorCreateHandler() {
+    if (this.status != 200) window.location = '/';
+    
+    let article = document.querySelector('article.set_moderator'); 
+
+    let id = article.getAttribute('data-id');
+
+    let newButton = document.createElement('button');
+    newButton.setAttribute('data-id', id);
+    newButton.type = 'submit';
+    newButton.classList.add('remove_moderator');
+    newButton.textContent = 'Remove Moderator Role';
+    
+    let existingButton = article.querySelector('button.add_moderator');
+
+    existingButton.parentNode.replaceChild(newButton, existingButton);
+  }
+
+  function moderatorDeleteHandler() {
+    if (this.status != 200) window.location = '/';
+    
+    let article = document.querySelector('article.set_moderator'); 
+
+    let id = article.getAttribute('data-id');
+
+    let newButton = document.createElement('button');
+    newButton.setAttribute('data-id', id);
+    newButton.type = 'submit';
+    newButton.classList.add('add_moderator');
+    newButton.textContent = 'Assign Moderator Role';
+    
+    let existingButton = article.querySelector('button.remove_moderator');
+
+
+    existingButton.parentNode.replaceChild(newButton, existingButton);
+}
+
+
 
   addEventListeners();
   

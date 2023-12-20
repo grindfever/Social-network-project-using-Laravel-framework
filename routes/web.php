@@ -16,6 +16,8 @@ use App\Http\Controllers\SearchController;
 
 use App\Http\Controllers\AdminController;
 
+use App\Http\Controllers\ModeratorController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -86,5 +88,12 @@ Route::controller(AdminController::class)->group(function () {
     Route::get('/admin','showDashboard');    
 });
 
-//Remover
-Route::get('/teste', function(){return view('pages.teste');});
+//Moderator
+Route::controller(ModeratorController::class)->group(function () {
+    Route::get('/reports','reportList');
+    Route::post('/moderator/create/{id}','create');
+    Route::delete('/moderator/remove/{id}','remove'); 
+    Route::get('/teste', 'teste');   
+});
+
+

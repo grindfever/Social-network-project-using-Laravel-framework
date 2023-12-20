@@ -20,8 +20,10 @@ DROP TABLE if exists user_tagged_posts CASCADE;
 DROP TABLE if exists user_likes_posts CASCADE;
 DROP TABLE if exists user_likes_comments CASCADE;
 DROP TABLE if exists post_removals CASCADE;
-DROP TABLE if exists memberships CASCADE; 
-
+DROP TABLE if exists memberships CASCADE;
+DROP TABLE if exists report_users CASCADE; 
+DROP TABLE if exists report_posts CASCADE;
+DROP TABLE if exists report_groups CASCADE;
 
 
 CREATE TYPE notification_type_enum AS ENUM ('liked_comment', 
@@ -63,7 +65,7 @@ CREATE TABLE users (
 
 CREATE TABLE moderators
 (
-    id Serial PRIMARY KEY CONSTRAINT fk_moderator_username REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE 
+  id INTEGER PRIMARY KEY CONSTRAINT fk_moderator_id REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE 
 );
 
 --ADMIN
@@ -208,7 +210,7 @@ CREATE TABLE post_removals
     moderator INTEGER CONSTRAINT fk_post_removal_moderator REFERENCES moderators(id) ON DELETE CASCADE ON UPDATE CASCADE
 				    CONSTRAINT nn_post_removal_moderator NOT NULL,
     reason character varying(128) CONSTRAINT nn_post_removal_reason NOT NULL,
-    date timestamp(0) without time zone CONSTRAINT nn_post_removal_date NOT NULL
+    date timestamp(0) without time zone CONSTRAINT nn_post_removal_date NOT NULL DEFAULT now()
 
 );
 
@@ -225,6 +227,30 @@ CREATE TABLE memberships
     member INTEGER CONSTRAINT fk_membership_member REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 				 CONSTRAINT nn_membership_member NOT NULL,
     PRIMARY KEY (possible_member, group_id)
+);
+
+--REPORT USER
+CREATE TABLE report_users
+(
+  id SERIAL PRIMARY KEY,
+  user_reported_id INTEGER CONSTRAINT fk_reported_user REFERENCES users(id) ON DELETE CASCADE CONSTRAINT nn_reported NOT NULL,
+  user_who_repoted_id INTEGER CONSTRAINT fk_who_reported_user REFERENCES users(id) ON DELETE CASCADE CONSTRAINT nn_who_reported NOT NULL
+);
+
+--REPORT USER
+CREATE TABLE report_posts
+(
+  id SERIAL PRIMARY KEY,
+  post_id INTEGER CONSTRAINT fk_reported_post REFERENCES posts(id) ON DELETE CASCADE CONSTRAINT nn_reported NOT NULL,
+  user_id INTEGER CONSTRAINT fk_who_reported_user REFERENCES users(id) ON DELETE CASCADE CONSTRAINT nn_who_reported NOT NULL
+);
+
+--REPORT USER
+CREATE TABLE report_groups
+(
+  id SERIAL PRIMARY KEY,
+  group_id INTEGER CONSTRAINT fk_reported_group REFERENCES groups(id) ON DELETE CASCADE CONSTRAINT nn_reported NOT NULL,
+  user_who_repoted_id INTEGER CONSTRAINT fk_who_reported_user REFERENCES users(id) ON DELETE CASCADE CONSTRAINT nn_who_reported NOT NULL
 );
 
 INSERT INTO users VALUES (
@@ -301,4 +327,9 @@ INSERT INTO admins VALUES (
   DEFAULT,
   'm@example.com',
   '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W'
+);
+
+
+INSERT INTO moderators VALUES (
+  2
 );

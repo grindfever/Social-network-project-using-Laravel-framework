@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+use App\Models\Moderator;
+
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -82,5 +84,9 @@ class User extends Authenticatable
     public  function posts(): HasMany
     {
         return $this->hasMany(Post::class);
+    }
+
+    public function isModerator(){
+        return Moderator::where('id','=',$this->id)->exists();
     }
 }
