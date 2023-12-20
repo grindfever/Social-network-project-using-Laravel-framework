@@ -34,7 +34,7 @@ class MyEmail extends Mailable
     {
         return new Envelope(
             from: new Address(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME')),
-            subject: 'LBAW Tutorial 01 - Send Email',
+            subject: 'Y Password recovery request',
         );
     }
 
