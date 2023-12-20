@@ -22,6 +22,10 @@
     if (searchForm !== null){  
       searchForm.addEventListener('submit', sendSearchRequest);
     }
+
+    let groupmessageCreator = document.querySelector('article.message form.new_group_message');
+    if (groupmessageCreator != null)
+      groupmessageCreator.addEventListener('submit', sendCreateGroupMessageRequest);
   }
 
   function encodeForAjax(data) {
@@ -451,7 +455,46 @@ function showSearchResults(){
   let searchResultContainer = document.querySelector('.search-results-container');
   searchResultContainer.style.display = "none";
 }
-  
+
+// GROUP MESSAGE STUFF
+function sendCreateGroupMessageRequest(event){
+  let id = this.closest('article').getAttribute('data-id');
+  let name = this.querySelector('input[name=content]').value;
+  if (name != '')
+    sendAjaxRequest('post', '/groups/'+id+'/chat', {content: name}, groupmessageAddedHandler);
+
+  event.preventDefault();
+}
+
+function groupmessageAddedHandler() {
+  if (this.status != 200) window.location = '/';
+  let message = JSON.parse(this.responseText);
+  console.log(message);
+  let new_message = createGroupMessage(message);
+
+  let messagesList = document.querySelector('ul.messages');
+  let li = document.createElement('li');
+  li.textContent = message;
+
+  // Insert the new message after the last <li> element in the messages list
+  messagesList.appendChild(li);
+  let messagesContainer = document.querySelector('.message-container');
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+  let form = document.querySelector('article.message form.new_group_message');
+  form.querySelector('[type=text]').value = "";
+
+}
+
+function createGroupMessage(message) {
+  let new_message = document.createElement('article');
+  new_message.classList.add('message');
+
+  new_message.innerHTML = `
+    <li>${message}</li>
+  `;
+  return new_message;
+}
 
   addEventListeners();
   
