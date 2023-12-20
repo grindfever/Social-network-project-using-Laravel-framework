@@ -93,7 +93,6 @@ Route::controller(ModeratorController::class)->group(function () {
     Route::get('/reports','reportList');
     Route::post('/moderator/create/{id}','create');
     Route::delete('/moderator/remove/{id}','remove'); 
-    Route::get('/teste', 'teste');   
 });
 
 

@@ -6,22 +6,31 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Moderator;
-
+use App\Models\ReportUser;
+use App\Models\ReportPost;
+use App\Models\ReportGroup;
 
 
 
 class ModeratorController extends Controller
 {
     public function reportList(){
-        if (Auth::guest()){
-            return redirect('/');
-        }
-        $user = Auth::user();
+        if (!Auth::guard('admin')->check()){
+            if (Auth::guest()){
+                return redirect('/');
+            }
+            $user = Auth::user();
 
-        if (!$user->isModerator()){
-            return redirect('/');
+            if (!$user->isModerator()){
+                return redirect('/');
+            }
         }
-        return view('pages.reports');
+
+        $userReports = ReportUser::orderBy('date','desc')->get();
+        $postReports = ReportPost::orderBy('date','desc')->get();
+        $groupReports = ReportGroup::orderBy('date','desc')->get();
+
+        return view('pages.reports', ['userReports'=>$userReports,'postReports'=>$postReports,'groupReports'=>$groupReports]);
     }
     
 
@@ -39,10 +48,5 @@ class ModeratorController extends Controller
         $moderator = Moderator::find($id);
         $moderator->delete();
         return response()->json($moderator);
-    }
-
-    public function teste(){
-        $moderators = Moderator::all();
-        dd($moderators);
     }
 }

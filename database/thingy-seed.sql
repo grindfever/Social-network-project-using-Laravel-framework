@@ -234,7 +234,8 @@ CREATE TABLE report_users
 (
   id SERIAL PRIMARY KEY,
   user_reported_id INTEGER CONSTRAINT fk_reported_user REFERENCES users(id) ON DELETE CASCADE CONSTRAINT nn_reported NOT NULL,
-  user_who_repoted_id INTEGER CONSTRAINT fk_who_reported_user REFERENCES users(id) ON DELETE CASCADE CONSTRAINT nn_who_reported NOT NULL
+  user_who_repoted_id INTEGER CONSTRAINT fk_who_reported_user REFERENCES users(id) ON DELETE CASCADE CONSTRAINT nn_who_reported NOT NULL,
+  date timestamp(0) without time zone CONSTRAINT nn_date NOT NULL DEFAULT now()
 );
 
 --REPORT USER
@@ -242,7 +243,8 @@ CREATE TABLE report_posts
 (
   id SERIAL PRIMARY KEY,
   post_id INTEGER CONSTRAINT fk_reported_post REFERENCES posts(id) ON DELETE CASCADE CONSTRAINT nn_reported NOT NULL,
-  user_id INTEGER CONSTRAINT fk_who_reported_user REFERENCES users(id) ON DELETE CASCADE CONSTRAINT nn_who_reported NOT NULL
+  user_id INTEGER CONSTRAINT fk_who_reported_user REFERENCES users(id) ON DELETE CASCADE CONSTRAINT nn_who_reported NOT NULL,
+  date timestamp(0) without time zone CONSTRAINT nn_date NOT NULL DEFAULT now()
 );
 
 --REPORT USER
@@ -250,7 +252,8 @@ CREATE TABLE report_groups
 (
   id SERIAL PRIMARY KEY,
   group_id INTEGER CONSTRAINT fk_reported_group REFERENCES groups(id) ON DELETE CASCADE CONSTRAINT nn_reported NOT NULL,
-  user_who_repoted_id INTEGER CONSTRAINT fk_who_reported_user REFERENCES users(id) ON DELETE CASCADE CONSTRAINT nn_who_reported NOT NULL
+  user_who_repoted_id INTEGER CONSTRAINT fk_who_reported_user REFERENCES users(id) ON DELETE CASCADE CONSTRAINT nn_who_reported NOT NULL,
+  date timestamp(0) without time zone CONSTRAINT nn_date NOT NULL DEFAULT now()
 );
 
 INSERT INTO users VALUES (
@@ -333,3 +336,12 @@ INSERT INTO admins VALUES (
 INSERT INTO moderators VALUES (
   2
 );
+
+
+INSERT INTO report_users (user_reported_id, user_who_repoted_id)
+VALUES (1, 2);
+
+INSERT INTO report_posts (post_id, user_id)
+VALUES (1, 3);
+
+
