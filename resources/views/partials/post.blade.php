@@ -1,4 +1,4 @@
-<div class="post-border" style ="width=60vh;"  id="{{ $post->id}}">
+<div class="post-border"  id="{{ $post->id}}">
     <article class="post" data-id="{{ $post->id }}">
         <div class="card-header">
             <a href="/profile/{{ $post->user->id }}">

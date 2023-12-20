@@ -25,7 +25,7 @@
 
   }
   
-  /*
+  
   function encodeForAjax(data) {
     if (data == null) return null;
     
@@ -36,7 +36,7 @@
   
   function sendAjaxRequest(method, url, data, handler) {
     let request = new XMLHttpRequest();
-    \
+    
     request.open(method, url, true)
     request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -44,9 +44,9 @@
     request.send(encodeForAjax(data));
 
   }
-  */
-
-  function sendAjaxRequest(method, url, data, handler) {
+  
+  // Ajax request to include media upload
+  function sendAjaxRequestFormData(method, url, data, handler) {
     let request = new XMLHttpRequest();
     let formData = new FormData();
 
@@ -148,7 +148,7 @@
         data.file = file;
       }
       console.log(data);
-      sendAjaxRequest('post', '/dashboard/create', data, postAddedHandler);
+      sendAjaxRequestFormData('post', '/dashboard/create', data, postAddedHandler);
     }
   }
   
@@ -190,16 +190,12 @@
 
   function createPost(post) {
     let new_post = document.createElement('article');
-    let imgHTML = '';
+    let mediaElement = '';
     let currentURLhost = window.location.host;
     let currentURLprotocol = window.location.protocol;
     let currentURL = currentURLprotocol + '//' + currentURLhost;
-   
-    
-    if (typeof post.file === 'string' && post.file.length > 0) {
-      imgHTML = `<img class="post-image" src="${currentURL}/post/${post.file}">`;
-    }
-
+    let extension = '';
+ 
     if (typeof post.post.user.img === 'string' && post.post.user.img.length > 0) {
       avatarHTML = `<img src="${currentURL}/profile/${post.post.user.img}" class="avatar">`;
     }
@@ -207,28 +203,30 @@
       avatarHTML = `<img src="${currentURL}/profile/default.jpg" class="avatar">`;
     }
 
-    // Get the extension of the file
-    let extension = post.file.split('.').pop();
-
-    // Create a new element based on the file type
-    let mediaElement;
-    if (['mp4', 'webm', 'ogg'].includes(extension)) {
-      mediaElement = document.createElement('video');
-      mediaElement.setAttribute('controls', '');
-      let source = document.createElement('source');
-      source.src = currentURL + '/post/' + post.file;
-      source.type = `video/${extension}`;
-      mediaElement.appendChild(source);
-    } else if (['mp3', 'wav', 'ogg'].includes(extension)) {
-      mediaElement = document.createElement('audio');
-      mediaElement.setAttribute('controls', '');
-      let source = document.createElement('source');
-      source.src = currentURL + '/post/'+post.file;
-      source.type = `audio/${extension}`;
-      mediaElement.appendChild(source);
-    } else {
-      mediaElement = `<img src="${currentURL}/post/${post.file}" class="avatar">`;
+    
+    if (typeof post.file === 'string' && post.file.length > 0) {
+      extension = post.file.split('.').pop();
+      // Create a new element based on the file type
+      
+      if (['mp4', 'webm', 'ogg'].includes(extension)) {
+        mediaElement = document.createElement('video');
+        mediaElement.setAttribute('controls', '');
+        let source = document.createElement('source');
+        source.src = currentURL + '/post/' + post.file;
+        source.type = `video/${extension}`;
+        mediaElement.appendChild(source);
+      } else if (['mp3', 'wav', 'ogg'].includes(extension)) {
+        mediaElement = document.createElement('audio');
+        mediaElement.setAttribute('controls', '');
+        let source = document.createElement('source');
+        source.src = currentURL + '/post/'+post.file;
+        source.type = `audio/${extension}`;
+        mediaElement.appendChild(source);
+      } else {
+        mediaElement = `<img src="${currentURL}/post/${post.file}" class="post-image">`;
+      }
     }
+
     console.log(mediaElement);
     new_post.classList.add('post');
     new_post.setAttribute('data-id', post.post.id);
@@ -248,7 +246,7 @@
         </p>
       </div>
       <div class="like-post">
-        <button type="submit" class="like-count">
+        <button type="submit" class="like-count animate" data-post-id="${post.post.id}">
           <span class="far fa-heart"></span> 0
         </button>
       </div>
@@ -466,17 +464,6 @@ document.addEventListener('click', function(event) {
     editComment(commentId);
   }
 });
-
-/*
-// Event listener for save comment button
-document.addEventListener('click', function(event) {
-  if (event.target.id === 'save-comment') {
-    let commentId = event.target.closest('.comment-container').getAttribute('data-id');
-    let commentContent = event.target.closest('.comment-container').querySelector('textarea').value;
-    saveComment(commentId, commentContent);
-  }
-});
-*/
 
   function sendDeleteCommentRequest(commentID) {
     
