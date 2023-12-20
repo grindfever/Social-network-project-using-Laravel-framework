@@ -8,8 +8,12 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+use App\Models\User;
 use App\Models\Comment;
-use App\Models\Post;
+use App\Models\CommentLike;
+
+use Illuminate\Support\Facades\Log;
+
 
 class CommentController extends Controller
 {
@@ -60,4 +64,37 @@ class CommentController extends Controller
             'id' => $id,
         ]);
     }
+
+    public function like($id)
+    {
+        $liker = auth()->user();
+        $comment = Comment::findOrFail($id);
+        
+        if(!$liker->commentsLikes()->where('comment_id', $comment->id)->exists()) {
+            $liker->commentsLikes()->attach($comment);
+        }
+
+        $likeCount = $comment->likes()->count();
+
+        return response()->json([
+            'message' => 'Comment liked successfully',
+            'isLiked' => True,
+            'likeCount' => $likeCount,
+            'id' => $id,
+        ],200);
+    }
+
+    public function unlike($id){
+        $liker = Auth::user();
+        $comment = Comment::find($id);
+    
+        if ($liker->commentsLikes()->where('comment_id', $comment->id)->exists()) {
+            $liker->commentsLikes()->detach($comment);
+        }
+    
+        $likeCount = $comment->likes()->count(); // Calculate likes count if needed
+        
+        return response()->json(['message' => 'Comment unliked','isLiked' => False, 'likeCount' => $likeCount,'id' => $id], 200);
+    }
+
 }

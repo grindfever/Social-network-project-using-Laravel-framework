@@ -59,14 +59,12 @@ Route::controller(DashBoardController::class)->group(function () {
  Route::post('api/post/{post_id}/like', [DashBoardController::class, 'like'])->middleware('auth')->name('post.like');
  Route::delete('api/post/{post_id}/unlike', [DashBoardController::class, 'unlike'])->middleware('auth')->name('post.unlike');
 
- //Route::post('/file/upload', [FileController::class, 'upload']);
-
-
- // Commentspassword.request
+ // Comments
  Route::post('api/post/{post_id}/comment', [CommentController::class, 'store'])->middleware('auth')->name('post.comment.store');
  Route::delete('api/comment/{comment_id}', [CommentController::class, 'delete'])->middleware('auth')->name('post.comment.destroy');
  Route::put('api/comment/{comment_id}', [CommentController::class, 'edit'])->middleware('auth')->name('post.comment.update');
-
+ Route::post('api/comment/{comment_id}/like', [CommentController::class, 'like'])->middleware('auth')->name('post.comment.like');
+Route::delete('api/comment/{comment_id}/unlike', [CommentController::class, 'unlike'])->middleware('auth')->name('post.comment.unlike');
 // Authentication
 Route::controller(LoginController::class)->group(function () {
     Route::get('/login', 'showLoginForm')->name('login');

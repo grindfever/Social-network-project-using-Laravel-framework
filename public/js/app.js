@@ -377,11 +377,16 @@ function sendFriendRequestHandler(response) {
         </p>
       </div>
       <div class="like-post">
-        <button type="submit" class="like-count animate" data-post-id="${post.post.id}">
+        <button type="submit" class="like-count" data-post-id="${post.post.id}">
           <span class="far fa-heart"></span> 0
         </button>
+        <span class="far fa-comment me-1 fa-lg"></span> 0
       </div>
     `;
+
+    // Get the like button in the new post
+    let likeButton = new_post.querySelector('button.like-count');
+    likeButton.addEventListener('click', sendLikeRequest);
 
 
     // Create a div element, add a class to it, and append new_post to it
@@ -568,15 +573,88 @@ function sendFriendRequestHandler(response) {
       </a>
       <span class="float-end">Just now</span>
       <li class="list-group-item">${comment.comment.content}</li>
+
+        <div class="like-comment">
+          <button type="submit" class="like-comment animate" data-comment-id="${comment.comment.id}">
+                <span class="far fa-heart"></span> 0
+          </button>
+        </div>
+
         <div class="float-end" style="padding-top: 10px;">
           <button id="edit-comment" data-id="${comment.comment.id}" class="btn btn-sm btn-primary">Edit</button>
           <button id="delete-comment" data-id="${comment.comment.id}" class="btn btn-sm btn-danger">Delete</button>
         </div>
     `;
+   
+    // Get the like-comment button in the new comment
+    let likeCommentButton = new_comment.querySelector('button.like-comment');
+
+    // Add an event listener to the like-comment button
+    likeCommentButton.addEventListener('click', sendLikeCommentRequest);
 
     return new_comment;
   }
  
+  // ########## LIKE AND UNLIKE COMMENTS  ##############
+
+  // Event listener for like comment button
+
+   
+    let likeCommentButtons = document.querySelectorAll('button.like-comment');
+    [].forEach.call(likeCommentButtons, function(likeCommentButton) {
+        likeCommentButton.addEventListener('click', sendLikeCommentRequest);
+    });
+    
+
+
+  function sendLikeCommentRequest(event) {
+    let id = this.closest('div.comment-container').getAttribute('data-id');
+    let likeCommentButton = this;
+    if (likeCommentButton.classList.contains('liked')) {
+      sendAjaxRequest('delete', '/api/comment/'+id+'/unlike', null, unlikeCommentHandler);
+    } else {
+      sendAjaxRequest('post', '/api/comment/'+id+'/like', null, likeCommentHandler);
+    }
+    event.preventDefault();
+  }
+
+  function likeCommentHandler() {
+    if (this.status == 200) {
+      let response = JSON.parse(this.responseText);
+      
+      let likeCommentButton = document.querySelector('button.like-comment[data-comment-id="'+response.id+'"]');
+      if (response.isLiked) {
+        console.log(likeCommentButton);
+        likeCommentButton.classList.add('liked');
+        likeCommentButton.classList.add('animate');
+        likeCommentButton.innerHTML = '<span class="fas fa-heart"></span> ' + response.likeCount;
+      }
+    }
+    else {
+      console.error('An error occurred: ' + this.status);
+      console.error('Response: ' + this.responseText);
+    }
+  }
+
+  function unlikeCommentHandler() {
+    if (this.status == 200) {
+      let response = JSON.parse(this.responseText);
+      
+      let unlikeCommentButton = document.querySelector('button.like-comment[data-comment-id="'+response.id+'"]');
+      console.log(unlikeCommentButton);
+      if (!response.isLiked) {
+        unlikeCommentButton.classList.remove('liked');
+        unlikeCommentButton.classList.add('animate');
+        unlikeCommentButton.innerHTML = '<span class="far fa-heart"></span> ' + response.likeCount;
+      }
+    }
+    else {
+      console.error('An error occurred: ' + this.status);
+      console.error('Response: ' + this.responseText);
+    }
+  }
+
+
   // ########## EDIT AND DELETE COMMENTS  ##############
 
 // Event listener for delete comment button

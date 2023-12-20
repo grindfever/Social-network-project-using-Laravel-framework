@@ -17,6 +17,17 @@
                 </a>
                 <span class="float-end">{{ \Carbon\Carbon::parse($comment->date)->diffForHumans() }}</span>
                 <li class="list-group-item" >{{ $comment->content }}</li>
+                <div class="like-comment">
+                    @if (Auth::user()->likesComment($comment))
+                        <button type="submit" class="like-comment liked" data-comment-id="{{$comment->id}}" >
+                            <span class="fas fa-heart me-1"></span>{{ $comment->likes()->count() }}
+                        </button>
+                    @else
+                        <button type="submit" class="like-comment" data-comment-id="{{$comment->id}}">
+                            <span class="far fa-heart me-1"></span>{{ $comment->likes()->count() }}
+                        </button>
+                    @endif
+                </div>
                 @if ($comment->user_id === auth()->id())
                     <div class="float-end" style="padding-top: 10px;">
                         <button id="edit-comment" data-id="{{$comment->id}}" class="btn btn-sm btn-primary" onClick="editComment({{$comment->id}})">Edit</button>

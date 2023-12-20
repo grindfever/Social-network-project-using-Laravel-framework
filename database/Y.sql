@@ -146,6 +146,17 @@ CREATE TABLE comments
     CHECK (content IS NOT NULL OR img IS NOT NULL)
 );
 
+
+CREATE TABLE comment_likes
+(
+    comment_id INTEGER CONSTRAINT fk_comment_likes_comment_id REFERENCES comments(id) ON DELETE CASCADE ON UPDATE CASCADE
+            CONSTRAINT nn_comment_likes_comment_id NOT NULL,
+    user_id INTEGER CONSTRAINT fk_post_likes_user_id REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+            CONSTRAINT nn_post_likes_user_id NOT NULL,
+    PRIMARY KEY (comment_id, user_id)
+);
+
+
 --FRIEND REQUEST
 
 CREATE TABLE friend_requests

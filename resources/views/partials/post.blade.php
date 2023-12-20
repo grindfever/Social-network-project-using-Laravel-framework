@@ -42,12 +42,15 @@
                         <span class="far fa-heart me-1"></span>{{ $post->likes()->count() }}
                     </button>
                 @endif
+                <span class="far fa-comment me-1 fa-lg"></span> {{ $post->comments()->count() }}
             </div>
         @endauth
 
     @guest
-    <a href='{{route('login')}}' class="fw-light nav-link fs-6"> <span class="far fa-heart me-1">
-    </span> {{ $post->likes()->count() }} </a>
+    <a href='{{route('login')}}' class="fw-light nav-link fs-6"> 
+        <span class="far fa-heart me-1"></span> {{ $post->likes()->count() }} </a>
+    <span class="fw-light nav-link fs-6"> 
+        <span class="far fa-comment me-1"></span> {{ $post->comments()->count() }} </span>
     @endguest
 </article>
 </div>

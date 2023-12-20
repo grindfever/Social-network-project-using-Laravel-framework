@@ -149,8 +149,8 @@ class DashBoardController extends Controller
             $liker->likes()->attach($post);
         }
     
-        $likeCount = $post->likes()->count(); // Calculate likes count if needed
-        //return redirect()->route('DashBoard')->with('success', 'Post liked');
+        $likeCount = $post->likes()->count(); 
+        
         return response()->json(['message' => 'Post liked','isLiked' => True, 'likeCount' => $likeCount, 'postId' => $id], 200);
     }
     
@@ -164,7 +164,7 @@ class DashBoardController extends Controller
         }
     
         $likeCount = $post->likes()->count(); // Calculate likes count if needed
-        //return redirect()->route('DashBoard')->with('success', 'Post unliked');
+        
         return response()->json(['message' => 'Post unliked','isLiked' => False, 'likeCount' => $likeCount,'postId' => $id], 200);
     }
     

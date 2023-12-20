@@ -7,23 +7,24 @@ use Illuminate\Database\Eloquent\Model;
 
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Comment extends Model
+class CommentLike extends Model
 {
+
     use HasFactory;
 
     public $timestamps  = false;
-
-
-    public function user()
+    /**
+     * Get the comment.
+     */
+    public  function comment(): BelongsTo 
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(Comment::class);
     }
 
-    public function likes()
+    public  function user(): BelongsTo 
     {
-        return $this->belongsToMany(User::class, 'comment_likes');
+        return $this->belongsTo(User::class);
     }
-
 }
