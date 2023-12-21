@@ -19123,12 +19123,9 @@ padding-top:10px;
 
 .message-container {
  width: 50%;
-  
-
-   /* Set the width for both sent and received message containers */
-}
+  }
 .message-container ul {
-  list-style-type: none; /* Remove the bullet points from the ul */
+  list-style-type: none; 
 }
 
 .message-container ul li {
@@ -19144,22 +19141,6 @@ padding-top:10px;
   word-wrap: break-word;
 }
 
-.sent-messages {
-  align-self: flex-end; /* Align sent messages to the right */
-  text-align: end;
-}
-.sent-messages li{
-  background-color: #1f9bcf;
-  color:#fff;
-  
-}
-.received-messages {
-  align-self: flex-start; /* Align received messages to the left */
-}
-.received-messages li {
-  background-color: #888;
-  color:#fff; /* Align received messages to the left */
-}
 .message {
   margin-top: 10px; /* Add some spacing between messages */
   
@@ -19186,4 +19167,27 @@ padding-top:10px;
  article button{
   font-size:16x;
 }
+
+
+.sent-message {
+  background-color: #3498db;
+  color: #ffffff; 
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  max-width: 70%; 
+  align-self: flex-end;
+}
+
+.received-message {
+  background-color: #ecf0f1;
+  color: #000000; 
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  max-width: 70%; 
+  align-self: flex-start; 
+}
+
+
 

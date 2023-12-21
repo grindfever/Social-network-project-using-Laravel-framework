@@ -464,8 +464,7 @@ function sendFriendRequestHandler(response) {
     let messagesList = document.querySelector('ul.messages');
     let li = document.createElement('li');
     li.textContent = message.content;
-
-    // Insert the new message after the last <li> element in the messages list
+    li.classList = "sent-message";
     messagesList.appendChild(li);
 
     let form = document.querySelector('article.message form.new_message');
