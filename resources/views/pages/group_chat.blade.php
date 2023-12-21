@@ -4,30 +4,20 @@
 <div class="container mt-5">
     <div id="chatpage">
         <div id="chat">
-            <div class="message-container sent-messages">
-                <ul class="list-group messages">
-                    @foreach($sent_messages as $sentMessage)
+            <div class="message-container all-messages">
+                <ul class="messages">
+                    @php
+                        $all_messages = $sent_messages->merge($received_messages)->sortBy('id');
+                    @endphp
+
+                    @foreach($all_messages as $message)
                         @php
-                            $sender = \App\Models\User::find($sentMessage->sender);
+                            $sender = \App\Models\User::find($message->sender);
                         @endphp
-                        <li class="list-group-item">
+                        <li class="{{ $message->sender == Auth::user()->id ? 'sent-message' : 'received-message' }}">
                             <span class="message-info">{{ optional($sender)->name }}:</span>
-                            {{ $sentMessage->content }}
-                            <span class="float-end small-date">{{ \Carbon\Carbon::parse($sentMessage->date)->diffForHumans() }}</span>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-            <div class="message-container received-messages">
-                <ul class="list-group messages">
-                    @foreach($received_messages as $receivedMessage)
-                        @php
-                            $sender = \App\Models\User::find($receivedMessage->sender);
-                        @endphp
-                        <li class="list-group-item">
-                            <span class="message-info">{{ optional($sender)->name }}:</span>
-                            {{ $receivedMessage->content }}
-                            <span class="float-end small-date">{{ \Carbon\Carbon::parse($receivedMessage->date)->diffForHumans() }}</span>
+                            {{ $message->content }}
+                            <span class="float-end small-date">{{ \Carbon\Carbon::parse($message->date)->diffForHumans() }}</span>
                         </li>
                     @endforeach
                 </ul>
@@ -46,4 +36,3 @@
     </div>
 </div>
 @endsection
-

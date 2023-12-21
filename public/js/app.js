@@ -464,8 +464,7 @@ function sendFriendRequestHandler(response) {
     let messagesList = document.querySelector('ul.messages');
     let li = document.createElement('li');
     li.textContent = message.content;
-
-    // Insert the new message after the last <li> element in the messages list
+    li.classList = "sent-message";
     messagesList.appendChild(li);
 
     let form = document.querySelector('article.message form.new_message');
@@ -958,7 +957,7 @@ function createGroupMessage(message) {
   new_message.classList.add('message');
 
   let li = document.createElement('li');
-  li.className = 'list-group-item';
+  li.classList = 'sent-message';
   li.style.border = 'none';
   li.style.margin = '0';
   li.innerHTML = `<span class="message-info">${message.user}:</span> ${message.content} <span class="float-end small-date">Just now</span>`;
