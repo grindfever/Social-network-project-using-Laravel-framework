@@ -146,6 +146,10 @@
 
 
 
+[type=search] {
+  -webkit-appearance: textfield;
+  outline-offset: -2px;
+}
 
 #scrollToTopButton {
   position: fixed;
@@ -12554,7 +12558,19 @@ label,
   cursor: pointer;
 }
 
+.col-form-label {
+  padding-top: calc(0.375rem + var(--bs-border-width));
+  padding-bottom: calc(0.375rem + var(--bs-border-width));
+  margin-bottom: 0;
+  font-size: inherit;
+  line-height: 1.5;
+}
 
+.col-form-label-lg {
+  padding-top: calc(0.5rem + var(--bs-border-width));
+  padding-bottom: calc(0.5rem + var(--bs-border-width));
+  font-size: 1.25rem;
+}
 
 /* rtl:end:ignore */
 .bs-tooltip-bottom .tooltip-arrow, .bs-tooltip-auto[data-popper-placement^=bottom] .tooltip-arrow {

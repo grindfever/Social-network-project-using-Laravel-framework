@@ -4,10 +4,13 @@
 
 @section('content')
     
-    @guest
+    @guest('admin')
+    @guest()
     <article class="post">
         <p> Please <a href="{{ url('/login') }}">login</a> to create a post </p>
     @endguest
+    @endguest
+
 
     @auth
     <form class="new_post" method="POST" action="/dashboard" enctype="multipart/form-data">

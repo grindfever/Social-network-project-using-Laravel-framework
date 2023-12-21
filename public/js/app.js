@@ -3,6 +3,21 @@ function addEventListeners() {
     if(postDeleter != null)
       postDeleter.addEventListener('click', sendDeletePostRequest);
 
+      let deleteButtons = document.querySelectorAll('button#remove-post');
+        deleteButtons.forEach(function(button) {
+          button.addEventListener('click', sendDeleteAdminPostRequest);
+      });
+      
+      let banButtons = document.querySelectorAll('button#ban');
+        banButtons.forEach(function(button) {
+          button.addEventListener('click', sendBanRequest);
+      });
+
+      let unbanButtons = document.querySelectorAll('button#unban');
+        unbanButtons.forEach(function(button) {
+          button.addEventListener('click', sendUnbanRequest);
+      });
+
     let friendDeleters = document.querySelectorAll('article.friend button#delete-friend');
     [].forEach.call(friendDeleters, function(deleter) {
       deleter.addEventListener('click', sendDeleteFriendRequest);
@@ -44,6 +59,15 @@ function addEventListeners() {
     [].forEach.call(friendRejecters, function (rejecter) {
         rejecter.addEventListener('click', sendRejectFriendRequest);
     });
+
+    let createModerator = document.querySelector('article.set_moderator button.add_moderator');
+    if (createModerator != null)
+      createModerator.addEventListener('click',sendCreateModeratorRequest);
+
+    let removeModerator = document.querySelector('article.set_moderator button.remove_moderator');
+    if (removeModerator != null)
+      removeModerator.addEventListener('click',sendDeleteModeratorRequest);
+
     }
 
     function sendAcceptFriendRequest(sender, receiver) {
@@ -98,7 +122,6 @@ function sendFriendRequestHandler(response) {
       }
   } else {
       console.error('Error:', response.message);
-      // Handle the error, show a message, etc.
   }
 }
 
@@ -163,7 +186,6 @@ function sendFriendRequestHandler(response) {
 
   }
   
-  // Ajax request to include media upload
   function sendAjaxRequestFormData(method, url, data, handler) {
     let request = new XMLHttpRequest();
     let formData = new FormData();
@@ -182,9 +204,8 @@ function sendFriendRequestHandler(response) {
   
   function editablePost() {
       let contentDiv = document.querySelector('div.content');
-      let titleHeader = document.querySelector('h1'); // Adjust the selector if your title is in a different header tag
+      let titleHeader = document.querySelector('h1'); 
 
-      // Create editable textareas for content and title
       let contentInput = document.createElement('textarea');
       contentInput.name = 'content';
       contentInput.classList.add('edit-textarea');
@@ -197,32 +218,29 @@ function sendFriendRequestHandler(response) {
       titleInput.textContent = titleHeader.textContent;
       titleHeader.replaceWith(titleInput);
 
-      // Show save button
+      
       let saveButton = document.querySelector('button#save-post');
       saveButton.style.display = 'block';
 
-      // Add event listener to save changes on submit
+      
       saveButton.addEventListener('click', function() {
         saveEditedPost(contentInput.value, titleInput.value);
       });
   }
 
   function saveEditedPost(content, title) {
-    // Perform AJAX request to save the edited post
+    
     let id = document.querySelector('#delete-post').getAttribute('data-post-id');
     sendAjaxRequest('put', '/api/post/' + id, { content: content, title: title }, postEditedHandler);
   }
 
   function postEditedHandler() {
     if (this.status === 200) {
-      // Handle successful post edit
       console.log('Post edited successfully');
 
-      // Hide save button
       let saveButton = document.querySelector('button#save-post');
       saveButton.style.display = 'none';
 
-      // Remove text areas
       let contentInput = document.querySelector('textarea[name=content]');
       let titleInput = document.querySelector('textarea[name=title]');
       let contentDiv = document.createElement('div');
@@ -235,7 +253,6 @@ function sendFriendRequestHandler(response) {
       contentInput.replaceWith(contentDiv);
       titleInput.replaceWith(titleHeader);
     } else {
-      // Handle error in post edit
       console.log('Failed to edit the post. Please try again.');
     }
   }
@@ -245,6 +262,18 @@ function sendFriendRequestHandler(response) {
     let id = deleteButton.getAttribute('data-post-id');
     sendAjaxRequest('delete', '/api/post/' + id, null, postDeletedHandler);
   }
+
+
+  function sendDeleteAdminPostRequest(event) {
+    event.preventDefault();
+
+    let deleteButton = document.querySelector('button.btn-danger');
+    let id = deleteButton.getAttribute('data-post-id');
+    console.log(id);
+    sendAjaxRequest('delete', '/api/post/' + id, null, adminPostDeleteHandler);
+}
+
+  
     
   function sendDeleteFriendRequest(event) {
     let id = this.closest('article').getAttribute('data-id');
@@ -288,6 +317,22 @@ function sendFriendRequestHandler(response) {
     let div = document.getElementById(post.id);
     div.remove();
   }
+
+  function adminPostDeleteHandler() {
+    if (this.status != 200) window.location = '/admin';
+    else {
+      console.log("Erro");
+      console.log(this.status);
+    }
+    let post = JSON.parse(this.responseText);
+    
+    console.log(post);
+
+    let tr = document.querySelector('tr[data-post-id="' + post.id + '"]');
+    
+    tr.remove();
+  }
+  
   
   function friendDeletedHandler() {
     if (this.status != 200) console.log(this.status); //window.location = '/';
@@ -918,6 +963,143 @@ function createGroupMessage(message) {
   `;
   return new_message;
 }
+
+
+  function sendBanRequest(event){
+
+    let id = this.closest('tr').getAttribute('data-id');
+    console.log(id);
+
+    sendAjaxRequest('post', '/moderator/ban/' + id, null, banHandler);
+
+    console.log('Sent Ban request');
+    
+    event.preventDefault();
+  }
+
+  function sendUnbanRequest(event){
+
+    let id = this.closest('tr').getAttribute('data-id');
+    
+    console.log(id);
+
+    sendAjaxRequest('delete', '/moderator/unban/' + id, null, unbanHandler);
+    
+    console.log('Sent unban request');
+  }
+
+  function banHandler() {
+    if (this.status !== 200) {
+        window.location = '/';
+        return;
+    }
+
+    let id = JSON.parse(this.responseText);
+
+    let oldButton = document.querySelector('button[data-id="' + id + '"]');
+
+    let newButton = document.createElement('button');
+    newButton.id = "unban";
+    newButton.setAttribute('data-id', id);
+    newButton.type = 'submit';
+    newButton.classList.add('btn', 'btn-dark');
+    newButton.textContent = 'Unban';
+
+    oldButton.parentNode.replaceChild(newButton, oldButton);
+
+    let unbanButtons = document.querySelectorAll('button#unban');
+        unbanButtons.forEach(function(button) {
+          button.addEventListener('click', sendUnbanRequest);
+      });
+}
+      
+
+  function unbanHandler(){
+    if (this.status != 200) window.location = '/';
+    
+    let id = JSON.parse(this.responseText);
+
+    let oldButton = document.querySelector('button[data-id="' + id + '"]');
+
+    let newButton = document.createElement('button');
+    newButton.id = "ban";
+    newButton.setAttribute('data-id', id);
+    newButton.type = 'submit';
+    newButton.classList.add('btn', 'btn-danger');
+    newButton.textContent = 'Ban';
+
+    oldButton.parentNode.replaceChild(newButton, oldButton);
+
+    let banButtons = document.querySelectorAll('button#ban');
+        banButtons.forEach(function(button) {
+          button.addEventListener('click', sendBanRequest);
+      });
+  }
+
+  function sendCreateModeratorRequest(event){
+
+    let id = this.closest('article').getAttribute('data-id');
+    
+
+    sendAjaxRequest('post', '/moderator/create/' + id, null, moderatorCreateHandler);
+    
+    event.preventDefault();
+  }
+
+  function sendDeleteModeratorRequest(event){
+
+    let id = this.closest('article').getAttribute('data-id');
+    
+    sendAjaxRequest('delete', '/moderator/remove/' + id, null, moderatorDeleteHandler);
+  }
+
+  function moderatorCreateHandler() {
+    if (this.status != 200) window.location = '/';
+    
+    let article = document.querySelector('article.set_moderator'); 
+
+    let id = article.getAttribute('data-id');
+
+    let newButton = document.createElement('button');
+    newButton.setAttribute('data-id', id);
+    newButton.type = 'submit';
+    newButton.classList.add('remove_moderator');
+    newButton.textContent = 'Remove Moderator Role';
+    
+    let existingButton = article.querySelector('button.add_moderator');
+
+    existingButton.parentNode.replaceChild(newButton, existingButton);
+
+    let removeModerator = document.querySelector('article.set_moderator button.remove_moderator');
+    if (removeModerator != null)
+      removeModerator.addEventListener('click',sendDeleteModeratorRequest);
+
+  }
+
+  function moderatorDeleteHandler() {
+    if (this.status != 200) window.location = '/';
+    
+    let article = document.querySelector('article.set_moderator'); 
+
+    let id = article.getAttribute('data-id');
+
+    let newButton = document.createElement('button');
+    newButton.setAttribute('data-id', id);
+    newButton.type = 'submit';
+    newButton.classList.add('add_moderator');
+    newButton.textContent = 'Assign Moderator Role';
+    
+    let existingButton = article.querySelector('button.remove_moderator');
+
+
+    existingButton.parentNode.replaceChild(newButton, existingButton);
+
+    let createModerator = document.querySelector('article.set_moderator button.add_moderator');
+    if (createModerator != null)
+      createModerator.addEventListener('click',sendCreateModeratorRequest);
+}
+
+
 
   addEventListeners();
   

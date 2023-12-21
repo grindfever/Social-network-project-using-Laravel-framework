@@ -22,6 +22,9 @@ DROP TABLE if exists user_likes_posts CASCADE;
 DROP TABLE if exists user_likes_comments CASCADE;
 DROP TABLE if exists post_removals CASCADE;
 DROP TABLE if exists memberships CASCADE;
+DROP TABLE if exists report_users CASCADE; 
+DROP TABLE if exists report_posts CASCADE;
+DROP TABLE if exists report_groups CASCADE;
 DROP TABLE if exists group_messages CASCADE;  
 DROP TABLE if exists friends CASCADE;
 
@@ -75,7 +78,7 @@ CREATE TABLE users (
 
 CREATE TABLE moderators
 (
-    id Serial PRIMARY KEY CONSTRAINT fk_moderator_username REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE 
+  id INTEGER PRIMARY KEY CONSTRAINT fk_moderator_id REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE 
 );
 
 --ADMIN
@@ -206,9 +209,7 @@ CREATE TABLE bans
     moderator INTEGER CONSTRAINT fk_ban_moderator REFERENCES moderators(id) ON DELETE CASCADE ON UPDATE CASCADE
 				    CONSTRAINT nn_ban_moderator NOT NULL,
     user_id INTEGER CONSTRAINT fk_ban_user REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
-    ban_time integer CONSTRAINT nn_ban_ban_time NOT NULL DEFAULT 0,
-    forever boolean CONSTRAINT nn_ban_forever NOT NULL DEFAULT FALSE,
-    date timestamp(0) without time zone CONSTRAINT nn_ban_date NOT NULL
+    date timestamp(0) without time zone CONSTRAINT nn_ban_date NOT NULL DEFAULT now()
 );
 
 --USER TAGGED POST
@@ -244,7 +245,8 @@ CREATE TABLE post_removals
     moderator INTEGER CONSTRAINT fk_post_removal_moderator REFERENCES moderators(id) ON DELETE CASCADE ON UPDATE CASCADE
 				    CONSTRAINT nn_post_removal_moderator NOT NULL,
     reason character varying(128) CONSTRAINT nn_post_removal_reason NOT NULL,
-    date timestamp(0) without time zone CONSTRAINT nn_post_removal_date NOT NULL
+    date timestamp(0) without time zone CONSTRAINT nn_post_removal_date NOT NULL DEFAULT now()
+
 );
 
 --MEMBERSHIP
@@ -317,6 +319,33 @@ CREATE TABLE group_messages
 );
 
 
+--REPORT USER
+CREATE TABLE report_users
+(
+  id SERIAL PRIMARY KEY,
+  user_reported_id INTEGER CONSTRAINT fk_reported_user REFERENCES users(id) ON DELETE CASCADE CONSTRAINT nn_reported NOT NULL,
+  user_who_repoted_id INTEGER CONSTRAINT fk_who_reported_user REFERENCES users(id) ON DELETE CASCADE CONSTRAINT nn_who_reported NOT NULL,
+  date timestamp(0) without time zone CONSTRAINT nn_date NOT NULL DEFAULT now()
+);
+
+--REPORT USER
+CREATE TABLE report_posts
+(
+  id SERIAL PRIMARY KEY,
+  post_id INTEGER CONSTRAINT fk_reported_post REFERENCES posts(id) ON DELETE CASCADE CONSTRAINT nn_reported NOT NULL,
+  user_id INTEGER CONSTRAINT fk_who_reported_user REFERENCES users(id) ON DELETE CASCADE CONSTRAINT nn_who_reported NOT NULL,
+  date timestamp(0) without time zone CONSTRAINT nn_date NOT NULL DEFAULT now()
+);
+
+--REPORT USER
+CREATE TABLE report_groups
+(
+  id SERIAL PRIMARY KEY,
+  group_id INTEGER CONSTRAINT fk_reported_group REFERENCES groups(id) ON DELETE CASCADE CONSTRAINT nn_reported NOT NULL,
+  user_who_repoted_id INTEGER CONSTRAINT fk_who_reported_user REFERENCES users(id) ON DELETE CASCADE CONSTRAINT nn_who_reported NOT NULL,
+  date timestamp(0) without time zone CONSTRAINT nn_date NOT NULL DEFAULT now()
+);
+
 INSERT INTO users VALUES (
   DEFAULT,
   'John Doe',
@@ -374,6 +403,13 @@ INSERT INTO users VALUES (
 );
 
 -- Add more users as needed
+
+INSERT INTO admins VALUES (
+  DEFAULT,
+  'boss@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W'
+);
+
 
 INSERT INTO posts VALUES (
   DEFAULT,
@@ -516,6 +552,19 @@ INSERT INTO groups VALUES (
     'os mais loucos do leic'
 );
 
+
+INSERT INTO moderators VALUES (
+  2
+);
+
+
+INSERT INTO report_users (user_reported_id, user_who_repoted_id)
+VALUES (1, 2);
+
+INSERT INTO report_posts (post_id, user_id)
+VALUES (1, 3);
+
+
 INSERT INTO memberships VALUES (
     1,
     1,
@@ -560,3 +609,11 @@ INSERT INTO group_messages VALUES (
 
 INSERT INTO friend_requests (sender, receiver, accepted, request_date)
 VALUES (2, 1, FALSE, NOW());
+
+
+INSERT INTO bans VALUES
+(
+  DEFAULT,
+  2,
+  3
+);

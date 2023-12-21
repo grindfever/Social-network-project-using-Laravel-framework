@@ -48,8 +48,7 @@ class PostPolicy
      */
     public function delete(User $user, Post $post): bool
     {
-      // Only a post owner can delete it.
-      return $user->id === $post->user_id;
+      return ($user->id === $post->user_id || Auth::guard('admin')->check() || $user->isModerator());
     }
 
     public function update(User $user, Post $post): bool

@@ -17,6 +17,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FriendRequestController;
 use App\Http\Controllers\ForgotPasswordController;
 
+use App\Http\Controllers\ModeratorController;
+
 
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
@@ -132,6 +134,17 @@ Route::controller(GroupMessageController::class)->group(function (){
     Route::post('/groups/{groupId}/chat', 'sendMessage');
 });
 
+//Moderator
+Route::controller(ModeratorController::class)->group(function () {
+    Route::get('/reports','reportList');
+    Route::post('/moderator/create/{id}','create');
+    Route::delete('/moderator/remove/{id}','remove'); 
+    Route::post('/moderator/ban/{id}','ban');
+    Route::delete('/moderator/unban/{id}','unban');
+    Route::get('/teste','teste');
+});
+
+
 Route::get('/about', function () {
     return view('pages.about_us');
 });
@@ -147,4 +160,14 @@ Route::controller(FriendRequestController::class)->group(function () {
 Route::controller(FriendController::class)->group(function () {
     Route::get('/friends', 'show')->name('friends.show');
     Route::delete('/friends/{id}/remove', 'removeFriend')->name('friends.remove');
+});
+
+
+//Admin
+Route::controller(AdminController::class)->group(function () {
+    Route::get('/admin','showDashboard');  
+    Route::get('/admin/groups','groups');
+    Route::get('/admin/users','users');
+    Route::get('/admin/posts','posts');  
+    Route::get('/admin/moderators','moderators');  
 });

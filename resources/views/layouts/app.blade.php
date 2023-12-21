@@ -40,6 +40,12 @@
                     <input class="form-control me-sm-2" name="query" type="search" placeholder="search">
                     <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
                   </form>
+                  @auth('web')
+                    @if(Auth::user()->isModerator())
+                    <li class="nav-item">
+                      <a class="nav-link" href="{{ url('/reports') }}" >Reports</a>
+                    </li>
+                    @endif
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/messages') }}">Messages</a>
                   </li>
@@ -52,19 +58,43 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/contact') }}" >Contact us</a>
                   </li>
-                  @if (Auth::check())
                     <li class="nav-item">
                       <a class="nav-link" href="{{ url('/profile/' . Auth::user()->id) }}" >{{ Auth::user()->name }}</a>
                     </li>
-        
                     <li class="nav-item">
                       <a class="nav-link" href="{{ url('/logout') }}">Logout</a> 
                     </li>
-                    @else
+                  @endauth
+                  @auth('admin')
+                    <li class="nav-item">
+                      <a class="nav-link" href="{{ url('/admin') }}">Administer</a> 
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{{ url('/reports') }}" >Reports</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{{ url('/admin/users') }}">Users</a> 
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{{ url('/admin/posts') }}">Posts</a> 
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{{ url('/admin/groups') }}">Groups</a> 
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{{ url('/admin/moderators') }}">Moderators</a> 
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{{ url('/logout') }}">Logout</a> 
+                    </li>
+                  @endauth
+                  @guest('admin')
+                  @guest('web')
                     <li class="nav-item">
                       <a class="nav-link" href="{{ url('/login') }}" >Login</a>
                     </li>
-                    @endif
+                  @endguest
+                  @endguest
                 </ul>
               </div>
             </div>
