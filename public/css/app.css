@@ -19199,3 +19199,7 @@ padding-top:10px;
 .new-group-message-form {
   margin: 0;
 }
+
+.main-features-header {
+  text-decoration: underline;
+}
