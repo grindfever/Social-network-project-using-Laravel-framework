@@ -31,7 +31,7 @@
     <button class="btn btn-primary "type="submit" style="margin-top:10px;">Login</button>
     <div class="login-buttons" style="margin-top: 10px;">
         <a class="btn btn-primary" href="/forgot-password-form">Forgot Your Password?</a>
-        <a class="btn btn-primary" data-bs-toggle="offcanvas" class="button button-outline" href="{{ route('register') }}">Register</a>
+        <a class="btn btn-primary" href="/register">Register</a>
     </div>
         
     @if (session('success'))

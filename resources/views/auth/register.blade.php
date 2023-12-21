@@ -14,6 +14,17 @@
     @endif
 
     <div class="form-floating mb-3">
+      <input type="text" name="username" class="form-control" id="floatingInput" placeholder="username" required>
+      <label for="floatingInput">Username</label>
+    </div>
+    @if ($errors->has('username'))
+      <span class="error">
+          {{ $errors->first('username') }}
+      </span>
+    @endif
+  
+
+    <div class="form-floating mb-3">
       <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com" value="{{ old('email') }}" required>
       <label for="floatingInput">Email address*</label>
     </div>
