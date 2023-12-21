@@ -617,6 +617,7 @@ function sendFriendRequestHandler(response) {
     new_comment.innerHTML = `
       <a href="/profile/${comment.user.id}" class="profile_avatar">
         ${avatarHTML}
+        ${comment.user.name}
       </a>
       <span class="float-end">Just now</span>
       <li class="list-group-item">${comment.comment.content}</li>
