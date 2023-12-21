@@ -280,16 +280,26 @@ ADD COLUMN search TSVECTOR;
 
 CREATE FUNCTION post_search_update() RETURNS TRIGGER AS $$
 BEGIN
-  NEW.search = (
-    to_tsvector('english',NEW.title)
-  );
+  IF TG_OP = 'INSERT' THEN   
+    NEW.search = (
+      setweight(to_tsvector('english',NEW.title),'A') || setweight(to_tsvector('english',NEW.content),'B') 
+
+    );
+  END IF;
+  IF  TG_OP = 'UPDATE' THEN
+    IF(NEW.title <> OLD.title OR NEW.content <> OLD.content) THEN
+      NEW.search = (
+          setweight(to_tsvector('english',NEW.title),'A') || setweight(to_tsvector('english',NEW.content),'B') 
+        );
+    END IF;
+  END IF;
   RETURN NEW;
 END $$
 LANGUAGE plpgsql;  
 
 
 CREATE TRIGGER post_search_update
-  BEFORE INSERT ON posts
+  BEFORE INSERT OR UPDATE ON posts
   FOR EACH ROW
   EXECUTE PROCEDURE post_search_update();
 
