@@ -19357,8 +19357,8 @@ margin-bottom:30px;
 }
 /* Style the friend article */
 .friend {
-  min-width:400px;
-  max-width: 1000px;
+  min-width:600px;
+  max-width: 600px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -19366,7 +19366,11 @@ margin-bottom:30px;
   border: 1px solid #ccc;
   margin-bottom: 10px;
 }
-
+.friend .name-redirect a{
+  color:#000;
+  margin-left:-400px;
+  
+}
 /* Style the profile picture and name container */
 .profile-picture-name {
   display: flex;
