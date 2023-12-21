@@ -7,12 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use App\Models\Friend;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\FriendRequest;
-
 use App\Http\Controllers\FileController;
 
 class ProfileController extends Controller {
@@ -155,6 +155,18 @@ class ProfileController extends Controller {
             ->with('success', 'Profile updated successfully');
     }
     
-    
+    public function delete($id)
+{
+    // Find the user
+    $user = User::findOrFail($id);
+
+    $user->forceDelete();
+
+    // Log out the user
+    Auth::logout();
+
+    // Redirect to the login page with a success message
+    return redirect()->route('login')->with('success', 'Account deleted successfully. We hope to see you again!');
+}
 }
 

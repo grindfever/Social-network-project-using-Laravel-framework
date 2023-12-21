@@ -19170,12 +19170,15 @@ margin-bottom:30px;
 }
 
 #myfriends a:first-child {
-  margin-right: 20px;
+
   margin-left:50px;
   
 }
-#myfriends a:last-child {
+#myfriends a {
   margin-left:20px;
+}
+#myfriends button{
+  margin-left:50px;
 }
 
 #myfriends{

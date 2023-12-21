@@ -37,10 +37,24 @@
     @endauth
     @else
     <section id="myfriends">
-    @if ($me)    
+    @if ($me)
+
     <a href="{{ route('profile.edit', ['id' => $user->id]) }}" class="btn btn-primary">Edit Profile</a>
+
     <a href="{{ route('friends.show') }}" class="btn btn-primary" >Friend List  </a>
     <a href="{{ route('friendrequests.index') }}" class="btn btn-primary">Friend Requests</a>
+    <form action="{{ route('profile.delete', ['id' => $user->id]) }}" method="post">
+        @method('DELETE')
+        @csrf
+        <button type="submit" class="btn btn-danger" onclick="confirmDelete()">Delete Account</button>
+    </form>    
+    <!--<script>
+    function confirmDelete() {
+        if (confirm('Are you sure you want to delete your account?')) {
+            document.getElementById('deleteForm').submit();
+        }
+    }
+    </script>-->
     @endif
   
    

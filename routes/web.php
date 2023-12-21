@@ -102,6 +102,7 @@ Route::controller(ProfileController::class)->group(function () {
     Route::post('/profile/{id}/send-friend-request', 'sendFriendRequest')->name('send.friend.request');
     Route::get('/profile/{id}/edit', 'editProfile')->name('profile.edit');
     Route::put('/profile/update/{id}', 'updateProfile')->name('profile.update');
+    Route::delete('/profile/delete/{id}', 'ProfileController@delete')->name('profile.delete');
 });
 
 
