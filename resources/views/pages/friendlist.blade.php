@@ -5,7 +5,7 @@
 @section('content')
 
 <section id="friendlist">
-    <h1>Friend List</h1>
+    <h1>Friend List :</h1>
 
     @if(count($friends) > 0)
         @foreach($friends as $friend)

@@ -5,7 +5,7 @@
 @section('content')
 
 <section id="friendrequests">   
-    <h2>Friend Requests</h2>
+    <h1>Friend Requests :</h1>
 
     @foreach ($friendRequests as $request)
     <div class="friend-request-item" data-sender="{{ $request->sender }}" data-receiver="{{ $request->receiver }}">
