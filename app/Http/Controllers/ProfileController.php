@@ -120,8 +120,7 @@ class ProfileController extends Controller {
     }
     public function updateProfile(Request $request, $id)
     {
-    
-        //dd($request->all());
+        
         // Validate the form data
         $request->validate([
             'name' => 'required|string',
@@ -137,6 +136,7 @@ class ProfileController extends Controller {
         $fileController = new FileController();
         $fileController->upload($request);
     
+
 
         // Update the user's profile
         $user->update([

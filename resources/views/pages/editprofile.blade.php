@@ -33,8 +33,8 @@
             <div id="privacy">
                 <label for="privacy">Privacy:</label>
                 <select id="privacy" name="privacy">
-                    <option value="1">Public</option>
-                    <option value="0">Private</option>
+                    <option value="false">Public</option>
+                    <option value="true">Private</option>
                 </select>
             </div>
 
