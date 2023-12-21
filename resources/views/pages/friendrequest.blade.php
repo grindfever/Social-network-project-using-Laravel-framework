@@ -5,7 +5,7 @@
 @section('content')
 
 <section id="friendrequests">   
-    <h2>Friend Requests</h2>
+    <h1>Friend Requests :</h1>
 
     @foreach ($friendRequests as $request)
     <div class="friend-request-item" data-sender="{{ $request->sender }}" data-receiver="{{ $request->receiver }}">
@@ -13,7 +13,10 @@
             @php
                 $sender = \App\Models\User::find($request->sender);
             @endphp
-
+            <div class="profile-picture">
+    
+                <img src="{{ $sender->getProfileImage() }}" class="avatar" alt="Profile Picture">
+            </div>
             Sender: {{ $sender->name ?? '(Name not available)' }}
             <br>
             Request Date: {{ $request->request_date }}

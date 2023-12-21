@@ -12,7 +12,8 @@ use App\Models\Moderator;
 use App\Http\Controllers\FileController;
 
 use Illuminate\Contracts\Auth\CanResetPassword;
-
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
@@ -27,6 +28,9 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'priv',
+        'bio',
+        'age'
     ];
 
     protected $hidden = [

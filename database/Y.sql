@@ -76,7 +76,8 @@ CREATE TABLE users (
   img VARCHAR,
   priv BOOLEAN DEFAULT TRUE,
   remember_token VARCHAR,
-  recover_token VARCHAR
+  recover_token VARCHAR,
+  deleted_at timestamp(0) without time zone 
 );
 
 --MODERATOR
