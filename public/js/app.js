@@ -867,9 +867,12 @@ document.addEventListener('click', function(event) {
     console.log('Sent unban request');
   }
 
-  function banHandler(){
-    if (this.status == 200) window.location = '/';
-    
+  function banHandler() {
+    if (this.status !== 200) {
+        window.location = '/';
+        return;
+    }
+
     let id = JSON.parse(this.responseText);
 
     let oldButton = document.querySelector('button[data-id="' + id + '"]');
@@ -881,8 +884,14 @@ document.addEventListener('click', function(event) {
     newButton.classList.add('btn', 'btn-dark');
     newButton.textContent = 'Unban';
 
-    oldbutton.parentNode.replaceChild(newButton, oldButton);
-  }
+    oldButton.parentNode.replaceChild(newButton, oldButton);
+
+    let unbanButtons = document.querySelectorAll('button#unban');
+        unbanButtons.forEach(function(button) {
+          button.addEventListener('click', sendUnbanRequest);
+      });
+}
+      
 
   function unbanHandler(){
     if (this.status != 200) window.location = '/';
@@ -898,7 +907,12 @@ document.addEventListener('click', function(event) {
     newButton.classList.add('btn', 'btn-danger');
     newButton.textContent = 'Ban';
 
-    oldbutton.parentNode.replaceChild(newButton, oldButton);
+    oldButton.parentNode.replaceChild(newButton, oldButton);
+
+    let banButtons = document.querySelectorAll('button#ban');
+        banButtons.forEach(function(button) {
+          button.addEventListener('click', sendBanRequest);
+      });
   }
 
   function sendCreateModeratorRequest(event){

@@ -142,7 +142,7 @@ Route::controller(ModeratorController::class)->group(function () {
     Route::post('/moderator/create/{id}','create');
     Route::delete('/moderator/remove/{id}','remove'); 
     Route::post('/moderator/ban/{id}','ban');
-    Route::delete('/moderator/ban/{id}','ban');
+    Route::delete('/moderator/unban/{id}','unban');
     Route::get('/teste','teste');
 });
 
