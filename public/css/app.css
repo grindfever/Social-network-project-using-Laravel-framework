@@ -19395,6 +19395,7 @@ margin-bottom:30px;
   cursor: pointer;
 }
 
+
 .no-decoration {
   text-decoration: none;
 }
@@ -19432,4 +19433,15 @@ margin-bottom:30px;
 
 .main-features-header {
   text-decoration: underline;
+}
+
+.editprofile label{
+  font-size:20px;
+}
+.editprofile h1{
+  font-weight: 350;
+  margin-bottom:30px;
+}
+.editprofile input{
+  font-size:20px;
 }

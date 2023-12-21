@@ -4,7 +4,7 @@
 
 @section('content')
     <section class="editprofile">
-        <h2>Edit Profile</h2>
+        <h1>Edit Profile</h1>
         <form action="{{ route('profile.update', ['id' => $user->id]) }}" method="post" enctype="multipart/form-data">
             @method('PUT')
             @csrf
