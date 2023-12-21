@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Moderator;
+
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +13,10 @@ use Carbon\Carbon;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Group;
+use App\Models\Moderator;
+use App\Models\Message;
+use App\Models\GroupMessage;
+use App\Models\Comment;
 
 
 class AdminController extends Controller
@@ -24,21 +28,61 @@ class AdminController extends Controller
         }
         else { 
 
-            $total_weekly_posts = Post::where('date','>',Carbon::now()->subDays(7))->get()->count();
-            $total_monthly_posts = Post::where('date','>', Carbon::now()->subDays(30))->get()->count();
-            $total_daily_posts = Post::where('date','>', Carbon::now()->subDays(1))->get()->count();
-            $total_yearly_posts = Post::where('date','>', Carbon::now()->subDays(365))->get()->count();
-            $total_posts = Post::all()->count();
+                $total_weekly_posts = Post::where('date', '>', Carbon::now()->subDays(7))->count();
+                $total_monthly_posts = Post::where('date', '>', Carbon::now()->subDays(30))->count();
+                $total_daily_posts = Post::where('date', '>', Carbon::now()->subDays(1))->count();
+                $total_yearly_posts = Post::where('date', '>', Carbon::now()->subDays(365))->count();
+                $total_posts = Post::count();
+            
+                $total_weekly_messages = Message::where('date', '>', Carbon::now()->subDays(7))->count();
+                $total_monthly_messages = Message::where('date', '>', Carbon::now()->subDays(30))->count();
+                $total_daily_messages = Message::where('date', '>', Carbon::now()->subDays(1))->count();
+                $total_yearly_messages = Message::where('date', '>', Carbon::now()->subDays(365))->count();
+                $total_messages = Message::count();
+            
+                $total_weekly_group_messages = GroupMessage::where('date', '>', Carbon::now()->subDays(7))->count();
+                $total_monthly_group_messages = GroupMessage::where('date', '>', Carbon::now()->subDays(30))->count();
+                $total_daily_group_messages = GroupMessage::where('date', '>', Carbon::now()->subDays(1))->count();
+                $total_yearly_group_messages = GroupMessage::where('date', '>', Carbon::now()->subDays(365))->count();
+                $total_group_messages = GroupMessage::count();
+            
+                $total_weekly_comments = Comment::where('date', '>', Carbon::now()->subDays(7))->count();
+                $total_monthly_comments = Comment::where('date', '>', Carbon::now()->subDays(30))->count();
+                $total_daily_comments = Comment::where('date', '>', Carbon::now()->subDays(1))->count();
+                $total_yearly_comments = Comment::where('date', '>', Carbon::now()->subDays(365))->count();
+                $total_comments = Comment::count();
+                $total_users = User::count();
+                $total_moderators = Moderator::count();
+                $total_groups = Group::count();
 
-            return view('pages.admin.dashboard', 
-                        [
-                        'daily_posts'=> $total_daily_posts,
-                        'weekly_posts'=> $total_weekly_posts, 
-                        'monthly_posts'=> $total_monthly_posts, 
-                        'yearly_posts'=> $total_yearly_posts, 
-                        'total_posts'=> $total_posts
-                        ]); 
-        }
+                
+                return view('pages.admin.dashboard', [
+                    'daily_posts' => $total_daily_posts,
+                    'weekly_posts' => $total_weekly_posts,
+                    'monthly_posts' => $total_monthly_posts,
+                    'yearly_posts' => $total_yearly_posts,
+                    'total_posts' => $total_posts,
+                    'daily_messages' => $total_daily_messages,
+                    'weekly_messages' => $total_weekly_messages,
+                    'monthly_messages' => $total_monthly_messages,
+                    'yearly_messages' => $total_yearly_messages,
+                    'total_messages' => $total_messages,
+                    'daily_group_messages' => $total_daily_group_messages,
+                    'weekly_group_messages' => $total_weekly_group_messages,
+                    'monthly_group_messages' => $total_monthly_group_messages,
+                    'yearly_group_messages' => $total_yearly_group_messages,
+                    'total_group_messages' => $total_group_messages,
+                    'daily_comments' => $total_daily_comments,
+                    'weekly_comments' => $total_weekly_comments,
+                    'monthly_comments' => $total_monthly_comments,
+                    'yearly_comments' => $total_yearly_comments,
+                    'total_comments' => $total_comments,
+                    'total_users' => $total_users,
+                    'total_moderators' => $total_moderators,
+                    'total_groups' => $total_groups,
+                ]);
+            }
+            
     }
 
     public function moderators(){
