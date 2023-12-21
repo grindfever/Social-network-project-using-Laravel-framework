@@ -37,7 +37,10 @@
                   </li>
                   <form class="d-flex" action="/dashboard">
                     @csrf
-                    <input class="form-control me-sm-2" name="query" type="search" placeholder="search">
+                    <label for="search-input">
+                      <span class="visually-hidden">Search</span>
+                      <input id="search-input" class="form-control me-sm-2" name="query" type="search" placeholder="Search">
+                    </label>
                     <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
                   </form>
                   @auth('web')

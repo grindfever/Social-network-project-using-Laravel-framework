@@ -2,7 +2,7 @@
     <article class="post" data-id="{{ $post->id }}">
         <div class="card-header">
             <a href="/profile/{{ $post->user->id }}">
-                <img src="{{ $post->user->getProfileImage() }}" class="avatar">
+                <img src="{{ $post->user->getProfileImage() }}" class="avatar" alt="avatar">
             {{ $post->user->name }}
             </a>
             <span class="float-end">{{ \Carbon\Carbon::parse($post->date)->diffForHumans() }}</span>
@@ -17,16 +17,16 @@
                     @endphp
                     @if (in_array($extension, ['mp4', 'webm', 'ogg']))
                         <video controls controlsList="nodownload">
-                            <source id="videoSource" src="{{ $post->getPostImage() }}" type="video/{{ $extension }}">
+                            <source id="videoSource" src="{{ $post->getPostImage() }}" type="video/{{ $extension }}" alt="post-video">
                             Your browser does not support the video tag.
                         </video>
                     @elseif (in_array($extension, ['mp3', 'wav', 'ogg']))
                         <audio controls controlsList="nodownload">
-                            <source id="audioSource" src="{{ $post->getPostImage() }}" type="audio/{{ $extension }}">
+                            <source id="audioSource" src="{{ $post->getPostImage() }}" type="audio/{{ $extension }}" alt="post-audio">
                             Your browser does not support the audio element.
                         </audio>
                     @else
-                        <img src="{{ $post->getPostImage() }}" class="post-image">
+                        <img src="{{ $post->getPostImage() }}" class="post-image" alt="post-image">
                     @endif
                 @endif
             </p>

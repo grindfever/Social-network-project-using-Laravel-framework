@@ -13,7 +13,7 @@
 
 
     @auth
-    <form class="new_post" method="POST" action="/dashboard" enctype="multipart/form-data">
+    <form class="new_post" method="POST" action="/dashboard/create" enctype="multipart/form-data">
         @csrf
         <div class="input-group">
             <input type="text" class="form-control" name="title" placeholder="Title">
