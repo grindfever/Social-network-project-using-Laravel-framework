@@ -13,6 +13,8 @@ use App\Models\User;
 use App\Models\Post;
 use App\Models\FriendRequest;
 
+use App\Http\Controllers\FileController;
+
 class ProfileController extends Controller {
     //Display Profile page
 
@@ -26,6 +28,7 @@ class ProfileController extends Controller {
         $user = Auth::user();
         return redirect('/profile/'.$user->id);
     }
+
     public function show(string $id)
     {
         $user = User::findOrFail($id);
@@ -51,13 +54,14 @@ class ProfileController extends Controller {
         }        
 
     
-}
+    }
     protected function hasFriendRequest($senderId, $receiverId)
     {   
         return FriendRequest::where('sender', $senderId)
         ->where('receiver', $receiverId)
         ->exists();
     }
+
     protected function areFriends($user1Id, $user2Id)
     {
         return Friend::where(function ($query) use ($user1Id, $user2Id) {
@@ -117,6 +121,7 @@ class ProfileController extends Controller {
     public function updateProfile(Request $request, $id)
     {
     
+        //dd($request->all());
         // Validate the form data
         $request->validate([
             'name' => 'required|string',
@@ -124,22 +129,22 @@ class ProfileController extends Controller {
             'age' => 'required|integer|min:18',
             'bio' => 'nullable|string|max:255',
         
-            // Add validation rules for other fields
         ]);
  
         // Find the user
         $user = User::findOrFail($id);
-    
+        
+        $fileController = new FileController();
+        $fileController->upload($request);
     
 
         // Update the user's profile
         $user->update([
             'name' => $request->input('name'),
-            'email' => $request->input('email'),
+            'email' => $request->input('email'),    
             'age' => $request->input('age'),
             'bio' => $request->input('bio'),
-            'priv' => $request->input('private_account', false),
-            // Update other fields as needed
+            'priv' => $request->input('privacy'),
         ]);
 
 

@@ -24,7 +24,7 @@
         </div>
         
         <label>
-            <input type="checkbox" {{ $user->priv?'checked':''}}>
+            <input type="checkbox" {{ $user->priv?'checked':''}} disabled>
             <span>Private Account</span>
         </label>
     </div>
