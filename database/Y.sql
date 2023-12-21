@@ -34,6 +34,11 @@ DROP FUNCTION IF EXISTS post_search_update;
 
 DROP INDEX IF EXISTS idx_post_search;
 
+DROP TRIGGER IF EXISTS group_search_update ON groups;
+
+DROP FUNCTION IF EXISTS group_search_update;
+
+DROP INDEX IF EXISTS idx_group_search;
 
 
 
@@ -304,6 +309,38 @@ CREATE TRIGGER post_search_update
   EXECUTE PROCEDURE post_search_update();
 
 CREATE INDEX idx_post_search ON posts USING GIN (search);
+
+
+ALTER TABLE groups
+ADD COLUMN search TSVECTOR;
+
+
+CREATE FUNCTION group_search_update() RETURNS TRIGGER AS $$
+BEGIN
+  IF TG_OP = 'INSERT' THEN   
+    NEW.search = (
+      setweight(to_tsvector('english',NEW.name),'A') 
+    );
+  END IF;
+  IF  TG_OP = 'UPDATE' THEN
+    IF(NEW.name <> OLD.name) THEN
+      NEW.search = (
+          setweight(to_tsvector('english',NEW.name),'A') 
+        );
+    END IF;
+  END IF;
+  RETURN NEW;
+END $$
+LANGUAGE plpgsql;  
+
+
+CREATE TRIGGER group_search_update
+  BEFORE INSERT OR UPDATE ON groups
+  FOR EACH ROW
+  EXECUTE PROCEDURE group_search_update();
+
+CREATE INDEX idx_group_search ON posts USING GIN (search);
+
 
 
 --- TRIGGERS ---

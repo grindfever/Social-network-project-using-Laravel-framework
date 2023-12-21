@@ -58,20 +58,8 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/groups') }}">Groups</a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/about') }}" >About us</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/contact') }}" >Contact us</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/features') }}" >Features</a>
-                  </li>
                     <li class="nav-item">
                       <a class="nav-link" href="{{ url('/profile/' . Auth::user()->id) }}" >{{ Auth::user()->name }}</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="{{ url('/logout') }}">Logout</a> 
                     </li>
                   @endauth
                   @auth('admin')
@@ -86,6 +74,19 @@
                       <a class="dropdown-item" href="{{ url('/admin/moderators') }}">Moderators</a>
                     </div>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/logout') }}">Logout</a> 
+                  </li>
+                  @endauth
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">See also</a>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="{{ url('/about') }}">About</a>
+                      <a class="dropdown-item" href="{{ url('/features') }}">Features</a>
+                      <a class="dropdown-item" href="{{ url('/contact') }}">Contact</a>
+                    </div>
+                  </li>
+                  @auth('web')
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/logout') }}">Logout</a> 
                   </li>

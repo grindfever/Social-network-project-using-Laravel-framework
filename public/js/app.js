@@ -484,7 +484,6 @@ function sendFriendRequestHandler(response) {
 
   // ########## LIKE BUTTON ##############
   
-  //event listener for like button
   let likeButtons = document.querySelectorAll('button.like-count');
   [].forEach.call(likeButtons, function(likeButton) {
     likeButton.addEventListener('click', sendLikeRequest);
@@ -896,6 +895,23 @@ document.addEventListener('click', function(event) {
             searchResultContainer.appendChild(link);
         });
     }
+    
+    if (searchResults.groups.length > 0) {
+      gotResults = true;
+      let groupsHeader = document.createElement('h2');
+      groupsHeader.textContent = 'Groups';
+      searchResultContainer.appendChild(groupsHeader);
+
+      searchResults.groups.forEach(group => {
+          let link = document.createElement('a');
+          link.href = '/groups/' + group.id;
+          link.textContent = group.name;
+
+          link.classList.add('list-group-item', 'list-group-item-action');
+
+          searchResultContainer.appendChild(link);
+      });
+  }
 
     if (!gotResults){
       let noResult = document.createElement('p');
