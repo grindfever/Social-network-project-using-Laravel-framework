@@ -16,21 +16,20 @@ class GroupMessageController extends Controller
         // Retrieve group chat messages
         $group_messages = GroupMessage::where('group_id', $groupId)->get();
         $group = Group::find($groupId);
-
-        return view('pages.group_chat', compact('group_messages', 'group'));
+        $sent_messages = GroupMessage::where('sender', Auth::user()->id)->where('group_id', $groupId)->get();
+        $received_messages = GroupMessage::where('group_id', $groupId)->where('sender', '<>', Auth::user()->id)->get();
+        return view('pages.group_chat', compact('group_messages', 'group', 'sent_messages', 'received_messages'));
     }
 
-    public function sendMessage(Request $request, string $groupId)   
+    public function sendMessage(Request $request, string $groupId)
     {
-        $group_message = new GroupMessage();
+        DB::table('group_messages')->insert([
+            'group_id' => $groupId,
+            'sender' => Auth::user()->id,
+            'content' => $request->input('content'),
+        ]);
 
-        //$this->authorize('create', $card);
 
-        $group_message->content = $request->input('message');
-        $group_message->sender = Auth::user()->id;
-        $group_message->group_id = $groupId;  
-
-        $group_message->save();
-        return response()->json($group_message);
+        return response()->json($request->input('content'));
     }
 }

@@ -4,7 +4,7 @@
 <div id="chatpage">
 <div id="chat">
     <div class="message-container sent-messages">
-        <ul class="messages">
+            <ul class="messages">
             @foreach($sentMessages as $sentMessage)
                 <li>{{ $sentMessage->content }}</li>
             @endforeach
