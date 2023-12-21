@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\User;
 use App\Models\Post;
+use App\Models\Group;
 use App\Models\PostLike;
 
 use App\Http\Controllers\FileController;
@@ -110,9 +111,10 @@ class DashBoardController extends Controller
         
         $users = User::where('username','=', $query)->take(5)->get();
         $posts = Post::whereRaw("search @@ to_tsquery('english', ?)", [$query])->get();
+        $groups = Group::whereRaw("search @@ to_tsquery('english', ?)", [$query])->get();
 
         
-        return response()->json(['users' => $users, 'posts' => $posts]);        
+        return response()->json(['users' => $users, 'posts' => $posts, 'groups' => $groups]);        
     }
 
     

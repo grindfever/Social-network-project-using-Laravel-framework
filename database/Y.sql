@@ -34,6 +34,11 @@ DROP FUNCTION IF EXISTS post_search_update;
 
 DROP INDEX IF EXISTS idx_post_search;
 
+DROP TRIGGER IF EXISTS group_search_update ON groups;
+
+DROP FUNCTION IF EXISTS group_search_update;
+
+DROP INDEX IF EXISTS idx_group_search;
 
 
 
@@ -306,6 +311,38 @@ CREATE TRIGGER post_search_update
 CREATE INDEX idx_post_search ON posts USING GIN (search);
 
 
+ALTER TABLE groups
+ADD COLUMN search TSVECTOR;
+
+
+CREATE FUNCTION group_search_update() RETURNS TRIGGER AS $$
+BEGIN
+  IF TG_OP = 'INSERT' THEN   
+    NEW.search = (
+      setweight(to_tsvector('english',NEW.name),'A') 
+    );
+  END IF;
+  IF  TG_OP = 'UPDATE' THEN
+    IF(NEW.name <> OLD.name) THEN
+      NEW.search = (
+          setweight(to_tsvector('english',NEW.name),'A') 
+        );
+    END IF;
+  END IF;
+  RETURN NEW;
+END $$
+LANGUAGE plpgsql;  
+
+
+CREATE TRIGGER group_search_update
+  BEFORE INSERT OR UPDATE ON groups
+  FOR EACH ROW
+  EXECUTE PROCEDURE group_search_update();
+
+CREATE INDEX idx_group_search ON posts USING GIN (search);
+
+
+
 --- TRIGGERS ---
 
 
@@ -381,16 +418,16 @@ INSERT INTO users VALUES (
 
 INSERT INTO users VALUES (
   DEFAULT,
-  'a',
-  'A',
-  'a@example.com',
+  'Afonso Dias',
+  'Afonso',
+  'afonso@example.com',
   '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
-  'a',
+  'skrt',
   18,
   DEFAULT
 ); -- Password is 1234. Generated using Hash::make('1234')
 
--- Populating users table
+
 INSERT INTO users VALUES (
   DEFAULT,
   'Emily',
@@ -413,7 +450,125 @@ INSERT INTO users VALUES (
   DEFAULT
 );
 
--- Add more users as needed
+
+INSERT INTO users VALUES (
+  DEFAULT,
+  'Sophie',
+  'Sophie Turner',
+  'sophie@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', -- Password is 1234
+  'Actress',
+  18,
+  DEFAULT
+);
+
+
+INSERT INTO users VALUES (
+  DEFAULT,
+  'Daniel',
+  'Daniel White',
+  'daniel@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', -- Password is 1234
+  'Software Engineering Student',
+  19,
+  DEFAULT
+);
+
+INSERT INTO users VALUES (
+  DEFAULT,
+  'Olivia',
+  'Olivia Davis',
+  'olivia@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', -- Password is 1234
+  'Marketing Student',
+  21,
+  DEFAULT
+);
+
+
+INSERT INTO users VALUES (
+  DEFAULT,
+  'Ethan',
+  'Ethan Brooks',
+  'ethan@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', -- Password is 1234
+  'Graphic Design Student',
+  20,
+  DEFAULT
+);
+
+
+INSERT INTO users VALUES (
+  DEFAULT,
+  'Ava',
+  'Ava Robinson',
+  'ava@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', -- Password is 1234
+  'Photography Student',
+  22,
+  DEFAULT
+);
+
+
+INSERT INTO users VALUES (
+  DEFAULT,
+  'Carter',
+  'Carter Miller',
+  'carter@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', -- Password is 1234
+  'Finance Student',
+  23,
+  DEFAULT
+);
+
+
+INSERT INTO users VALUES (
+  DEFAULT,
+  'Hannah',
+  'Hannah Lee',
+  'hannah@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', -- Password is 1234
+  'Interior Design Student',
+  24,
+  DEFAULT
+);
+
+
+INSERT INTO users VALUES (
+  DEFAULT,
+  'Connor',
+  'Connor Clark',
+  'connor@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', -- Password is 1234
+  'Journalism Student',
+  26,
+  DEFAULT
+);
+
+
+INSERT INTO users VALUES (
+  DEFAULT,
+  'Grace',
+  'Grace Turner',
+  'grace@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', -- Password is 1234
+  'Biology Student',
+  25,
+  DEFAULT
+);
+
+
+INSERT INTO users VALUES (
+  DEFAULT,
+  'James',
+  'James Foster',
+  'james@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', -- Password is 1234
+  'Computer Science Student',
+  22,
+  DEFAULT
+);
+
 
 INSERT INTO admins VALUES (
   DEFAULT,
@@ -482,12 +637,202 @@ INSERT INTO posts VALUES (
   DEFAULT
 );
 
+INSERT INTO posts VALUES (
+  DEFAULT,
+  1,
+  'Hello Again World',
+  'Hello World! This is my second post. Or is it?',
+  '2022-01-01 12:00:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  1,
+  'Exciting Stuff!',
+  'I just got accepted into my dream job! So excited to start working.',
+  '2022-01-02 13:30:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  2,
+  'Travelling',
+  'Going on a trip to London for a few months. Hopefully I can catch the British GP',
+  '2022-01-03 15:45:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  2,
+  'Pancake Recipe',
+  'Does anyone know Carlos Sainz pancake recipe?',
+  '2022-01-04 09:15:00',
+  DEFAULT,
+  DEFAULT
+);
+
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  3,
+  'Fitness is hard',
+  'Started my fitness journey a few days ago but feel like giving up',
+  '2022-01-08 17:20:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  4,
+  'Coding Challenges',
+  'Completed a set of coding challenges today. Feeling accomplished!',
+  '2022-01-06 14:10:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  4,
+  'Tech Conference',
+  'Attended a tech conference and learned about the latest developments in AI and machine learning.',
+  '2022-01-07 11:45:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  5,
+  'Artistic Creations',
+  'Worked on some artistic creations today. Feeling inspired!',
+  '2022-01-08 18:30:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  5,
+  'Gallery Exhibition',
+  'Visited a gallery exhibition showcasing incredible artworks. Truly inspiring!',
+  '2022-01-09 16:00:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  6,
+  'Finance Insights',
+  'Explored finance insights and investment strategies. Learning something new every day!',
+  '2022-01-10 12:20:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  6,
+  'Stock Market Trends',
+  'Analyzed stock market trends and made some strategic investments. Fingers crossed!',
+  '2022-01-11 09:45:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  7,
+  'Interior Design Projects',
+  'Worked on some exciting interior design projects today. Cant wait to see the final results!',
+  '2022-01-12 14:30:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  7,
+  'Home Renovation',
+  'Planning a home renovation project. Looking for creative ideas and inspiration!',
+  '2022-01-13 10:55:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  8,
+  'Breaking News',
+  'Stay tuned for breaking news updates. Keeping you informed on the latest events!',
+  '2022-01-14 17:10:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  8,
+  'Global Trends',
+  'Exploring global trends and their impact on various industries. The world is constantly changing!',
+  '2022-01-15 15:15:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  9,
+  'Environmental Initiatives',
+  'Engaged in environmental initiatives to promote sustainability. Every action counts!',
+  '2022-01-16 11:30:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+  9,
+  'Nature Photography',
+  'Capturing the beauty of nature through photography. A picture is worth a thousand words!',
+  '2022-01-17 08:45:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+   10,
+  'Journalism Updates',
+  'Providing journalism updates on current events. Journalism is about telling the truth!',
+  '2022-01-18 16:00:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
+   10,
+  'Interviewing Experts',
+  'Conducted interviews with experts in the field. Sharing valuable insights with you!',
+  '2023-12-19 14:05:00',
+  DEFAULT,
+  DEFAULT
+);
 
 INSERT INTO comments VALUES (
   DEFAULT,
   1,
   'Congratulations! That is amazing news!',
-  '2022-01-01 12:30:00',
+  '2023-01-01 12:30:00',
   DEFAULT,
   1
 );
@@ -496,7 +841,7 @@ INSERT INTO comments VALUES (
   DEFAULT,
   1,
   'So happy for you! Best of luck in your new adventure.',
-  '2022-01-01 13:00:00',
+  '2023-01-01 13:00:00',
   DEFAULT,
   2
 );
@@ -505,7 +850,7 @@ INSERT INTO comments VALUES (
   DEFAULT,
   2,
   'Bali is definitely on my bucket list. Your pictures look incredible!',
-  '2022-01-02 14:00:00',
+  '2023-01-02 14:00:00',
   DEFAULT,
   3
 );
@@ -514,7 +859,7 @@ INSERT INTO comments VALUES (
   DEFAULT,
   2,
   'Please share the recipe! I am always looking for new dishes to try.',
-  '2022-01-02 15:30:00',
+  '2023-01-02 15:30:00',
   DEFAULT,
   4
 );
@@ -523,7 +868,7 @@ INSERT INTO comments VALUES (
   DEFAULT,
   3,
   'You got this! Stay motivated and enjoy the journey.',
-  '2022-01-03 16:45:00',
+  '2023-01-03 16:45:00',
   DEFAULT,
   5
 );
@@ -532,13 +877,390 @@ INSERT INTO comments VALUES (
   DEFAULT,
   3,
   'Let me know if you need any workout tips. I am happy to help!',
-  '2022-01-03 18:00:00',
+  '2023-01-03 18:00:00',
   DEFAULT,
   5
 );
 
+INSERT INTO comments VALUES (
+  DEFAULT,
+  2,
+  'Congratulations on getting accepted! What will you be studying?',
+  '2023-01-02 14:15:00',
+  DEFAULT,
+  2
+);
 
--- Add more posts as needed
+INSERT INTO comments VALUES (
+  DEFAULT,
+  3,
+  'That sounds amazing! I have always wanted to visit Bali. Any recommendations for places to visit?',
+  '2023-01-03 16:00:00',
+  DEFAULT,
+  3
+);
+
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  1,
+  'The recipe looks delicious! I would love to try it out.',
+  '2023-01-04 10:00:00',
+  DEFAULT,
+  4
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  3,
+  'Great job on trying out new recipes! Whats your favorite type of cuisine?',
+  '2023-01-04 11:30:00',
+  DEFAULT,
+  4
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  2,
+  'Keep up the good work on your fitness journey! You inspire me to start mine.',
+  '2023-01-05 18:30:00',
+  DEFAULT,
+  5
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  1,
+  'Im interested in starting a fitness journey too. Any tips for beginners?',
+  '2023-01-05 19:45:00',
+  DEFAULT,
+  5
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  3,
+  'I didnt ask lol',
+  '2023-01-07 12:30:00',
+  DEFAULT,
+  6
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  1,
+  'I see you are a coder. Wanna talk?',
+  '2023-01-08 09:15:00',
+  DEFAULT,
+  6
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  2,
+  'Your artworks are beautiful! Im sure they will be lucky to have you at your new job',
+  '2022-01-09 17:00:00',
+  DEFAULT,
+  7
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  1,
+  'What is the job? Please tell me',
+  '2022-01-10 10:30:00',
+  DEFAULT,
+  7
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  3,
+  'I love the UK',
+  '2022-01-11 11:00:00',
+  DEFAULT,
+  8
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  2,
+  'London > Lisbon',
+  '2022-01-11 14:45:00',
+  DEFAULT,
+  8
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  1,
+  'No idea',
+  '2022-01-12 15:30:00',
+  DEFAULT,
+  9
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  3,
+  'I heard he shared it in a youtube video on the F1 channel',
+  '2022-01-13 11:45:00',
+  DEFAULT,
+  9
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  2,
+  'Dont give up bro you got this',
+  '2022-01-14 18:30:00',
+  DEFAULT,
+  10
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  1,
+  'Same XD',
+  '2022-01-15 16:00:00',
+  DEFAULT,
+  10
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  3,
+  'The next Elon Musk',
+  '2022-01-16 12:20:00',
+  DEFAULT,
+  11
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  2,
+  'Zuckerberg WHO? You are so crazy',
+  '2022-01-17 09:45:00',
+  DEFAULT,
+  11
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+   1,
+  'What did you learn?',
+  '2022-01-18 17:10:00',
+  DEFAULT,
+  12
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+   3,
+  'Where????',
+  '2022-01-19 15:15:00',
+  DEFAULT,
+  12
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  2,
+  'This post is insightful! Have you considered writing more on this topic?',
+  '2022-02-01 14:45:00',
+  DEFAULT,
+  13
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  3,
+  'I completely agree with your perspective. Lets continue this conversation!',
+  '2022-02-02 16:30:00',
+  DEFAULT,
+  13
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  1,
+  'Sounds nice! Where is it?',
+  '2022-02-03 09:15:00',
+  DEFAULT,
+  14
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  3,
+  'One day they will have my paintings there',
+  '2022-02-03 10:45:00',
+  DEFAULT,
+  14
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  2,
+  'I have no idea how that stuff works haha',
+  '2022-02-04 17:20:00',
+  DEFAULT,
+  15
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  1,
+  'Share what you have bro. Lets get richer',
+  '2022-02-05 10:30:00',
+  DEFAULT,
+  15
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  3,
+  'Please, share them I beg you',
+  '2022-02-06 11:00:00',
+  DEFAULT,
+  16
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  2,
+  'Easy, you got this. Profit is coming',
+  '2022-02-06 12:30:00',
+  DEFAULT,
+  16
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  1,
+  'Share them when they are ready',
+  '2022-02-07 12:30:00',
+  DEFAULT,
+  17
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  3,
+  'I wanna see the process',
+  '2022-02-08 09:15:00',
+  DEFAULT,
+  17
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  2,
+  'The interior design concept is fascinating! What inspired your creative choices?',
+  '2022-02-09 17:00:00',
+  DEFAULT,
+  18
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  1,
+  'Im redecorating my space. Any tips for creating a cozy home environment?',
+  '2022-02-10 10:30:00',
+  DEFAULT,
+  18
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  3,
+  'The news update is eye-opening! How can individuals contribute to global awareness?',
+  '2022-02-11 11:00:00',
+  DEFAULT,
+  19
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  2,
+  'Im passionate about current affairs too! What inspired you to pursue journalism?',
+  '2022-02-11 14:45:00',
+  DEFAULT,
+  19
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  2,
+  'This post provides valuable insights! How did you come across this information?',
+  '2022-02-14 18:30:00',
+  DEFAULT,
+  21
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  1,
+  'Im interested in global trends. Which trend do you find most impactful currently?',
+  '2022-02-15 16:00:00',
+  DEFAULT,
+  20
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  3,
+  'Environmental initiatives are crucial! How can we contribute to sustainability?',
+  '2022-02-16 12:20:00',
+  DEFAULT,
+  21
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  2,
+  'Nature photography sounds like a great hobby! Do you share your photos online?',
+  '2022-02-17 09:45:00',
+  DEFAULT,
+  22
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  1,
+  'This post is insightful! Have you considered writing more on this topic?',
+  '2022-02-18 17:10:00',
+  DEFAULT,
+  23
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  3,
+  'I completely agree with your perspective. Lets continue this conversation!',
+  '2022-02-19 15:15:00',
+  DEFAULT,
+  23
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  2,
+  'Congratulations on your achievement!',
+  '2023-12-20 09:15:00',
+  DEFAULT,
+  24
+);
+
+INSERT INTO comments VALUES (
+  DEFAULT,
+  3,
+  'Im waiting...',
+  '2023-12-20 10:45:00',
+  DEFAULT,
+  24
+);
+
 
 
 INSERT INTO messages VALUES (
@@ -573,6 +1295,26 @@ INSERT INTO groups VALUES (
     'os mais loucos do leic'
 );
 
+INSERT INTO groups VALUES (
+    DEFAULT,
+    2, 
+    'Os Cincum', 
+    'Reis da feup'
+);
+
+INSERT INTO groups VALUES (
+    DEFAULT,
+    3, 
+    'ESAG', 
+    'antigos estudantes do liceu'
+);
+
+INSERT INTO groups VALUES (
+    DEFAULT,
+    1, 
+    'F1', 
+    'Bora discutir f1'
+);
 
 INSERT INTO moderators VALUES (
   2
@@ -609,6 +1351,116 @@ INSERT INTO memberships VALUES (
 INSERT INTO memberships VALUES (
     3,
     1,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    1
+);
+
+INSERT INTO memberships VALUES (
+    1,
+    2,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    2
+);
+
+INSERT INTO memberships VALUES (
+    2,
+    2,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    2
+);
+
+INSERT INTO memberships VALUES (
+    5,
+    2,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    2
+);
+
+INSERT INTO memberships VALUES (
+    3,
+    3,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    3
+);
+
+INSERT INTO memberships VALUES (
+    1,
+    3,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    3
+);
+
+INSERT INTO memberships VALUES (
+    6,
+    3,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    3
+);
+
+INSERT INTO memberships VALUES (
+    8,
+    3,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    3
+);
+
+INSERT INTO memberships VALUES (
+    1,
+    4,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    1
+);
+
+INSERT INTO memberships VALUES (
+    2,
+    4,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    1
+);
+
+INSERT INTO memberships VALUES (
+    3,
+    4,
+    DEFAULT,
+    DEFAULT,
+    '2023-12-07 11:00:23',
+    '2023-12-07 11:00:23',
+    1
+);
+
+INSERT INTO memberships VALUES (
+    7,
+    4,
     DEFAULT,
     DEFAULT,
     '2023-12-07 11:00:23',
