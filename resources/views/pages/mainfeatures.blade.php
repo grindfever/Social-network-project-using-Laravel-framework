@@ -74,9 +74,19 @@
         <article class="card mb-5">
             <h3 class="card-header">The admins are able to do the following actions:</h3>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">Administer user accounts</li>
+                <li class="list-group-item">Administer user accounts and roles</li>
                 <li class="list-group-item">Block and unblock user accounts</li>
                 <li class="list-group-item">Delete user account</li>
+                <li class="list-group-item">Access an admin page with statistics</li>
+                <li class="list-group-item">Everything moderators can also do</li>
+            </ul>
+        </article>
+        <article class="card mb-5">
+            <h3 class="card-header">The moderators are able to do the following actions:</h3>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Remove posts</li>
+                <li class="list-group-item">Delete groups</li>
+                <li class="list-group-item">Ban users</li>
             </ul>
         </article>
         <article class="card mb-5">
