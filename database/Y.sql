@@ -198,9 +198,7 @@ CREATE TABLE bans
     moderator INTEGER CONSTRAINT fk_ban_moderator REFERENCES moderators(id) ON DELETE CASCADE ON UPDATE CASCADE
 				    CONSTRAINT nn_ban_moderator NOT NULL,
     user_id INTEGER CONSTRAINT fk_ban_user REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
-    ban_time integer CONSTRAINT nn_ban_ban_time NOT NULL DEFAULT 0,
-    forever boolean CONSTRAINT nn_ban_forever NOT NULL DEFAULT FALSE,
-    date timestamp(0) without time zone CONSTRAINT nn_ban_date NOT NULL
+    date timestamp(0) without time zone CONSTRAINT nn_ban_date NOT NULL DEFAULT now()
 );
 
 --USER TAGGED POST

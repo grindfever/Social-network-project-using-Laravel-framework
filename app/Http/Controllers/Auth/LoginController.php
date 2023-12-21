@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\View\View;
 
+use App\Models\Admin;
+
+
 class LoginController extends Controller
 {
 
-    /**
-     * Display a login form.
-     */
     public function showLoginForm()
     {
         if (Auth::check()) {

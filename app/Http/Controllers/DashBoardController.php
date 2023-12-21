@@ -20,69 +20,49 @@ use Illuminate\Support\Facades\Log;
 class DashBoardController extends Controller
 {
     
-     /**
-     * Show the post for a given id.
-     */
      public function show(string $id): View 
      {   
-        // Get the post.
         $post = Post::findOrFail($id);
 
-        // Use the pages.post template to display the post.
         return view('pages.post', [
             'post' => $post, 
         ]);
     }
 
-    /**
-     * Shows all posts.
-     */
     public function list()
     {   
-
-    
-        // Get all posts ordered by date.
         $posts = Post::orderBy('date', 'desc')->get();
         
-        // Use the pages.dashboard template to display all posts.
         return view('pages.dashboard', [
             'posts' => $posts
         ]);
     }
     
 
-    /**
-     * Create a new post
-     */
     public function create(Request $request)
     {
 
-        // Validate the request.
         $request->validate([
             'title' => 'required|max:128',
             'content' => 'required|max:512',
             'file' => 'nullable|file|mimes:jpeg,png,jpg,gif,mp3,mp4',
         ]);
 
-        // Create a blank new Post.
         $post = new Post();
         
-        // Set post details
         $post->title = strip_tags($request->input('title'));
         $post->content = strip_tags($request->input('content')); 
         $post->user_id = Auth::user()->id;
         $post->save();
-        // Check if the current user is authorized to create this card.
+
         $this->authorize('create', $post);
  
-        // Call the upload function from FileController
 
         $request->merge(['id' => $post->id]);
         $fileController = new FileController();
         $uploadResult = $fileController->upload($request);
 
         if ($uploadResult === null) {
-            // Handle error, maybe return a response indicating the upload failed
             return response()->json(['post' => $post, 'file' => 'error']);
         }
 
@@ -92,40 +72,35 @@ class DashBoardController extends Controller
         
         return response()->json(['post' => $post, 'file' => $uploadResult]);
     }
-
-    /**
-     * Updates the state of an individual post.
-     */
     public function update(Request $request, $id)
     {
-        // Find the post.
         $post = Post::find($id);
 
-        // Check if the current user is authorized to update this post.
         $this->authorize('update', $post);
 
-        // Update the content property of the post.
         $post->content = $request->input('content');
 
-        // Save the post and return it as JSON.
         $post->save();
         return response()->json($post);
     }
 
-    /**
-     * Delete a post.
-     */
+    
     public function delete(Request $request, $id)
     {
-        // Find the post.
         $post = Post::find($id);
         
-        // Check if the current user is authorized to delete this post.
-        $this->authorize('delete',$post);
+        //$this->authorize('delete',$post);
 
-        // Delete the post and return it as JSON.
-        $post->delete();
-        return response()->json($post);
+        if (Auth::guard('admin')->check()){
+            $post->delete();
+            return response()->json($post);
+        }
+
+        $user = Auth::user();
+        if ($user->id === $post->user_id || $user->isModerator()){
+            $post->delete();
+            return response()->json($post);
+        }
     }
 
 

@@ -27,13 +27,15 @@
         @include('partials.profile', ['user' => $user])
     </section>
     
-    @if (!$me && !$areFriends)
+    @if (!$areFriends)
+    @auth('web')
     <div class="friend-request-item" data-sender="{{ auth()->id() }}" data-receiver="{{ $user->id }}">
         <form id="friendRequestForm" data-sender="{{ auth()->id() }}" data-receiver="{{ $user->id }}">
             @csrf
             <button type="submit">Send Friend Request</button>
         </form>
     </div>
+    @endauth
     @else
     <section id="friends">
     <a href="{{ route('friends.show') }}">Friend List  </a>

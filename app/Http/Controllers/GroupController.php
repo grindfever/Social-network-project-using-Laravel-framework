@@ -12,16 +12,13 @@ class GroupController extends Controller
 {
     public function createGroup(Request $request)
     {
-        // Validate input
 
         $members = $request->input('members');
 
-        // Ensure at least three members are selected
         if (count($members) < 2) {
             return redirect()->back()->with('error', 'A group must have at least three members including you.');
         }
 
-        // Create the group
 
         $group = new Group();
         $group->owner = auth()->user()->id;
@@ -32,21 +29,19 @@ class GroupController extends Controller
         DB::table('memberships')->insert([
                 'possible_member' => auth()->user()->id,
                 'group_id' => $group->id,
-                'accepted' => true, // Assuming memberships are accepted by default
+                'accepted' => true,
                 'requested' => false,
                 'accept_date' => now(),
                 'req_or_inv_date' => now(),
                 'member' => auth()->user()->id,
             ]);
 
-        // Create memberships for each selected member
         $members = $request->input('members');
         foreach ($members as $memberId) {
-        // Create a membership record
             DB::table('memberships')->insert([
                 'possible_member' => $memberId,
                 'group_id' => $group->id,
-                'accepted' => true, // Assuming memberships are accepted by default
+                'accepted' => true,
                 'requested' => false,
                 'accept_date' => now(),
                 'req_or_inv_date' => now(),
@@ -54,14 +49,12 @@ class GroupController extends Controller
             ]);
         }
 
-        // Redirect to the group list
         return redirect('/groups');
     }
 
  
     public function showGroupCreationForm()
     {
-    // Get all users except the authenticated user
     $users = User::where('id', '!=', auth()->user()->id)->get();
 
     return view('pages.create_group', compact('users'));
@@ -70,8 +63,10 @@ class GroupController extends Controller
     
     public function showGroups()
     {
+        if (Auth::guard('admin')->check()){
+            return redirect('/admin/groups');
+        }
         if (!Auth::check()) {
-            // Not logged in, redirect to login.
             return redirect('/login');
 
         } else {
@@ -87,37 +82,26 @@ class GroupController extends Controller
     return view('pages.groupshow', compact('group'));
     }
 
-    // GroupController.php
 
     public function edit(Group $group)
     {
-    /* // Check if the logged-in user is the owner of the group
-    if (auth()->user()->id !== $group->owner) {
-        abort(403, 'This action is unauthorized.');
-    } */
 
-    // Retrieve the list of users who are not members of the group
     $existingMembers = DB::table('memberships')->where('group_id', $group->id)->pluck('possible_member');
     $users = DB::table('users')->whereNotIn('id', $existingMembers)->get();
 
-    // Check if there are no users left to add
     if ($users->isEmpty()) {
         $noUsersLeftMessage = "Your group is so popular! There is no one left to add!";
     } else {
         $noUsersLeftMessage = null;
     }
 
-    // Rest of the method
     return view('pages.groupedit', compact('group', 'users', 'noUsersLeftMessage'));
     }
 
 
     public function update(Request $request, Group $group)
     {
-    // Check if the user is the owner of the group
-    // $this->authorize('update', $group);
 
-    // Validate and update group details (name, description)
     $request->validate([
         'name' => 'required|string|max:255',
         'description' => 'nullable|string|max:1024',
@@ -133,21 +117,16 @@ class GroupController extends Controller
 
     public function addMembers(Request $request, Group $group)
     {
-    // Check if the user is the owner of the group
-    //$this->authorize('update', $group);
-
-    // Validate and attach selected members to the group
     $request->validate([
         'members' => 'array',
     ]);
 
     $members = $request->input('members');
     foreach ($members as $memberId) {
-        // Create a membership record
         DB::table('memberships')->insert([
             'possible_member' => $memberId,
             'group_id' => $group->id,
-            'accepted' => true, // Assuming memberships are accepted by default
+            'accepted' => true,
             'requested' => false,
             'accept_date' => now(),
             'req_or_inv_date' => now(),
@@ -160,10 +139,7 @@ class GroupController extends Controller
 
     public function destroy(Group $group)
     {
-    // Check if the user is the owner of the group
-    //$this->authorize('delete', $group);
-
-    // Delete the group and associated memberships
+    
     DB::table('memberships')->where('group_id', $group->id)->delete();
     DB::table('groups')->where('id', $group->id)->delete();
 

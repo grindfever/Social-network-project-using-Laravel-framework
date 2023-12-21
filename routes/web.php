@@ -164,5 +164,9 @@ Route::controller(FriendController::class)->group(function () {
 
 //Admin
 Route::controller(AdminController::class)->group(function () {
-    Route::get('/admin','showDashboard');    
+    Route::get('/admin','showDashboard');  
+    Route::get('/admin/groups','groups');
+    Route::get('/admin/users','users');
+    Route::get('/admin/posts','posts');  
+    Route::get('/admin/moderators','moderators');  
 });
