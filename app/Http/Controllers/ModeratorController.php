@@ -10,6 +10,7 @@ use App\Models\ReportUser;
 use App\Models\ReportPost;
 use App\Models\ReportGroup;
 use App\Models\Ban;
+use App\Models\User;
 
 
 
@@ -53,10 +54,17 @@ class ModeratorController extends Controller
 
     public function ban(Request $request, $id)
     {
+        $user = User::find($id);
+        if ($user->isModerator()){
+            return response()->json();
+        }
+
         DB::table('bans')->insert([
             'moderator' => Auth::user()->id,
             'user_id' => $id,
         ]);
+
+        DB::table('users')->where('id', $id)->update(['remember_token' => null]);
 
         return response()->json($id);
     }

@@ -50,6 +50,10 @@ class LoginController extends Controller
         else {
             if (Auth::attempt($credentials, $request->filled('remember'))) {
                 $request->session()->regenerate();
+                if(Auth::user()->isBanned()){
+                    Auth::logout();
+                    return redirect('/login')->with('banned', 'You have been banned.');
+                }
                 return redirect()->intended('/dashboard');
             }
         }
