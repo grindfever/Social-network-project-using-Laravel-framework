@@ -19191,13 +19191,11 @@ padding-top:10px;
   text-decoration: none;
 }
 
-
-
-.new-group-message-form {
-  margin: 0;
-}
-
 .small-date {
   font-size: 10px;
   margin-left: 10px;
+}
+
+.new-group-message-form {
+  margin: 0;
 }
