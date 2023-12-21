@@ -21,7 +21,6 @@
                         <a href="{{ url('/profile/' . $user->id) }}">See profile</a>
                     </td>
                     <td>
-                        @auth('web')
                         @if($user->isBanned())
                             @csrf
                             <button type="submit" id="unban" class="btn btn-dark" data-id="{{ $user->id }}">Unban</button>
@@ -29,7 +28,6 @@
                             @csrf
                             <button type="submit" id="ban" class="btn btn-danger" data-id="{{ $user->id }}">Ban</button>
                         @endif
-                        @endauth
                     </td>
                 </tr>
             @endforeach
