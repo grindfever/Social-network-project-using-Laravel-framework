@@ -29,23 +29,23 @@
                             <button type="submit" id="ban" class="btn btn-danger" data-id="{{ $user->id }}">Ban</button>
                         @endif
                     </td>
+                    @auth('admin')
                     <td>
-                        @auth('admin')
-                            <section id="set_moderator">
-                                <article class="set_moderator" data-id="{{$user->id}}">
-                                    @if($user->isModerator())
-                                        <button class="remove_moderator" data-id="{{$user->id}}" type='submit'>
-                                            Remove Moderator Role
-                                        </button>
-                                    @else
-                                        <button class="add_moderator" data-id="{{$user->id}}" type='submit'>
-                                            Assign Moderator Role
-                                        </button>
-                                    @endif
-                                </article>
-                            </section>
-                        @endauth
+                        <section id="set_moderator">
+                            <article class="set_moderator" data-id="{{$user->id}}">
+                                @if($user->isModerator())
+                                    <button class="remove_moderator" data-id="{{$user->id}}" type='submit'>
+                                        Remove Moderator Role
+                                    </button>
+                                @else
+                                    <button class="add_moderator" data-id="{{$user->id}}" type='submit'>
+                                        Assign Moderator Role
+                                    </button>
+                                @endif
+                            </article>
+                        </section>
                     </td>
+                    @endauth
                 </tr>
             @endforeach
         </tbody>

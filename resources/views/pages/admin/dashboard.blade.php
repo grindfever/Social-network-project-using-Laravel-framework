@@ -3,17 +3,8 @@
 
 @section('content')
 
-@auth('admin')
 <h2> Admin dashboard </h2>
 
-<ul>
-    <li> Posts made today :  </li>
-    <li> Posts made this week : {{$weekly_posts}} </li>
-    <li> Posts made this month : {{$monthly_posts}} </li>
-    <li> Posts made this year : {{$yearly_posts}} </li>
-    <li> Total Posts : {{$total_posts}} </li>
-</ul>
-@endauth
 
 
 @auth('admin')
@@ -29,7 +20,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="table-active">
+      <tr class="table-dark">
         <th scope="row">Posts</th>
         <td>{{$daily_posts}}</td>
         <td>{{$weekly_posts}}</td>
@@ -37,7 +28,7 @@
         <td>{{$yearly_posts}}</td>
         <td>{{$total_posts}}</td>
       </tr>
-      <tr>
+      <tr class="table-dark">
         <th scope="row">Private Messages</th>
         <td>Column content</td>
         <td>Column content</td>
@@ -45,7 +36,7 @@
         <td>Column content</td>
         <td>Column content</td>
       </tr>
-      <tr>
+      <tr class="table-dark">
         <th scope="row">Group Messages</th>
         <td>Column content</td>
         <td>Column content</td>
@@ -53,7 +44,7 @@
         <td>Column content</td>
         <td>Column content</td>
       </tr>
-      <tr>
+      <tr class="table-dark">
         <th scope="row">New Accounts</th>
         <td>Column content</td>
         <td>Column content</td>
