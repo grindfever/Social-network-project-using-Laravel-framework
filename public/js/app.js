@@ -6,7 +6,17 @@ function addEventListeners() {
       let deleteButtons = document.querySelectorAll('button#remove-post');
         deleteButtons.forEach(function(button) {
           button.addEventListener('click', sendDeleteAdminPostRequest);
-      });      
+      });
+      
+      let banButtons = document.querySelectorAll('button#ban');
+        banButtons.forEach(function(button) {
+          button.addEventListener('click', sendBanRequest);
+      });
+
+      let unbanButtons = document.querySelectorAll('button#unban');
+        unbanButtons.forEach(function(button) {
+          button.addEventListener('click', sendUnbanRequest);
+      });
 
     let friendDeleters = document.querySelectorAll('article.friend button#delete-friend');
     [].forEach.call(friendDeleters, function(deleter) {
@@ -833,6 +843,63 @@ document.addEventListener('click', function(event) {
 }
   
 
+
+  function sendBanRequest(event){
+
+    let id = this.closest('tr').getAttribute('data-id');
+    console.log(id);
+
+    sendAjaxRequest('post', '/moderator/ban/' + id, null, banHandler);
+
+    console.log('Sent Ban request');
+    
+    event.preventDefault();
+  }
+
+  function sendUnbanRequest(event){
+
+    let id = this.closest('tr').getAttribute('data-id');
+    
+    console.log(id);
+
+    sendAjaxRequest('delete', '/moderator/unban/' + id, null, unbanHandler);
+    
+    console.log('Sent unban request');
+  }
+
+  function banHandler(){
+    if (this.status == 200) window.location = '/';
+    
+    let id = JSON.parse(this.responseText);
+
+    let oldButton = document.querySelector('button[data-id="' + id + '"]');
+
+    let newButton = document.createElement('button');
+    newButton.id = "unban";
+    newButton.setAttribute('data-id', id);
+    newButton.type = 'submit';
+    newButton.classList.add('btn', 'btn-dark');
+    newButton.textContent = 'Unban';
+
+    oldbutton.parentNode.replaceChild(newButton, oldButton);
+  }
+
+  function unbanHandler(){
+    if (this.status != 200) window.location = '/';
+    
+    let id = JSON.parse(this.responseText);
+
+    let oldButton = document.querySelector('button[data-id="' + id + '"]');
+
+    let newButton = document.createElement('button');
+    newButton.id = "ban";
+    newButton.setAttribute('data-id', id);
+    newButton.type = 'submit';
+    newButton.classList.add('btn', 'btn-danger');
+    newButton.textContent = 'Ban';
+
+    oldbutton.parentNode.replaceChild(newButton, oldButton);
+  }
 
   function sendCreateModeratorRequest(event){
 

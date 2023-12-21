@@ -9,6 +9,7 @@ use App\Models\Moderator;
 use App\Models\ReportUser;
 use App\Models\ReportPost;
 use App\Models\ReportGroup;
+use App\Models\Ban;
 
 
 
@@ -48,5 +49,22 @@ class ModeratorController extends Controller
         $moderator = Moderator::find($id);
         $moderator->delete();
         return response()->json($moderator);
+    }
+
+    public function ban(Request $request, $id)
+    {
+        DB::table('bans')->insert([
+            'moderator' => Auth::user()->id,
+            'user_id' => $id,
+        ]);
+
+        return response()->json($id);
+    }
+
+    public function unban(Request $request, $id)
+    {
+        Ban::where('user_id','=',$id)->delete();
+
+        return response()->json($id);
     }
 }

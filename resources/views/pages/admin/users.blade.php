@@ -13,7 +13,7 @@
         </thead>
         <tbody>
             @foreach($users as $user)
-                <tr class="table-active">
+                <tr class="table-active" data-id="{{ $user->id }}">
                     <td>{{ $user->id }}</td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->username }}</td>
@@ -21,10 +21,15 @@
                         <a href="{{ url('/profile/' . $user->id) }}">See profile</a>
                     </td>
                     <td>
-                        <form class="ban" action="{{url('/ban/'.$user->id)}}">
+                        @auth('web')
+                        @if($user->isBanned())
                             @csrf
-                            <button type="submit" class="btn btn-danger">Ban</button>
-                        </form>
+                            <button type="submit" id="unban" class="btn btn-dark" data-id="{{ $user->id }}">Unban</button>
+                        @else
+                            @csrf
+                            <button type="submit" id="ban" class="btn btn-danger" data-id="{{ $user->id }}">Ban</button>
+                        @endif
+                        @endauth
                     </td>
                 </tr>
             @endforeach

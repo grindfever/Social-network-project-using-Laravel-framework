@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-
+use App\Models\Ban;
 use App\Models\Moderator;
 use App\Http\Controllers\FileController;
 
@@ -112,5 +112,10 @@ class User extends Authenticatable
     
     public function getProfileImage() {
         return FileController::get('profile', $this->id);
+    }
+
+
+    public function isBanned() {
+        return Ban::where('user_id', $this->id)->exists(); 
     }
 }

@@ -598,3 +598,11 @@ INSERT INTO group_messages VALUES (
 
 INSERT INTO friend_requests (sender, receiver, accepted, request_date)
 VALUES (2, 1, FALSE, NOW());
+
+
+INSERT INTO bans VALUES
+(
+  DEFAULT,
+  2,
+  3
+);
