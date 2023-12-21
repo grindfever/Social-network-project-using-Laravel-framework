@@ -13,14 +13,21 @@
             @php
                 $sender = \App\Models\User::find($request->sender);
             @endphp
+            
             <div class="profile-picture">
     
                 <img src="{{ $sender->getProfileImage() }}" class="avatar" alt="Profile Picture">
             </div>
+            <div class="sender-request">
+             <div class="sender-name">   
             Sender: {{ $sender->name ?? '(Name not available)' }}
-            <br>
+            </div>
+           
+            <div class="request-date">
             Request Date: {{ $request->request_date }}
-            <br>
+</div>
+</div>
+         
 
             <form onsubmit="event.preventDefault(); sendAcceptFriendRequest({{ $request->sender }}, {{ $request->receiver }});">
                 @csrf
