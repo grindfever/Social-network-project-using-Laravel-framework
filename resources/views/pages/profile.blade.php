@@ -47,14 +47,34 @@
         @method('DELETE')
         @csrf
         <button type="submit" class="btn btn-danger" onclick="confirmDelete()">Delete Account</button>
+     
+
     </form>    
-    <!--<script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
     function confirmDelete() {
         if (confirm('Are you sure you want to delete your account?')) {
-            document.getElementById('deleteForm').submit();
+            // Make an AJAX request
+            $.ajax({
+                type: 'DELETE',
+                url: $('#deleteForm').attr('action'),
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    // Handle success response
+                    alert('Account deleted successfully. We hope to see you again!');
+                    // Redirect to the login page or perform any other action
+                    window.location.href = '{{ route('login') }}';
+                },
+            
+            });
+        } else {
+            // Prevent the form submission if "Cancel" is clicked
+            event.preventDefault();
         }
     }
-    </script>-->
+</script>
     @endif
   
    
