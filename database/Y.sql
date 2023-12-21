@@ -395,6 +395,13 @@ INSERT INTO users VALUES (
 
 -- Add more users as needed
 
+INSERT INTO admins VALUES (
+  DEFAULT,
+  'boss@example.com',
+  '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W'
+);
+
+
 INSERT INTO posts VALUES (
   DEFAULT,
   1,
