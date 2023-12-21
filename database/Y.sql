@@ -399,7 +399,7 @@ INSERT INTO users VALUES (
   DEFAULT,
   'John Doe',
   'John',
-  'admin@example.com',
+  'john@example.com',
   '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W',
   'Funny person',
   29,
@@ -1265,7 +1265,7 @@ INSERT INTO comments VALUES (
 
 
 INSERT INTO messages VALUES (
-  DEFAULT, 1, 2, 'Blah1', DEFAULT, DEFAULT
+  DEFAULT, 1, 2, 'yoo have you heard the news?', DEFAULT, DEFAULT
 );
 
 INSERT INTO messages VALUES (
@@ -1273,7 +1273,7 @@ INSERT INTO messages VALUES (
 );
 
 INSERT INTO messages VALUES (
-  DEFAULT, 2, 1, 'Blah3', DEFAULT, DEFAULT
+  DEFAULT, 2, 1, 'Really?', DEFAULT, DEFAULT
 );
 
 INSERT INTO messages VALUES (
@@ -1301,7 +1301,7 @@ INSERT INTO messages VALUES (
 );
 
 INSERT INTO messages VALUES (
-  DEFAULT, 1, 2, 'Blah4', DEFAULT, DEFAULT
+  DEFAULT, 1, 2, 'the project deadline was extended!!!', DEFAULT, DEFAULT
 );
 
 INSERT INTO messages VALUES (
@@ -1312,17 +1312,11 @@ INSERT INTO messages VALUES (
   DEFAULT, 5, 1, 'Blah6', DEFAULT, DEFAULT
 );
 
-INSERT INTO messages VALUES (
-  DEFAULT, 1, 2, 'Blah1', DEFAULT, DEFAULT
-);
 
 INSERT INTO messages VALUES (
   DEFAULT, 1, 3, 'Blah2', DEFAULT, DEFAULT
 );
 
-INSERT INTO messages VALUES (
-  DEFAULT, 2, 1, 'Blah3', DEFAULT, DEFAULT
-);
 
 INSERT INTO messages VALUES (
   DEFAULT, 2, 3, 'Blah4', DEFAULT, DEFAULT
@@ -1362,10 +1356,6 @@ INSERT INTO messages VALUES (
 
 INSERT INTO messages VALUES (
   DEFAULT, 7, 4, 'Blah1', DEFAULT, DEFAULT
-);
-
-INSERT INTO messages VALUES (
-  DEFAULT, 2, 1, 'Blah2', DEFAULT, DEFAULT
 );
 
 INSERT INTO messages VALUES (
@@ -1564,15 +1554,15 @@ INSERT INTO memberships VALUES (
 );
 
 INSERT INTO group_messages VALUES (
-  DEFAULT, 1, 1, 'primeira', DEFAULT, DEFAULT
+  DEFAULT, 1, 1, 'how you doing guys?', DEFAULT, DEFAULT
 );
 
 INSERT INTO group_messages VALUES (
-  DEFAULT, 1, 2, 'segunda', DEFAULT, DEFAULT
+  DEFAULT, 1, 2, 'everything alright and you?', DEFAULT, DEFAULT
 );
 
 INSERT INTO group_messages VALUES (
-  DEFAULT, 1, 3, 'terceira', DEFAULT, DEFAULT
+  DEFAULT, 1, 3, 'yo yo yo', DEFAULT, DEFAULT
 );
 
 INSERT INTO friend_requests (sender, receiver, accepted, request_date)
@@ -1587,8 +1577,6 @@ VALUES
   3
 );
 
-INSERT INTO friends (user_id1, user_id2)
-VALUES (1, 2);
 
 INSERT INTO friends (user_id1, user_id2)
 VALUES (1, 3);
