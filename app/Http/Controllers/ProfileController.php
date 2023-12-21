@@ -46,12 +46,18 @@ class ProfileController extends Controller {
         else {
             $me = Auth::user()->id == $id;
             $areFriends = $this->areFriends(Auth::user()->id, $id);
-            return view('pages.profile', ['user' => $user, 'areFriends' => $areFriends, 'post' => $post, 'me' => $me]);
+            $hasFriendRequest = $this->hasFriendRequest(Auth::user()->id, $id);
+            return view('pages.profile', ['user' => $user, 'areFriends' => $areFriends,'hasFriendRequest' => $hasFriendRequest, 'post' => $post, 'me' => $me]);
         }        
 
     
 }
-
+    protected function hasFriendRequest($senderId, $receiverId)
+    {   
+        return FriendRequest::where('sender', $senderId)
+        ->where('receiver', $receiverId)
+        ->exists();
+    }
     protected function areFriends($user1Id, $user2Id)
     {
         return Friend::where(function ($query) use ($user1Id, $user2Id) {

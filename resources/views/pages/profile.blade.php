@@ -22,34 +22,35 @@
 @endauth
 
 <section id="profile">
-    <p>Profile!</p>
     <section id="user">
         @include('partials.profile', ['user' => $user])
     </section>
     
-    @if (!$areFriends)
+    @if (!$me && !$areFriends && !$hasFriendRequest)
     @auth('web')
     <div class="friend-request-item" data-sender="{{ auth()->id() }}" data-receiver="{{ $user->id }}">
         <form id="friendRequestForm" data-sender="{{ auth()->id() }}" data-receiver="{{ $user->id }}">
             @csrf
-            <button type="submit">Send Friend Request</button>
+            <button type="submit" class="btn btn-dark">Send Friend Request</button>
         </form>
     </div>
     @endauth
     @else
-    <section id="friends">
-    <a href="{{ route('friends.show') }}">Friend List  </a>
-    <a href="{{ route('friendrequests.index') }}">Friend Requests</a>
+    <section id="myfriends">
+    @if ($me)    
+    <a href="{{ route('friends.show') }}" class="btn btn-primary" >Friend List  </a>
+    <a href="{{ route('friendrequests.index') }}" class="btn btn-primary">Friend Requests</a>
+    @endif
     </section>
 
     @endif
-
-    @foreach ($post as $post)
-    <header>
-        <h2>{{ $user->name}}</h2>
-    </header> 
-       {{ $post->content }}
-    @endforeach
+    <hr>
+    <section class="profile-posts">
+    <h2>{{ $user->name }}'s posts: </h2>
+    @foreach($post as $post)
+            @include('partials.post', ['post' => $post])
+        @endforeach
+    </section>
 </section>
 
 

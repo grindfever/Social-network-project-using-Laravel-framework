@@ -1,3 +1,5 @@
+
+
 <div class="post-border"  id="{{ $post->id}}">
     <article class="post" data-id="{{ $post->id }}">
         <div class="card-header">

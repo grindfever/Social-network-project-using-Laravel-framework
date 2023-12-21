@@ -19059,23 +19059,38 @@ label,
 }
 
 .messages a,
+
+
+/*profile*/
+.user-info .profile-picture img{
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    object-fit: cover;
+  
+}
 .user-info a {
-    font-size: 1.6em; /* Adjust the font size as needed */
-    color: #fff;
-    text-decoration: none;
-    margin-bottom: 20px; /* Adjust as needed */
+  font-size: 1.6em; /* Adjust the font size as needed */
+  color: #fff;
+  text-decoration: none;
+  margin-bottom: 20px; /* Adjust as needed */
 }
 
 .user-info span {
-    font-size: 1.5em; /* Adjust the font size as needed */
-    margin-left: 10px; /* Adjust as needed for spacing */
+  font-size: 1.5em; /* Adjust the font size as needed */
+  margin-left: 10px; /* Adjust as needed for spacing */
+}
+.user-info h2{
+font-weight:380;
+margin-bottom:30px;
 }
 
-/*profile*/
 #profile{
   width:100%;
-  padding-left: 100px;
-  padding-top:40px;
+  min-width: 400px;
+  padding-bottom:400px;
+
+
 }
 .profiletimeline{
   padding-left: 100px;
@@ -19093,6 +19108,35 @@ label,
 }
 #profile .user{
   font-size: 20px;
+  margin-bottom:40px;
+  padding-left:50px;
+}
+#profile .profile-posts{
+  margin-top: 50px;
+  padding-left:50px;
+}
+.friend-request-item{
+  padding-left:50px;
+  margin-bottom:30px;
+
+}
+.profile-posts > h2:first-of-type {
+  margin-bottom:30px;
+  font-weight: 360;
+}
+.profile-posts h2{
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
+#myfriends a:first-child {
+  margin-right: 20px;
+  margin-left:50px;
+  
+}
+#myfriends{
+  margin-bottom:30px;
+  font-size:20px;
 }
 
 /*Chatmenu*/
@@ -19186,4 +19230,6 @@ padding-top:10px;
  article button{
   font-size:16x;
 }
+/*friendlist*/
+
 

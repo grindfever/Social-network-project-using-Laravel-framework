@@ -2,14 +2,15 @@
 
 
     <div class="user-info">
+        
+        <div class="profile-picture">
+    
+             <img src="{{ $user->getProfileImage() }}" alt="Profile Picture">
+        </div>
         <div class="name">
             <h2>{{ $user->name }}</h2>
             
         </div>
-        <div class="profile-picture">
-    
-             <img src="{{ public_path('lbaw23102/images/' . $user->img) }}" alt="Profile Picture">
-            </div>
         <div class="email">
             <p>Email: {{ $user->email }}</p>
         </div>
