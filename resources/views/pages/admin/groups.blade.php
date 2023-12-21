@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Users</h1>
+    <h1>Groups</h1>
 
     <table class="table table-hover">
         <thead>
