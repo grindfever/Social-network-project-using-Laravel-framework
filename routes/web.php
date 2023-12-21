@@ -153,6 +153,10 @@ Route::get('/contact', function () {
     return view('pages.contact');
 });
 
+Route::get('/features', function () {
+    return view('pages.mainfeatures');
+});
+
 //Friendrequest
 Route::controller(FriendRequestController::class)->group(function () {
     Route::get('/friendrequests', 'index')->name('friendrequests.index');

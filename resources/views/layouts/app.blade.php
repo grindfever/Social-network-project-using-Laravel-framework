@@ -64,6 +64,9 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/contact') }}" >Contact us</a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/features') }}" >Features</a>
+                  </li>
                     <li class="nav-item">
                       <a class="nav-link" href="{{ url('/profile/' . Auth::user()->id) }}" >{{ Auth::user()->name }}</a>
                     </li>
