@@ -55,15 +55,22 @@ class ModeratorController extends Controller
     public function ban(Request $request, $id)
     {
         $user = User::find($id);
-        if ($user->isModerator()){
-            return response()->json();
+
+        if(Auth::guard('admin')->check()){
+            DB::table('bans')->insert([
+                'admin' => Auth::guard('admin')->id(),
+                'user_id' => $id,
+            ]);
         }
-
-        DB::table('bans')->insert([
-            'moderator' => Auth::user()->id,
-            'user_id' => $id,
-        ]);
-
+        else {
+            if ($user->isModerator()){
+                return response()->json();
+            }
+            DB::table('bans')->insert([
+                'moderator' => Auth::user()->id,
+                'user_id' => $id,
+            ]);
+        }
         DB::table('users')->where('id', $id)->update(['remember_token' => null]);
 
         return response()->json($id);

@@ -21,7 +21,6 @@
                         <a href="{{ url('/profile/' . $user->id) }}">See profile</a>
                     </td>
                     <td>
-                        @auth('web')
                         @if($user->isBanned())
                             @csrf
                             <button type="submit" id="unban" class="btn btn-dark" data-id="{{ $user->id }}">Unban</button>
@@ -29,8 +28,24 @@
                             @csrf
                             <button type="submit" id="ban" class="btn btn-danger" data-id="{{ $user->id }}">Ban</button>
                         @endif
-                        @endauth
                     </td>
+                    @auth('admin')
+                    <td>
+                        <section id="set_moderator">
+                            <article class="set_moderator" data-id="{{$user->id}}">
+                                @if($user->isModerator())
+                                    <button class="remove_moderator" data-id="{{$user->id}}" type='submit'>
+                                        Remove Moderator Role
+                                    </button>
+                                @else
+                                    <button class="add_moderator" data-id="{{$user->id}}" type='submit'>
+                                        Assign Moderator Role
+                                    </button>
+                                @endif
+                            </article>
+                        </section>
+                    </td>
+                    @endauth
                 </tr>
             @endforeach
         </tbody>

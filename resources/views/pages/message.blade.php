@@ -1,31 +1,26 @@
-@extends('layouts.app')  
+@extends('layouts.app')
 
 @section('content')
 <div id="chatpage">
-<div id="chat">
-    <div class="message-container sent-messages">
+    <div id="chat">
+        <div class="message-container">
             <ul class="messages">
-            @foreach($sentMessages as $sentMessage)
-                <li>{{ $sentMessage->content }}</li>
-            @endforeach
-        </ul>
+                @foreach($allMessages->sortBy('date') as $message)
+                    <li class="{{ $message->sender == Auth::user()->id ? 'sent-message' : 'received-message' }}">
+                        {{ $message->content }}
+                    </li>
+                @endforeach
+            </ul>
+        </div>
     </div>
-    <div class="message-container received-messages">
-        <ul class="messages">
-            @foreach($receivedMessages as $receivedMessage)
-                <li>{{ $receivedMessage->content }}</li>
-            @endforeach
-        </ul>
-    </div>
-</div>
 
-<article class="message" data-id="{{$id}}">
+    <article class="message" data-id="{{$id}}">
         <form class="new_message" method="POST" action="/messages/{{$id}}">
             @csrf
             <input type="text" name="content" placeholder="new message">
             <button type="submit">Send</button>
         </form>
-</article>
+    </article>
 </div>
-
 @endsection
+

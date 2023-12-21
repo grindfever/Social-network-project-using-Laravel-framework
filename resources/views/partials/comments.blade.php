@@ -1,4 +1,5 @@
 <div class="comments" data-id="{{ $post->id }}">
+    @auth('web')
     <form class="new_comment" action="{{ route('post.comment.store', $post->id)}}" method="POST">
         @csrf
         <div class="form-group">
@@ -6,6 +7,7 @@
         </div>
         <button id="submit_comment" type="submit" class="btn btn-dark"> Post Comment </button>
     </form>
+    @endauth
 
     <h4>Comments</h4>
     
@@ -18,7 +20,7 @@
                 <span class="float-end">{{ \Carbon\Carbon::parse($comment->date)->diffForHumans() }}</span>
                 <li class="list-group-item" >{{ $comment->content }}</li>
                 <div class="like-comment">
-                    @if (Auth::user()->likesComment($comment))
+                    @if (!Auth::guard('admin')->check() && Auth::user()->likesComment($comment))
                         <button type="submit" class="like-comment liked" data-comment-id="{{$comment->id}}" >
                             <span class="fas fa-heart me-1"></span>{{ $comment->likes()->count() }}
                         </button>
@@ -28,6 +30,7 @@
                         </button>
                     @endif
                 </div>
+                
                 @if ($comment->user_id === auth()->id())
                     <div class="float-end" style="padding-top: 10px;">
                         <button id="edit-comment" data-id="{{$comment->id}}" class="btn btn-sm btn-primary" onClick="editComment({{$comment->id}})">Edit</button>

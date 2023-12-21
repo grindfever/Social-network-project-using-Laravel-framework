@@ -18,8 +18,8 @@
             // Fix for Firefox autofocus CSS bug
             // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
         </script>
-        <script type="text/javascript" src={{ url('js/app.js') }} defer>
-        </script>
+        <script type="text/javascript" src={{ url('js/app.js') }} defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
@@ -44,11 +44,17 @@
                     <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
                   </form>
                   @auth('web')
-                    @if(Auth::user()->isModerator())
-                    <li class="nav-item">
-                      <a class="nav-link" href="{{ url('/reports') }}" >Reports</a>
-                    </li>
-                    @endif
+                  @if(Auth::user()->isModerator())
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Moderation</a>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="{{ url('/reports') }}" >Reports</a>
+                      <a class="dropdown-item" href="{{ url('/admin/users') }}">Users</a> 
+                      <a class="dropdown-item" href="{{ url('/admin/posts') }}">Posts</a> 
+                      <a class="dropdown-item" href="{{ url('/admin/groups') }}">Groups</a>
+                    </div>
+                  </li>
+                  @endif
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/messages') }}">Messages</a>
                   </li>
@@ -61,6 +67,9 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/contact') }}" >Contact us</a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/features') }}" >Features</a>
+                  </li>
                     <li class="nav-item">
                       <a class="nav-link" href="{{ url('/profile/' . Auth::user()->id) }}" >{{ Auth::user()->name }}</a>
                     </li>
@@ -69,27 +78,20 @@
                     </li>
                   @endauth
                   @auth('admin')
-                    <li class="nav-item">
-                      <a class="nav-link" href="{{ url('/admin') }}">Administer</a> 
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="{{ url('/reports') }}" >Reports</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="{{ url('/admin/users') }}">Users</a> 
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="{{ url('/admin/posts') }}">Posts</a> 
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="{{ url('/admin/groups') }}">Groups</a> 
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="{{ url('/admin/moderators') }}">Moderators</a> 
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="{{ url('/logout') }}">Logout</a> 
-                    </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Administration</a>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="{{ url('/admin') }}">Homepage</a> 
+                      <a class="dropdown-item" href="{{ url('/reports') }}" >Reports</a>
+                      <a class="dropdown-item" href="{{ url('/admin/users') }}">Users</a> 
+                      <a class="dropdown-item" href="{{ url('/admin/posts') }}">Posts</a> 
+                      <a class="dropdown-item" href="{{ url('/admin/groups') }}">Groups</a> 
+                      <a class="dropdown-item" href="{{ url('/admin/moderators') }}">Moderators</a>
+                    </div>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url('/logout') }}">Logout</a> 
+                  </li>
                   @endauth
                   @guest('admin')
                   @guest('web')

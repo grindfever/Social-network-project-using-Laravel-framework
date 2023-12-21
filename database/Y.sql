@@ -85,7 +85,7 @@ CREATE TABLE moderators
 
 CREATE TABLE admins
 (
-  id SERIAL,
+  id SERIAL PRIMARY KEY,
   email VARCHAR UNIQUE NOT NULL,
   password VARCHAR NOT NULL,
   remember_token VARCHAR
@@ -206,10 +206,11 @@ CREATE TABLE notifications
 CREATE TABLE bans
 (
     id SERIAL PRIMARY KEY,
-    moderator INTEGER CONSTRAINT fk_ban_moderator REFERENCES moderators(id) ON DELETE CASCADE ON UPDATE CASCADE
-				    CONSTRAINT nn_ban_moderator NOT NULL,
+    admin INTEGER CONSTRAINT fk_ban_ADMIN REFERENCES admins(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    moderator INTEGER CONSTRAINT fk_ban_moderator REFERENCES moderators(id) ON DELETE CASCADE ON UPDATE CASCADE,
     user_id INTEGER CONSTRAINT fk_ban_user REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
-    date timestamp(0) without time zone CONSTRAINT nn_ban_date NOT NULL DEFAULT now()
+    date timestamp(0) without time zone CONSTRAINT nn_ban_date NOT NULL DEFAULT now(),
+    CHECK (admin IS NOT NULL OR moderator IS NOT NULL)
 );
 
 --USER TAGGED POST
@@ -279,16 +280,26 @@ ADD COLUMN search TSVECTOR;
 
 CREATE FUNCTION post_search_update() RETURNS TRIGGER AS $$
 BEGIN
-  NEW.search = (
-    to_tsvector('english',NEW.title)
-  );
+  IF TG_OP = 'INSERT' THEN   
+    NEW.search = (
+      setweight(to_tsvector('english',NEW.title),'A') || setweight(to_tsvector('english',NEW.content),'B') 
+
+    );
+  END IF;
+  IF  TG_OP = 'UPDATE' THEN
+    IF(NEW.title <> OLD.title OR NEW.content <> OLD.content) THEN
+      NEW.search = (
+          setweight(to_tsvector('english',NEW.title),'A') || setweight(to_tsvector('english',NEW.content),'B') 
+        );
+    END IF;
+  END IF;
   RETURN NEW;
 END $$
 LANGUAGE plpgsql;  
 
 
 CREATE TRIGGER post_search_update
-  BEFORE INSERT ON posts
+  BEFORE INSERT OR UPDATE ON posts
   FOR EACH ROW
   EXECUTE PROCEDURE post_search_update();
 
@@ -611,7 +622,8 @@ INSERT INTO friend_requests (sender, receiver, accepted, request_date)
 VALUES (2, 1, FALSE, NOW());
 
 
-INSERT INTO bans VALUES
+INSERT INTO bans (id,moderator,user_id) 
+VALUES
 (
   DEFAULT,
   2,

@@ -13,12 +13,10 @@ class GroupMessageController extends Controller
 {
     public function showChat($groupId)
     {
-        // Retrieve group chat messages
-        $group_messages = GroupMessage::where('group_id', $groupId)->get();
         $group = Group::find($groupId);
         $sent_messages = GroupMessage::where('sender', Auth::user()->id)->where('group_id', $groupId)->get();
         $received_messages = GroupMessage::where('group_id', $groupId)->where('sender', '<>', Auth::user()->id)->get();
-        return view('pages.group_chat', compact('group_messages', 'group', 'sent_messages', 'received_messages'));
+        return view('pages.group_chat', compact('group', 'sent_messages', 'received_messages'));
     }
 
     public function sendMessage(Request $request, string $groupId)
@@ -29,7 +27,11 @@ class GroupMessageController extends Controller
             'content' => $request->input('content'),
         ]);
 
+        $user = Auth::user()->name;
 
-        return response()->json($request->input('content'));
+        return response()->json([
+            'content' => $request->input('content'),
+            'user' => $user,
+        ]);
     }
 }
