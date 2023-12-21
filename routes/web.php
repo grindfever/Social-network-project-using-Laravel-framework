@@ -16,6 +16,7 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FriendRequestController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\FeedController;
 
 use App\Http\Controllers\ModeratorController;
 
@@ -50,6 +51,8 @@ Route::controller(DashBoardController::class)->group(function () {
     Route::get('/post/{id}','show');
 });
 
+Route::get('/feed', FeedController::class )->middleware('auth')->name('feed');
+
 
 /*
  *    API
@@ -66,7 +69,7 @@ Route::controller(DashBoardController::class)->group(function () {
  Route::delete('api/comment/{comment_id}', [CommentController::class, 'delete'])->middleware('auth')->name('post.comment.destroy');
  Route::put('api/comment/{comment_id}', [CommentController::class, 'edit'])->middleware('auth')->name('post.comment.update');
  Route::post('api/comment/{comment_id}/like', [CommentController::class, 'like'])->middleware('auth')->name('post.comment.like');
-Route::delete('api/comment/{comment_id}/unlike', [CommentController::class, 'unlike'])->middleware('auth')->name('post.comment.unlike');
+ Route::delete('api/comment/{comment_id}/unlike', [CommentController::class, 'unlike'])->middleware('auth')->name('post.comment.unlike');
 // Authentication
 Route::controller(LoginController::class)->group(function () {
     Route::get('/login', 'showLoginForm')->name('login');

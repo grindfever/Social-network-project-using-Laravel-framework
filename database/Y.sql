@@ -434,6 +434,16 @@ INSERT INTO posts VALUES (
 
 INSERT INTO posts VALUES (
   DEFAULT,
+  4,
+  'Sou vski',
+  'Hello World! This is my first post.',
+  '2022-01-01 12:00:00',
+  DEFAULT,
+  DEFAULT
+);
+
+INSERT INTO posts VALUES (
+  DEFAULT,
   1,
   'Exciting News!',
   'I just got accepted into my dream university! So excited to start this new chapter in my life.',
@@ -629,3 +639,9 @@ VALUES
   2,
   3
 );
+
+INSERT INTO friends (user_id1, user_id2)
+VALUES (1, 2);
+
+INSERT INTO friends (user_id1, user_id2)
+VALUES (1, 3);

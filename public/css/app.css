@@ -1,12 +1,15 @@
+
+
 #content {
   padding-top: 60px; /* Add this line, adjust as needed */
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   min-height: 100vh; /* Adjust this value as needed */
-  max-width: 50vw; /* Adjust this value as needed */
+  max-width: 80vw; /* Adjust this value as needed */
   scroll-behavior: smooth;
-  margin: 0 auto;
+  margin: 0 auto; /* Add this line to center the content horizontally */
 }
 
 #post-page{
