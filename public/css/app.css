@@ -19187,3 +19187,17 @@ padding-top:10px;
   font-size:16x;
 }
 
+.no-decoration {
+  text-decoration: none;
+}
+
+
+
+.new-group-message-form {
+  margin: 0;
+}
+
+.small-date {
+  font-size: 10px;
+  margin-left: 10px;
+}

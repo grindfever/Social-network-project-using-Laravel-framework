@@ -1,52 +1,53 @@
-<!-- resources/views/groups/edit.blade.php -->
-
 @extends('layouts.app')
 
 @section('content')
-    <h1>Edit Group: {{ $group->name }}</h1>
+    <div class="container mt-5">
+        <h1>Edit Group: {{ $group->name }}</h1>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
-    <form method="post" action="/groups/{{ $group->id }}">
-        @csrf
-        @method('patch')
-
-        <div>
-            <label for="name">Group Name:</label>
-            <input type="text" name="name" value="{{ old('name', $group->name) }}" required>
-        </div>
-
-        <div>
-            <label for="description">Group Description:</label>
-            <textarea name="description">{{ old('description', $group->description) }}</textarea>
-        </div>
-
-        @if (auth()->user()->id === $group->owner)
-    <button type="submit">Update Group</button>
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
         @endif
-    </form>
 
-    <h2>Add Members</h2>
+        <form method="post" action="/groups/{{ $group->id }}">
+            @csrf
+            @method('patch')
 
-    <form method="post" action="/groups/{{ $group->id }}/add-members">
-        @csrf
+            <div class="mb-3">
+                <label for="name" class="form-label">Group Name:</label>
+                <input type="text" name="name" value="{{ old('name', $group->name) }}" class="form-control" required>
+            </div>
 
-        <div>
-            @if(isset($noUsersLeftMessage))
-            <p>{{ $noUsersLeftMessage }}</p>
-            @else
-            <label>Select members to Add:</label>
-            @foreach($users as $user)
-                <div>
-                    <input type="checkbox" name="members[]" value="{{ $user->id }}">
-                    {{ $user->name }}
-                </div>
-            @endforeach
+            <div class="mb-3">
+                <label for="description" class="form-label">Group Description:</label>
+                <textarea name="description" class="form-control">{{ old('description', $group->description) }}</textarea>
+            </div>
+
+            @if (auth()->user()->id === $group->owner)
+                <button type="submit" class="btn btn-primary">Update Group</button>
             @endif
-        </div>
+        </form>
 
-        <button type="submit">Add Members</button>
-    </form>
+        <h2 class="mt-4">Add Members</h2>
+
+        <form method="post" action="/groups/{{ $group->id }}/add-members">
+            @csrf
+
+            <div class="mb-3">
+                @if(isset($noUsersLeftMessage))
+                    <p class="alert alert-info">{{ $noUsersLeftMessage }}</p>
+                @else
+                    <label class="form-label">Select members to Add:</label>
+                    @foreach($users as $user)
+                        <div class="form-check">
+                            <input type="checkbox" name="members[]" value="{{ $user->id }}" class="form-check-input">
+                            <label class="form-check-label">{{ $user->name }}</label>
+                        </div>
+                    @endforeach
+                @endif
+            </div>
+
+            <button type="submit" class="btn btn-primary">Add Members</button>
+        </form>
+    </div>
 @endsection
+

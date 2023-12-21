@@ -938,31 +938,35 @@ function groupmessageAddedHandler() {
   if (this.status != 200) window.location = '/';
   let message = JSON.parse(this.responseText);
   console.log(message);
-  let new_message = createGroupMessage(message);
 
+  let new_message = createGroupMessage(message);
   let messagesList = document.querySelector('ul.messages');
   let li = document.createElement('li');
-  li.textContent = message;
-
-  // Insert the new message after the last <li> element in the messages list
+  li.textContent = ''; // You may want to adjust this line based on your requirements
+  li.appendChild(new_message); // Append the new_message element, not the message string
   messagesList.appendChild(li);
-  let messagesContainer = document.querySelector('.message-container');
-  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+  messagesList.scrollTop = messagesList.scrollHeight;
 
   let form = document.querySelector('article.message form.new_group_message');
   form.querySelector('[type=text]').value = "";
-
 }
+
 
 function createGroupMessage(message) {
   let new_message = document.createElement('article');
   new_message.classList.add('message');
 
-  new_message.innerHTML = `
-    <li>${message}</li>
-  `;
+  let li = document.createElement('li');
+  li.className = 'list-group-item';
+  li.style.border = 'none';
+  li.style.margin = '0';
+  li.innerHTML = `<span class="message-info">${message.user}:</span> ${message.content} <span class="float-end small-date">Just now</span>`;
+
+  new_message.appendChild(li);
   return new_message;
 }
+
 
 
   function sendBanRequest(event){
