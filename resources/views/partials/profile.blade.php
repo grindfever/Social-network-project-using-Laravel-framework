@@ -5,7 +5,7 @@
         
         <div class="profile-picture">
     
-             <img src="{{ $user->getProfileImage() }}" alt="Profile Picture">
+             <img src="{{ $user->getProfileImage() }}"  alt="Profile Picture">
         </div>
         <div class="name">
             <h2>{{ $user->name }}</h2>

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 
@@ -106,6 +106,50 @@ class ProfileController extends Controller {
     
         return response()->json(['success' => false, 'message' => 'Friend request already sent']);
     }
-}
+    public function editProfile() {
+        if (Auth::guest()) {
+            return redirect("/dashboard");
+        }
+    
+        $user = Auth::user();
+        return view('pages.editprofile', ['user' => $user]);
+    }
+    public function updateProfile(Request $request, $id)
+    {
+    
+        // Validate the form data
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'age' => 'required|integer|min:18',
+            'bio' => 'nullable|string|max:255',
+        
+            // Add validation rules for other fields
+        ]);
+ 
+        // Find the user
+        $user = User::findOrFail($id);
+    
+    
 
+        // Update the user's profile
+        $user->update([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'age' => $request->input('age'),
+            'bio' => $request->input('bio'),
+            'priv' => $request->input('private_account', false),
+            // Update other fields as needed
+        ]);
+
+
+
+    
+        // Redirect the user to their profile page or a success page
+        return redirect()->route('profile.show', ['id' => $id])
+            ->with('success', 'Profile updated successfully');
+    }
+    
+    
+}
 

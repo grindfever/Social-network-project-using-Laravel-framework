@@ -19059,8 +19059,48 @@ label,
 }
 
 .messages a,
+/*editprofile*/
+#name,
+#email,
+#age,
+#bio {
+    margin-bottom: 20px;
+}
 
+/* Style labels */
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
 
+/* Style input fields */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+textarea {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Style the submit button */
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Add some spacing to the submit button */
+button[type="submit"] {
+    margin-top: 10px;
+}
 /*profile*/
 .user-info .profile-picture img{
     width: 250px;
@@ -19134,11 +19174,62 @@ margin-bottom:30px;
   margin-left:50px;
   
 }
+#myfriends a:last-child {
+  margin-left:20px;
+}
+
 #myfriends{
   margin-bottom:30px;
   font-size:20px;
 }
+#friendrequests {
+  margin-top: 20px;
+}
 
+/* Style the heading */
+#friendrequests h2 {
+
+  color: #333;
+}
+
+/* Style the friend request item */
+#friendrequests .friend-request-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  padding-bottom:10px;
+  padding-right:30px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+
+/* Style the sender's name */
+.friend-request-item .sender-name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Style the request date */
+.friend-request-item .request-date {
+  color: #777;
+}
+
+/* Style the accept and reject buttons */
+.friend-request-item form {
+  display: flex;
+  gap: 5px;
+}
+
+.friend-request-item form button {
+  background-color: #3498db;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
 /*Chatmenu*/
 #chatmenu{
   padding-top:40px;
@@ -19231,5 +19322,42 @@ padding-top:10px;
   font-size:16x;
 }
 /*friendlist*/
+#friendlist h1:first-child{
+  margin-bottom:30px;
+}
+/* Style the friend article */
+.friend {
+  max-width: 1000px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
 
+/* Style the profile picture and name container */
+.profile-picture-name {
+  display: flex;
+  align-items: center;
+}
+
+
+/* Style the friend's name link */
+.name a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Style the remove friend button */
+.removefriend button {
+  background-color: #dc3545;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
 

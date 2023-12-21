@@ -97,11 +97,11 @@ Route::controller(RegisterController::class)->group(function () {
 //Profile
 Route::controller(ProfileController::class)->group(function () {
     Route::get('/profile', 'myProfile');
-    Route::get('/profile/{id}', 'show');
+    Route::get('/profile/{id}', 'show')->name('profile.show');
     Route::get('/friendrequest', 'showfriendrequest');
-    
-    // Correct the route for sending friend requests
     Route::post('/profile/{id}/send-friend-request', 'sendFriendRequest')->name('send.friend.request');
+    Route::get('/profile/{id}/edit', 'editProfile')->name('profile.edit');
+    Route::put('/profile/update/{id}', 'updateProfile')->name('profile.update');
 });
 
 

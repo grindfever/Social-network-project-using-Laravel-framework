@@ -38,10 +38,16 @@
     @else
     <section id="myfriends">
     @if ($me)    
+    <a href="{{ route('profile.edit', ['id' => $user->id]) }}" class="btn btn-primary">Edit Profile</a>
     <a href="{{ route('friends.show') }}" class="btn btn-primary" >Friend List  </a>
     <a href="{{ route('friendrequests.index') }}" class="btn btn-primary">Friend Requests</a>
     @endif
+  
+   
+    
+    
     </section>
+
 
     @endif
     <hr>
